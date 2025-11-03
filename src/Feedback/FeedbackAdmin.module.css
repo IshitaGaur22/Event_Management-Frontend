@@ -1,0 +1,266 @@
+/* This single file now styles the Admin Panel, Filter, and Top Events */
+
+.adminContainer {
+    width: 95%;
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 25px;
+    background-color: var(--simba-white);
+    border-radius: var(--radius-soft);
+    box-shadow: var(--shadow-medium);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.adminContainer h2 {
+    text-align: center;
+    font-size: 1.8em;
+    margin-bottom: 0.5rem;
+}
+
+/* --- Back Button --- */
+.backButton {
+    align-self: flex-start;
+    background-color: var(--simba-white);
+    border: 1px solid var(--simba-light-grey);
+    color: var(--simba-text-medium);
+    border-radius: var(--radius-round);
+    font-size: 0.9em;
+}
+.backButton:hover {
+    background-color: var(--simba-off-white);
+    color: var(--simba-brown-dark);
+}
+
+/* --- Stats Container (Top Events) --- */
+.statsContainer {
+    background-color: var(--simba-off-white);
+    border: 1px solid var(--simba-light-grey);
+    border-radius: var(--radius-soft);
+    padding: 15px 20px;
+    text-align: left;
+}
+.statsContainer h3 {
+    margin-top: 0;
+    color: var(--simba-orange-dark);
+    font-size: 1.3em;
+}
+.statsContainer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.statsContainer li {
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--simba-light-grey);
+    color: var(--simba-text-medium);
+}
+.statsContainer li:last-child {
+    border-bottom: none;
+}
+
+/* --- Filter Form --- */
+.filterForm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+.filterForm input,
+.filterForm select {
+    padding: 10px 12px;
+    border: 1px solid var(--simba-light-grey);
+    border-radius: var(--radius-soft);
+    font-size: 0.95em;
+    font-family: var(--font-primary);
+    background-color: var(--simba-off-white);
+    color: var(--simba-text-dark);
+    transition: all 0.2s ease;
+    flex: 1 1 120px; /* Grow, shrink, and base width */
+}
+.filterForm input:focus,
+.filterForm select:focus {
+    border-color: var(--simba-orange-light);
+    box-shadow: 0 0 0 3px rgba(224, 145, 74, 0.2);
+    outline: none;
+    background-color: var(--simba-white);
+}
+
+.filterForm button {
+    padding: 10px 18px;
+    border-radius: var(--radius-round);
+    font-weight: 500;
+    font-size: 0.95em;
+    flex-shrink: 0;
+}
+.filterForm button[type="submit"] {
+    background-color: var(--simba-orange-dark);
+    color: var(--simba-white);
+}
+.filterForm button[type="submit"]:hover {
+    background-color: var(--simba-orange-light);
+}
+.filterForm button[type="button"] {
+    background-color: var(--simba-light-grey);
+    color: var(--simba-text-medium);
+}
+.filterForm button[type="button"]:hover {
+    background-color: #E9ECEF;
+}
+
+/* --- Feedback Table --- */
+.feedbackTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    border-radius: var(--radius-soft);
+    overflow: hidden; /* Important for border-radius */
+    box-shadow: var(--shadow-light);
+    border: 1px solid var(--simba-light-grey);
+}
+
+.feedbackTable th,
+.feedbackTable td {
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: top;
+    
+}
+.feedbackTable tbody tr {
+    border-bottom: 1px solid var(--simba-light-grey);
+}
+.feedbackTable thead th {
+    background-color: var(--simba-brown-dark);
+    color: var(--simba-white);
+    font-weight: 500;
+}
+
+.feedbackTable tbody tr:nth-child(even) {
+    background-color: var(--simba-off-white);
+}
+
+.feedbackTable tbody tr:hover {
+    background-color: #f0f4f7;
+}
+
+.commentCell {
+    min-width: 200px;
+    max-width: 350px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.9em;
+    color: var(--simba-text-medium);
+}
+
+.actionsCell {
+    min-width: 150px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.actionsCell button {
+    padding: 6px 12px;
+    border-radius: var(--radius-round);
+    font-size: 0.85em;
+    font-weight: 500;
+}
+
+.actionsCell button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--simba-light-grey);
+    color: var(--simba-text-medium);
+}
+
+/* Reply Button */
+.actionsCell button:not(:disabled) {
+    background-color: var(--simba-orange-light);
+    color: var(--simba-white);
+}
+.actionsCell button:not(:disabled):hover {
+    background-color: var(--simba-orange-dark);
+}
+
+/* Archive/Unarchive Buttons */
+.archiveButton {
+    background-color: #DC3545;
+    color: var(--simba-white);
+}
+.archiveButton:hover {
+    background-color: #C82333;
+}
+.unarchiveButton {
+    background-color: #28A745;
+    color: var(--simba-white);
+}
+.unarchiveButton:hover {
+    background-color: #218838;
+}
+
+.archivedRow {
+    background-color: #f5f5f5 !important;
+    color: #999;
+    opacity: 0.8;
+}
+.archivedRow .commentCell {
+    text-decoration: line-through;
+}
+.filterContainer {
+    background-color: var(--simba-off-white);
+    border: 1px solid var(--simba-light-grey);
+    border-radius: var(--radius-soft);
+    padding: 15px 20px;
+}
+
+.filterContainer h3 {
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    color: var(--simba-brown-dark); /* A different color to distinguish */
+    font-size: 1.3em;
+}
+
+.linkButton,.eventlink {
+    background: none;
+    border: none;
+    color: var(--simba-orange-dark); /* Use your theme's link color */
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 0;
+    font-family: var(--font-primary);
+    
+}
+.eventlink{
+    text-align: left;
+}
+
+.linkButton:hover {
+    color: var(--simba-orange-light);
+}
+.adminHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allows link to wrap below title on small screens */
+    gap: 1rem;
+}
+
+.adminHeader h2 {
+    margin-bottom: 0; /* Remove default margin from h2 */
+}
+/* --- Responsive Table --- */
+/* Desktop Styles */
+@media (min-width: 768px) {
+  .container {
+    max-width: 800px; /* Or 900px, your choice */
+  }
+
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 25px;
+  }
+}
