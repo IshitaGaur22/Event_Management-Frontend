@@ -1,3 +1,7 @@
+import React, { useState } from 'react';
+import './App.css';
+import FeedbackAdmin from './Feedback/FeedbackAdmin';
+import SubmitFeedback from './Feedback/SubmitFeedback';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import GetBookings from './Booking/GetBookings';
 import BookTicketsForm from './Booking/BookTicketsForm';
@@ -10,7 +14,21 @@ import UpdateCompleted from './Booking/UpdateCompleted';
 import Header from './components/Header';
 
 function App() {
+  // State to control which view is active
+  const [showList, setShowList] = useState(false);
+
+  // This function will be passed to the components to toggle the view
+  const toggleView = () => {
+    setShowList(prevShowList => !prevShowList);
+  };
+
   return (
+    <div className="App">
+        
+        {showList ? (<FeedbackAdmin onShowForm={toggleView} />) 
+        : (<SubmitFeedback onViewPrevious={toggleView} />)
+        }
+    </div>
     <Router>
       <div>
         <Header />
