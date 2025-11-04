@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from './SummaryModal.module.css'; 
 import { Rating } from 'react-simple-star-rating'; 
+import BarChart from './BarChart';
 
 function SummaryModal({ data, onClose }) {
     if (!data) return null;
 
-    // Convert 0-5 rating to 0-100 for the star component
-    const ratingValue = data.averageRating * 20;
+    const ratingValue = data.averageRating *20;
     
     return (
         <div className={styles.modalBackdrop} onClick={onClose}>
@@ -31,6 +31,10 @@ function SummaryModal({ data, onClose }) {
                         readonly={true} 
                         size={30} 
                     />
+                </div>
+                <div className={styles.chartContainer}>
+                    <h4>Rating Distribution</h4>
+                    <BarChart chartData={data.ratingDistribution} />
                 </div>
             </div>
         </div>

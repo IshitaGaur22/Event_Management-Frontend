@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Rating } from 'react-simple-star-rating'; 
 import styles from './FeedbackForm.module.css'; 
-
+import api from '../Login/Api';
 
 function SubmitFeedback({onViewPrevious}) {
     // State for all form fields
@@ -65,7 +65,7 @@ function SubmitFeedback({onViewPrevious}) {
         };
 
         // API Call
-        axios.post('https://localhost:7283/api/Feedbacks/SubmitFeedback', feedbackData)
+        api.post('/Feedbacks/SubmitFeedback', feedbackData)
             .then(response => {
                 alert('Thank you! Your feedback has been submitted.');
                 setEventId("");
@@ -130,7 +130,7 @@ function SubmitFeedback({onViewPrevious}) {
                     <Rating
                         onClick={(rate) => handleRating(rate, setOverallExperience)}
                         initialValue={overallExperience}
-                        size={30}
+                        size={40}
                     />
                 </div>
 
@@ -138,19 +138,19 @@ function SubmitFeedback({onViewPrevious}) {
                 <div className={styles.ratingGrid}> 
                     <div className={styles.ratingGridRow}>
                         <label>Content Quality</label>
-                        <Rating onClick={(rate) => handleRating(rate, setContentQuality)} initialValue={contentQuality} size={20} />
+                        <Rating onClick={(rate) => handleRating(rate, setContentQuality)} initialValue={contentQuality} size={23} />
                     </div>
                     <div className={styles.ratingGridRow}>
                         <label>Venue & Facilities</label>
-                        <Rating onClick={(rate) => handleRating(rate, setVenueFacilities)} initialValue={venueFacilities} size={20} />
+                        <Rating onClick={(rate) => handleRating(rate, setVenueFacilities)} initialValue={venueFacilities} size={23} />
                     </div>
                     <div className={styles.ratingGridRow}>
                         <label>Event Organization</label>
-                        <Rating onClick={(rate) => handleRating(rate, setEventOrganization)} initialValue={eventOrganization} size={20} />
+                        <Rating onClick={(rate) => handleRating(rate, setEventOrganization)} initialValue={eventOrganization} size={23} />
                     </div>
                     <div className={styles.ratingGridRow}>
                         <label>Value for Money</label>
-                        <Rating onClick={(rate) => handleRating(rate, setValueForMoney)} initialValue={valueForMoney} size={20} />
+                        <Rating onClick={(rate) => handleRating(rate, setValueForMoney)} initialValue={valueForMoney} size={23} />
                     </div>
                 </div>
 

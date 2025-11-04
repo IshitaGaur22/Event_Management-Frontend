@@ -8,6 +8,8 @@
   box-shadow: var(--shadow-medium);
   color: var(--simba-text-dark);
   text-align: left;
+  background: var(--simba-bg-gradient);
+  border: 1px solid var(--simba-white);
 }
 
 .container h2 {

@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import styles from './FeedbackAdmin.module.css';
 import GetTopEvents from './TopEvents';
 import FeedbackFilter from './FeedbackFilter';
-import SummaryModal from './Summary';
+import SummaryModal from './SummaryModal';
+import { useAuth } from '../Login/AuthContext';
+import api from '../Login/Api';
 
-const API_URL = 'https://localhost:7283/api/Feedbacks';
+//const API_URL = 'https://localhost:7283/api/Feedbacks';
+
 
 function FeedbackAdmin({onShowForm}) {
+    const{role}=useAuth();
     const [topEvents, setTopEvents] = useState([]);
     const [feedbacks, setFeedbacks] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -56,7 +59,7 @@ function FeedbackAdmin({onShowForm}) {
     // --- Data Fetching ---
     const loadFeedbacks = (filterParams = {}) => {
         setIsLoading(true);
-        axios.get(`${API_URL}/FilterFeedbacks`, { params: filterParams })
+        api.get(`/Feedbacks/FilterFeedbacks`, { params: filterParams })
             .then(response => {
                 setFeedbacks(response.data);
                 setError(null);
@@ -71,7 +74,7 @@ function FeedbackAdmin({onShowForm}) {
     };
 
     const loadTopEvents = () => {
-        axios.get(`${API_URL}/TopRatedEvents`)
+        api.get(`/Feedbacks/TopRatedEvents`)
             .then(response => {
                 setTopEvents(response.data);
             })
@@ -109,7 +112,7 @@ function FeedbackAdmin({onShowForm}) {
             return;
         }
         
-        axios.put(`${API_URL}/ArchiveFeedback/${id}`)
+        api.put(`/Feedbacks/ArchiveFeedback/${id}`)
             .then(() => {
                 alert('Feedback archived!');
                 loadFeedbacks(getCurrentParams()); // Refresh the list
@@ -128,7 +131,7 @@ function FeedbackAdmin({onShowForm}) {
             return;
         }
 
-        axios.post(`${API_URL}/ReplyToFeedback/${id}`, { replyText })
+        api.post(`/Feedbacks/ReplyToFeedback/${id}`, { replyText })
             .then(() => {
                 alert('Reply submitted!');
                 loadFeedbacks(getCurrentParams()); // Refresh the list
@@ -139,7 +142,7 @@ function FeedbackAdmin({onShowForm}) {
             });
     };
     const handleEventClick = (eventId, eventName) => {
-        axios.get(`${API_URL}/GetFeedbackSummary/${eventId}`)
+        api.get(`/Feedbacks/GetFeedbackSummary/${eventId}`)
             .then(response => {
                 
                 const data = { ...response.data, eventName: eventName };
@@ -189,6 +192,7 @@ function FeedbackAdmin({onShowForm}) {
                 onClearFilters={handleClearFilters}
             />
             </div>
+            <div className={styles.tableWrapper}>
             <table className={styles.feedbackTable}>
                 <thead>
                     <tr>
@@ -219,22 +223,29 @@ function FeedbackAdmin({onShowForm}) {
                             <td data-label="Submitted">{formatDate(fb.submittedAt)}</td>
                             <td>{fb.reply || 'N/A'}</td>
                             <td className={styles.actionsCell}>
-                                <button onClick={() => handleReply(fb.feedbackId)} disabled={fb.reply}>
-                                    Reply
-                                </button>
+                                {role === 'Organiser' && (
+                                    <>
+                                        <button onClick={() => handleReply(fb.feedbackId)} disabled={fb.reply}>
+                                            Reply
+                                        </button>
                                 
-                                <button 
-                                    onClick={() => handleArchive(fb.feedbackId)} 
-                                    className={styles.archiveButton}
-                                >
-                                    Archive
-                                </button>
-                                
+                                        <button 
+                                            onClick={() => handleArchive(fb.feedbackId)} 
+                                            className={styles.archiveButton}
+                                        >
+                                        Archive
+                                        </button>
+                                    </>
+                                )}
+                                {role !== 'Organiser' && (
+                                    <span>(Admin Only)</span>
+                                )}
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            </div>
             {isModalOpen && (
                 <SummaryModal 
                     data={summaryData} 
