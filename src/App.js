@@ -1,13 +1,13 @@
 import './App.css';
 import React from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom'; // 1. Import useNavigate
+import { Routes, Route, useNavigate } from 'react-router-dom'; 
 import FeedbackAdmin from './Feedback/FeedbackAdmin';
 import SubmitFeedback from './Feedback/SubmitFeedback';
 import Login from './Login/Login';
-import { useAuth } from './Login/AuthContext'; // 2. Make sure this path is correct
+import { useAuth } from './Login/AuthContext'; 
 
 // A component for your main page
-function MainPage() {
+function FeedbackPage() {
   const [showList, setShowList] = React.useState(false);
   const toggleView = () => setShowList(p => !p);
 
@@ -23,7 +23,7 @@ function MainPage() {
 }
 
 function App() {
-  // 3. Get both 'token' and 'logout' from the context
+  // Get both 'token' and 'logout' from the context
   const { token, logout } = useAuth(); 
   const navigate = useNavigate();
 
@@ -36,7 +36,6 @@ function App() {
     <div className="App">
       <header className="App-header">
         
-        {/* 4. Add the Logout button */}
         {/* This button only shows if the user is logged in */}
         {token && (
           <button onClick={handleLogout} className="logoutButton">
@@ -47,7 +46,7 @@ function App() {
         
         <Routes>
           {/* Your routes will now automatically redirect to /login when token is null */}
-          <Route path="/" element={token ? <MainPage /> : <Login />} />
+          <Route path="/" element={token ? <FeedbackPage /> : <Login />} />
           <Route path="/login" element={<Login />} />
         </Routes>
       </header>

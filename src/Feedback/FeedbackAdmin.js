@@ -202,7 +202,7 @@ function FeedbackAdmin({onShowForm}) {
                         <th>Comment</th>
                         <th>Submitted At</th>
                         <th>Reply</th>
-                        <th>Actions</th>
+                        {role === 'Organiser' && <th>Actions</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -222,9 +222,9 @@ function FeedbackAdmin({onShowForm}) {
                             <td className={styles.commentCell}>{fb.comments}</td>
                             <td data-label="Submitted">{formatDate(fb.submittedAt)}</td>
                             <td>{fb.reply || 'N/A'}</td>
-                            <td className={styles.actionsCell}>
+                            
                                 {role === 'Organiser' && (
-                                    <>
+                                    <td className={styles.actionsCell}>
                                         <button onClick={() => handleReply(fb.feedbackId)} disabled={fb.reply}>
                                             Reply
                                         </button>
@@ -235,12 +235,9 @@ function FeedbackAdmin({onShowForm}) {
                                         >
                                         Archive
                                         </button>
-                                    </>
+                                    </td>
                                 )}
-                                {role !== 'Organiser' && (
-                                    <span>(Admin Only)</span>
-                                )}
-                            </td>
+                                
                         </tr>
                     ))}
                 </tbody>

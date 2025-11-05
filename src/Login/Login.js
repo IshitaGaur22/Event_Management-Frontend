@@ -12,7 +12,6 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // Call your NEW Users/login endpoint
       const response = await axios.post(
         "https://localhost:7283/api/Users/login", 
         { email, password }
