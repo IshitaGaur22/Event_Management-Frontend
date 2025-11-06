@@ -1,35 +1,46 @@
-import React from "react";
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import SimbaLogo from '../images/SimbaLogo.png'; // Make sure this path is correct
+import styles from './Header.module.css'; // Import your CSS module
+import { useAuth } from '../Login/AuthContext'; // Import useAuth
 
-const Header = ({ location }) => {
+const Header = () => {
+  // Get auth state and functions
+  const { token, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); // Clear token
+    navigate('/login'); // Redirect to login
+  };
+
   return (
-    <header className="w-full shadow-sm border-b bg-white">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+    <header className={styles.header}>
+      <div className={styles.headerContent}>
         
-        {/* Left: Logo */}
-        <div className="flex items-center space-x-2">
-          <img src="./emLogo.png" alt="Logo" className="w-8 h-8" />
-          <span className="font-bold text-lg">SIMBA</span>
-        </div>
+        {/* Left: Logo - Links to homepage */}
+        <Link to="/" className={styles.logoContainer}>
+          <img src={SimbaLogo} alt="Logo" className={styles.logo} />
+          <span className={styles.logoText}>SIMBA Events</span>
+        </Link>
 
-        {/* Center: Location (hidden on small screens) */}
-        {/* <div className="hidden md:flex flex-col text-sm">
-          <span className="font-semibold">{location.city}</span>
-          <span className="text-gray-500">{location.state}</span>
-        </div> */}
-
-        {/* Right: Profile Icon */}
-        <div>
-          <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center">
-            <img src="/profile.jpg" alt="Profile" />
+        {/* Right: Profile Icon & Logout Button */}
+        {/* Only show this section if the user is logged in */}
+        {token && (
+          <div className={styles.profileContainer}>
+            <div className={styles.profileIcon}>
+              <svg fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" fillRule="evenodd"></path>
+              </svg>
+            </div>
+            
+            <button onClick={handleLogout} className={styles.logoutButton}>
+              Logout
+            </button>
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* Mobile: Location below header */}
-      {/* <div className="md:hidden px-4 pb-2 text-sm">
-        <span className="font-semibold">{location.city}</span>,{" "}
-        <span className="text-gray-500">{location.state}</span>
-      </div> */}
+      </div>
     </header>
   );
 };

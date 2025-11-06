@@ -6,8 +6,6 @@ import SummaryModal from './SummaryModal';
 import { useAuth } from '../Login/AuthContext';
 import api from '../Login/Api';
 
-//const API_URL = 'https://localhost:7283/api/Feedbacks';
-
 
 function FeedbackAdmin({onShowForm}) {
     const{role}=useAuth();
@@ -16,7 +14,6 @@ function FeedbackAdmin({onShowForm}) {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // --- LIFTED STATE: Filter state now lives here ---
     const [filterEventName, setFilterEventName] = useState("");
     const [filterMinRating, setFilterMinRating] = useState("");
     const [filterSearch, setFilterSearch] = useState("");
@@ -34,16 +31,16 @@ function FeedbackAdmin({onShowForm}) {
         sortBy: sortBy,
         sortOrder: sortOrder
     });
-    // --- Helper function to show a smart error message ---
+    // error message 
     const showErrorMessage = (err) => {
         let errorMessage = "An unknown error occurred."; // Default message
 
         if (err.response && err.response.data) {
             if (typeof err.response.data === 'string') {
-                // If the server sends a plain string (like from NotFoundObjectResult)
+                // If the server sends a plain string 
                 errorMessage = err.response.data;
             } else if (err.response.data.message) {
-                // If the server sends an object like { message: "..." }
+                // If the server sends an object 
                 errorMessage = err.response.data.message;
             } else if (err.response.data.title) {
                 // If it's a standard .NET validation error object
@@ -124,7 +121,7 @@ function FeedbackAdmin({onShowForm}) {
     };
     
     
-    // U (Update) - Reply
+    // Update-Reply
     const handleReply = (id) => {
         const replyText = prompt('Enter your reply:');
         if (!replyText || replyText.trim() === '') {
@@ -137,7 +134,6 @@ function FeedbackAdmin({onShowForm}) {
                 loadFeedbacks(getCurrentParams()); // Refresh the list
             })
             .catch(err => {
-                // Use the helper function here too
                 showErrorMessage(err);
             });
     };
@@ -154,7 +150,7 @@ function FeedbackAdmin({onShowForm}) {
                 showErrorMessage(err);
             });
     };
-    // --- Render Logic (No changes needed below) ---
+    
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
@@ -164,7 +160,7 @@ function FeedbackAdmin({onShowForm}) {
                 ← Back to Submit Feedback
             </button>
             <h2>Feedbacks</h2>
-                {/* 2. Add the toggle link/button */}
+                {/* 2. Add the toggle button */}
                 <button 
                     className={styles.linkButton} 
                     onClick={() => setShowTopEvents(!showTopEvents)}

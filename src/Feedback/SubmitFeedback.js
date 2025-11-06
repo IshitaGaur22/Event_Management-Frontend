@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Rating } from 'react-simple-star-rating'; 
 import styles from './FeedbackForm.module.css'; 
 import api from '../Login/Api';
@@ -78,25 +77,20 @@ function SubmitFeedback({onViewPrevious}) {
                 setComments("");
             })
             .catch(err => {
-            // --- START: UPDATED ERROR HANDLING ---
                 let errorMessage = "An error occurred.";
 
                 if (err.response && err.response.data && err.response.data.errors) {
-                    // This will find the *first* specific validation error
-                    // e.g., "The Rating field must be between 1 and 5."
-                    // or "The Comments field must be a string with a minimum length of 10."
-                    
+                    // This will find the first specific validation error
                     const errors = err.response.data.errors;
-                    const errorKey = Object.keys(errors)[0]; // Get the first field name (e.g., "Rating")
+                    const errorKey = Object.keys(errors)[0]; // Get the first field name 
                     errorMessage = errors[errorKey][0];     // Get the first error message for that field
-                
-                } else if (err.response && err.response.data && err.response.data.title) {
+                } 
+                else if (err.response && err.response.data && err.response.data.title) {
                     // Fallback for the generic message
                     errorMessage = err.response.data.title;
                 }
 
                 alert(`Error: ${errorMessage}`);
-                // --- END: UPDATED ERROR HANDLING ---
             });
         };
 
