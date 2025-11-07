@@ -17,14 +17,13 @@ import BookingPage from './Booking/EventDetailsPage';
 import ReviewBookingPage from './Booking/ReviewBookingPage';
 import BookingPageWrapper from './Booking/BookingWrapper';
 import BookingConfirmationPage from './Booking/BookingConfirmationPage';
-import Login from './Login/Login'
 import ProtectedRoute from './Login/ProtectedRoute';
 import UserDashboard from './Dashboard/UserDashboard';
 import Login from './Login/Login';
 import { useAuth } from './AuthContext'; 
 import Footer from './components/Footer';
 
-function AppContent() {
+function App() {
   const [showList, setShowList] = useState(false);
   const toggleView = () => {
     setShowList(prevShowList => !prevShowList);
