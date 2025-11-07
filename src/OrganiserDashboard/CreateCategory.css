@@ -1,0 +1,56 @@
+.create-category-container {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #FAF0F2;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.create-category-container h2 {
+  color: #D72F59;
+  font-size: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-category-container h2 svg {
+  margin-right: 8px;
+}
+
+.create-category-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.create-category-form input {
+  padding: 10px;
+  border: 1px solid #ECAFBE;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.create-category-form button {
+  padding: 10px;
+  background-color: #D72F59;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.create-category-form button:hover {
+  background-color: #ECAFBE;
+}
+
+.message {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #D72F59;
+}

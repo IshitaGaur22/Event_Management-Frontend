@@ -1,3 +1,7 @@
+import Dashboard from './OrganiserDashboard/Dashboard';
+import CreateEventForm from './OrganiserDashboard/CreateEventForm';
+import UpdateEventPage from './OrganiserDashboard/UpdateEventPage';
+import EventDetails from './OrganiserDashboard/EventDetails';
 import React, { useState , useEffect} from 'react';
 import './App.css';
 import FeedbackAdmin from './Feedback/FeedbackAdmin';
@@ -39,8 +43,8 @@ function AppContent() {
     }
   }, [role]);
   return (
-    <Router>
-      <div className="min-h-screen bg-simba-off-white font-poppins text-simba-text-dark">
+    <BrowserRouter>
+    <div className="min-h-screen bg-simba-off-white font-poppins text-simba-text-dark">
         <Header onLogoClick={() => window.location.href = '/'} />
 
         <nav className="p-2 bg-gray-100 flex flex-wrap justify-center sm:justify-start border-b border-gray-300">
@@ -55,12 +59,14 @@ function AppContent() {
           <Link to="/login" className="m-2">Login</Link>
           <Link to="/dashboard" className="m-2">Dashboard</Link>
         </nav>
-
-        <main className="p-4 max-w-7xl mx-auto">
-          <Routes>
-            <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
-            <Route path="/" element={<GetBookings />} />
-            <Route path="/add" element={<BookTicketsForm />} />
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/create-event" element={<CreateEventForm />} />
+        <Route path="/update-event" element={<UpdateEventPage />} />
+        <Route path="/event-details" element={<EventDetails />} />
+        <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
+        <Route path="/" element={<GetBookings />} />
+         <Route path="/add" element={<BookTicketsForm />} />
             <Route path="/edit/:id" element={<UpdateBookingForm />} />
             <Route path="/search" element={<SearchByUsername />} />
             <Route path="/availability" element={<SeatAvailability />} />
@@ -73,10 +79,9 @@ function AppContent() {
             <Route path="/booking-confirmation" element={<BookingConfirmationPage />} />
             <Route path="*" element={<h2>Page Not Found</h2>} />
             <Route path="/login" element={<Login />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+      </Routes>
+</div>
+    </BrowserRouter>
   );
 }
 

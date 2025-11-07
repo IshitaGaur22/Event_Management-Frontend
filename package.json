@@ -1,5 +1,5 @@
 {
-  "name": "em-frontend",
+  "name": "event",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,6 +8,11 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "animate.css": "^4.1.1",
+    "firebase": "^12.5.0",
+    "react-countup": "^6.5.3",
+    "react-scripts": "^5.0.1",
+    "react-toastify": "^11.0.5",
     "axios": "^1.13.1",
     "canvas-confetti": "^1.9.4",
     "jwt-decode": "^4.0.0",
