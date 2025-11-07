@@ -65,3 +65,22 @@ const Header = () => {
 };
 
 export default Header;
+
+
+// create the header of the website having logo in left and profile icon on right. the colors are given in app.css as follows-
+// :root {
+//   --font-primary: 'Poppins', sans-serif;
+//   --simba-brown-dark: #6C4234;
+//   --simba-orange-dark: #C27040;
+//   --simba-orange-light: #E0914A;
+//   --simba-white: #FFFFFF;
+//   --simba-off-white: #F8F9FA;
+//   --simba-light-grey: #DEE2E6;
+//   --simba-text-dark: #212529;
+//   --simba-text-medium: #495057;
+ 
+//   --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.12);
+//   --radius-soft: 8px;
+//   --radius-round: 25px;
+// }
+// keep is responsive and bg of header light cause the logo is dark
