@@ -1,58 +1,49 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
-  // --- Your existing auth state ---
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  const [role, setRole] = useState(localStorage.getItem('role'));
-  const [userId, setUserId] = useState(localStorage.getItem('userId'));
+export function AuthProvider({ children }) {
+  const [token, setToken] = useState(() => localStorage.getItem('token') || localStorage.getItem('authToken') || null);
+  const [role, setRole] = useState(() => localStorage.getItem('role') || null);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
 
-  // --- NEW: Theme State ---
-  // Get theme from storage, default to 'light'
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
-
-  // This effect runs when the theme state changes
   useEffect(() => {
-    // Apply the theme to the <html> tag for CSS to use
     document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
   }, [theme]);
 
-  // --- NEW: Theme Toggle Function ---
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    localStorage.setItem('theme', newTheme);
-    setTheme(newTheme);
-  };
+  const toggleTheme = () => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
 
-  // --- Your existing auth functions ---
-  const login = (newToken, newRole, newUserId) => {
-    localStorage.setItem('token', newToken);
-    localStorage.setItem('role', newRole);
-    localStorage.setItem('userId', newUserId);
-    setToken(newToken);
-    setRole(newRole);
-    setUserId(newUserId);
+  const login = (...args) => {
+    let t, r, u;
+    [t, r, u] = args;
+    
+    setToken(t || null);
+    setRole(r || null);
+    if (t) localStorage.setItem('token', t); else localStorage.removeItem('token');
+    if (r) localStorage.setItem('role', r); else localStorage.removeItem('role');
+    if (u) localStorage.setItem('userId', u);
+    if (t) localStorage.setItem('authToken', t); // preserve authToken if other code uses it
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    localStorage.removeItem('userId');
-    // Also remove theme on logout
-    localStorage.removeItem('theme'); 
     setToken(null);
     setRole(null);
-    setUserId(null);
-    setTheme('light'); // Reset to light
+    localStorage.removeItem('token');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('role');
+    localStorage.removeItem('userId');
   };
 
-  // --- Provide theme and toggleTheme to the app ---
   return (
-    <AuthContext.Provider value={{ token, role, userId, theme, toggleTheme, login, logout }}>
+    <AuthContext.Provider value={{ token, role, theme, setTheme, toggleTheme, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-export const useAuth = () => useContext(AuthContext);
+export function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+  return ctx;
+}

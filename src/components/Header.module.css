@@ -14,7 +14,7 @@
 }
 
 .headerContent {
-  max-width: 80rem; /* Same as Tailwind's max-w-7xl */
+  max-width: 80rem; 
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -148,7 +148,7 @@ html[data-theme='dark'] .profileIcon {
 }
 
 html[data-theme='dark'] .profileIcon:hover{
-  color: var(--simba-dark);
+  background-color: var(--simba-text-dark);
 }
 
 html[data-theme='dark'] .themeToggle {
