@@ -10,6 +10,8 @@
   text-align: left;
   background: var(--simba-bg-gradient);
   border: 1px solid var(--simba-white);
+  will-change: opacity, transform;
+  animation: fadeInUp 300ms cubic-bezier(.2,.8,.2,1) both;
 }
 
 .container h2 {
@@ -29,6 +31,9 @@
   flex-direction: row;
   gap: 8px;
   align-items: center;
+  will-change: opacity, transform;
+  animation: fadeInUp 320ms cubic-bezier(.2,.8,.2,1) both;
+  animation-delay: 60ms;
 }
 
 .inputGroup label,
@@ -49,9 +54,17 @@
   border: 1px solid var(--simba-light-grey);
   border-radius: var(--radius-soft);
   background-color: var(--simba-off-white);
-  transition: all 0.2s ease;
+  transition: background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease, color 200ms ease, transform 160ms ease;
 }
 
+/* Subtle hover lift for inputs and textarea */
+.inputField:hover,
+.textarea:hover {
+  border-color: var(--simba-hover-light);
+  transform: translateY(-1px);
+}
+
+/* Focus remains explicit */
 .inputField:focus,
 .textarea:focus {
   border-color: var(--simba-orange-light);
@@ -93,6 +106,9 @@
   align-items: center;
   gap: 10px;
   padding: 5px 0;
+  will-change: opacity, transform;
+  animation: fadeInUp 320ms cubic-bezier(.2,.8,.2,1) both;
+  animation-delay: 60ms;
 }
 
 /* --- Buttons --- */
@@ -103,7 +119,7 @@
   padding: 12px 20px;
   border-radius: var(--radius-round);
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: background-color 180ms ease, box-shadow 180ms ease, transform 140ms ease, color 180ms ease;
   border: none;
   font-size: 1rem;
   width: 250px;
@@ -117,6 +133,7 @@
 .primaryButton:hover {
   background-color: var(--simba-orange-light);
   box-shadow: var(--shadow-light);
+  transform: translateY(-3px);
 }
 
 .secondaryButton {
@@ -127,6 +144,7 @@
 .secondaryButton:hover {
   background-color: var(--simba-white);
   border-color: #ccc;
+  transform: translateY(-2px);
 }
 
 html[data-theme='dark'] .inputField:focus,
@@ -142,7 +160,9 @@ html[data-theme='dark'] .textarea:focus {
 :global(body[data-theme='dark']) .textarea::placeholder {
   color: var(--simba-text-medium) !important;
 }
-
+html[data-theme='dark'] .option {
+  color: var(--simba-off-white) ;
+}
 @media (min-width: 768px) {
   .container {
     max-width: 1100px; 
@@ -153,3 +173,23 @@ html[data-theme='dark'] .textarea:focus {
     gap: 10px 60px;
   }
 }
+
+/* --- entrance animation--- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html[data-theme='dark'] .inputField {
+  color: var(--simba-text-medium) ;
+  background-color: var(--simba-off-white);
+}
+
+
+

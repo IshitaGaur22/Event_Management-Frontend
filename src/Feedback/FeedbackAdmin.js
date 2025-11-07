@@ -115,7 +115,6 @@ function FeedbackAdmin({onShowForm}) {
                 loadFeedbacks(getCurrentParams()); // Refresh the list
             })
             .catch(err => {
-                // Use the helper function to show the error
                 showErrorMessage(err);
             });
     };

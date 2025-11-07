@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Rating } from 'react-simple-star-rating'; 
 import styles from './FeedbackForm.module.css'; 
 import api from '../Login/Api';
@@ -9,12 +9,29 @@ function SubmitFeedback({onViewPrevious}) {
     // State for all form fields
     const [eventId, setEventId] = useState("");
     //const [userId, setUserId] = useState("");
+    const [allEvents, setAllEvents] = useState([]);
+    const [isLoadingEvents, setIsLoadingEvents] = useState(true);
+
     const [overallExperience, setOverallExperience] = useState(0);
     const [contentQuality, setContentQuality] = useState(0);
     const [venueFacilities, setVenueFacilities] = useState(0);
     const [eventOrganization, setEventOrganization] = useState(0);
     const [valueForMoney, setValueForMoney] = useState(0);
     const [comments, setComments] = useState("");
+
+    useEffect(() => {
+        setIsLoadingEvents(true);
+        api.get(`/Feedbacks/GetBookedEventsByUserId/${userId}`) 
+            .then(response => {
+                setAllEvents(response.data);
+            })
+            .catch(err => {
+                console.error("Error fetching all events:", err);
+            })
+            .finally(() => {
+                setIsLoadingEvents(false);
+            });
+    }, [userId]);
 
     const handleRating = (rate, setter) => {
         setter(rate);
@@ -23,7 +40,7 @@ function SubmitFeedback({onViewPrevious}) {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!eventId) {
-            alert('Please enter an Event ID.');
+            alert('Please select an event.');
             return;
         }
         
@@ -77,8 +94,10 @@ function SubmitFeedback({onViewPrevious}) {
             })
             .catch(err => {
                 let errorMessage = "An error occurred.";
-
-                if (err.response && err.response.data && err.response.data.errors) {
+                if (err.response && typeof err.response.data === 'string') {
+                    errorMessage = err.response.data;
+                }
+                else if (err.response && err.response.data && err.response.data.errors) {
                     // This will find the first specific validation error
                     const errors = err.response.data.errors;
                     const errorKey = Object.keys(errors)[0]; // Get the first field name 
@@ -99,14 +118,24 @@ function SubmitFeedback({onViewPrevious}) {
             
             <form onSubmit={handleSubmit} className={styles.form}>
                 <div className={styles.inputGroup}>
-                    <label>Event ID:</label>
-                    <input
-                        type="number"
+                    <label>Event:</label>
+                    <select
                         value={eventId}
                         onChange={(e) => setEventId(e.target.value)}
-                        className={styles.inputField}
-                        placeholder="Enter Event ID"
-                    />
+                        className={styles.inputField} 
+                    >   
+                        {/* Default "loading" option */}
+                        <option value="">
+                            {isLoadingEvents ? "Loading events..." : "-- Select an event --"}
+                        </option>
+                        
+                        {/* Map over the events from the API */}
+                        {allEvents.map(event => (
+                            <option key={event.eventID} value={event.eventID}>
+                                {event.eventName} 
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 
                 <label className={styles.heading}>Overall Experience</label>

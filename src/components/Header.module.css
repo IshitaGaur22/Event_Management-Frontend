@@ -1,11 +1,11 @@
-/* Import variables from your main App.css */
+
 @import '../App.css';
 
 .header {
   width: 100%;
-  /* 1. SET THE DARK BACKGROUND */
+  /* DARK BACKGROUND */
   background-color: var(--simba-brown-dark);
-  border-bottom: 1px solid var(--simba-brown-dark); /* Dark border */
+  border-bottom: 1px solid var(--simba-brown-dark); 
   box-shadow: var(--shadow-light);
   position: sticky;
   top: 0;
@@ -19,7 +19,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1rem; /* 12px 16px */
+  padding: 1rem 1rem; 
 }
 
 /* --- Left: Logo & Title --- */
@@ -42,8 +42,7 @@
   font-family: var(--font-primary);
   font-weight: 700;
   font-size: 1.25rem; 
-  /* 2. Make text light */
-  color: var(--simba-off-white); /* Use brand color */
+  color: var(--simba-off-white); 
   padding-bottom: 2px;
 }
 
@@ -51,12 +50,12 @@
 .profileContainer {
   display: flex;
   align-items: center;
-  gap: 0.75rem; /* 12px space */
+  gap: 0.75rem;
 }
 
 .profileIcon {
-  width: 2.5rem; /* 40px */
-  height: 2.5rem; /* 40px */
+  width: 2.5rem;
+  height: 2.5rem; 
   border-radius: 9999px; /* full circle */
   background-color: var(--simba-off-white);
   border: 1px solid var(--simba-light-grey);
@@ -67,12 +66,12 @@
 }
 
 .profileIcon svg {
-  width: 1.5rem; /* 24px */
-  height: 1.5rem; /* 24px */
+  width: 1.5rem; 
+  height: 1.5rem; 
   color: var(--simba-text-medium);
 }
 
-/* --- New Logout Button Style --- */
+/* --- Logout Button --- */
 .logoutButton {
   font-family: var(--font-primary);
   font-weight: 500;
@@ -82,7 +81,6 @@
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   
-  /* 4. Make logout a "call to action" button */
   background-color: var(--simba-orange-dark);
   color: var(--simba-white);
   border: 1px solid var(--simba-orange-dark);
@@ -94,22 +92,21 @@
   box-shadow: var(--shadow-light);
 }
 
-/* NEW: A container for all items on the right */
 .rightContainer {
   display: flex;
   align-items: center;
-  gap: 0.75rem; /* 12px */
+  gap: 0.75rem; 
 }
 
-/* --- NEW: Style for the Notification Bell --- */
+/* --- Notification Bell --- */
 .notificationBell {
   background-color: var(--simba-off-white);
   border: 1px solid var(--simba-light-grey);
   color: var(--simba-text-dark);
-  font-size: 1.1rem; /* Bell icon size */
-  width: 2.5rem; /* 40px */
-  height: 2.5rem; /* 40px */
-  border-radius: 50%; /* Circle */
+  font-size: 1.1rem; 
+  width: 2.5rem; 
+  height: 2.5rem; 
+  border-radius: 50%; 
   padding: 0;
   display: flex;
   align-items: center;
@@ -122,7 +119,7 @@
   border-color: #ccc;
 }
 
-/* --- ADD THIS to your DARK MODE section at the bottom --- */
+/* DARK MODE  --- */
 
 html[data-theme='dark'] .notificationBell {
   background-color: var(--simba-light-grey);
@@ -135,8 +132,6 @@ html[data-theme='dark'] .notificationBell:hover {
 html[data-theme='dark'] .header {
   background-color: var(--simba-white);
 }
-
-
 
 html[data-theme='dark'] .logoText {
   color: rgb(218, 218, 189);

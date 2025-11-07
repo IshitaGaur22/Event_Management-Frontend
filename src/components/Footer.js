@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Footer.module.css';
-import SimbaLogo from '../images/simba-dark.png'; // Use your logo
+import SimbaLogo from '../images/simba-dark.png'; 
 
 const Footer = () => {
   return (
