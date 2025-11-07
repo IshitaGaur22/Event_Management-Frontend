@@ -1,14 +1,14 @@
 .modalBackdrop {
-    position: fixed; /* Sits on top of all other content */
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    background-color: rgba(0, 0, 0, 0.5); 
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Ensures it's on top */
+    z-index: 1000; 
 }
 
 .modalContent {
@@ -18,7 +18,7 @@
     box-shadow: var(--shadow-medium);
     width: 90%;
     max-width: 400px;
-    position: relative; /* For positioning the close button */
+    position: relative; 
 }
 
 .modalContent h2 {
@@ -57,20 +57,17 @@
 .closeButton:hover {
     color: var(--simba-text-medium);
 }
-/* ... (all your existing styles: .modalBackdrop, etc.) ... */
 
-/* Widen the modal */
 .modalContent {
     background-color: var(--simba-white);
     padding: 25px 35px;
     border-radius: var(--radius-soft);
     box-shadow: var(--shadow-medium);
     width: 90%;
-    max-width: 550px; /* <-- Widen from 400px to 500px */
+    max-width: 550px; 
     position: relative;
 }
 
-/* ... (styles for .summaryItem, .starRating, .closeButton) ... */
 
 .chartContainer {
     margin-top: 25px;
