@@ -1,10 +1,10 @@
 import axios from "axios";
- 
+
 // Create a new axios instance
 const api = axios.create({
   baseURL: "https://localhost:7283/api", // Your Event API URL
 });
- 
+
 // This is an "interceptor" that adds the token to *every* request
 api.interceptors.request.use(
   (config) => {
@@ -18,5 +18,5 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
- 
+
 export default api;

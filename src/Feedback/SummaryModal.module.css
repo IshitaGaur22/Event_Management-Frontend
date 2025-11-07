@@ -1,0 +1,83 @@
+.modalBackdrop {
+    position: fixed; /* Sits on top of all other content */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensures it's on top */
+}
+
+.modalContent {
+    background-color: var(--simba-white);
+    padding: 25px 35px;
+    border-radius: var(--radius-soft);
+    box-shadow: var(--shadow-medium);
+    width: 90%;
+    max-width: 400px;
+    position: relative; /* For positioning the close button */
+}
+
+.modalContent h2 {
+    margin-top: 0;
+    color: var(--simba-brown-dark);
+    text-align: center;
+}
+
+.summaryItem {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1em;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--simba-light-grey);
+}
+
+.summaryItem span {
+    font-weight: 600;
+}
+
+.starRating {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    color: var(--simba-light-grey);
+    cursor: pointer;
+}
+.closeButton:hover {
+    color: var(--simba-text-medium);
+}
+/* ... (all your existing styles: .modalBackdrop, etc.) ... */
+
+/* Widen the modal */
+.modalContent {
+    background-color: var(--simba-white);
+    padding: 25px 35px;
+    border-radius: var(--radius-soft);
+    box-shadow: var(--shadow-medium);
+    width: 90%;
+    max-width: 550px; /* <-- Widen from 400px to 500px */
+    position: relative;
+}
+
+/* ... (styles for .summaryItem, .starRating, .closeButton) ... */
+
+.chartContainer {
+    margin-top: 25px;
+}
+.chartContainer h4 {
+    text-align: center;
+    color: var(--simba-text-medium);
+    margin-bottom: 15px;
+    font-weight: 500;
+}

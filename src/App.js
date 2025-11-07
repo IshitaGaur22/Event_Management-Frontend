@@ -1,4 +1,8 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import React, { useState , useEffect} from 'react';
+import './App.css';
+import FeedbackAdmin from './Feedback/FeedbackAdmin';
+import SubmitFeedback from './Feedback/SubmitFeedback';
+import { BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import GetBookings from './Booking/GetBookings';
@@ -16,8 +20,24 @@ import BookingConfirmationPage from './Booking/BookingConfirmationPage';
 import Login from './Login/Login'
 import ProtectedRoute from './Login/ProtectedRoute';
 import UserDashboard from './Dashboard/UserDashboard';
+import Login from './Login/Login';
+import { useAuth } from './AuthContext'; 
+import Footer from './components/Footer';
 
-function App() {
+function AppContent() {
+  const [showList, setShowList] = useState(false);
+  const toggleView = () => {
+    setShowList(prevShowList => !prevShowList);
+  };
+  
+  const { token, theme, role } = useAuth();
+  useEffect(() => {
+    if (role === 'Organiser') {
+      setShowList(true); // If Organiser, default to the admin list
+    } else {
+      setShowList(false); // If User (or logged out), default to the submit form
+    }
+  }, [role]);
   return (
     <Router>
       <div className="min-h-screen bg-simba-off-white font-poppins text-simba-text-dark">
