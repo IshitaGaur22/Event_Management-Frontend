@@ -10,7 +10,7 @@ function BookTicketsForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    bookTickets(selectedSeats, userName, eventId)
+    bookTickets(selectedSeats, eventId)
       .then(() => {
         alert('Booking successful!');
         navigate('/');

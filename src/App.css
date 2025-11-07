@@ -1,38 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+--font-primary: 'Poppins', sans-serif;
+--simba-brown-dark: #6C4234;
+--simba-orange-dark: #C27040;
+--simba-orange-light: #E0914A;
+--simba-white: #FFFFFF;
+--simba-off-white: #F8F9FA;
+--simba-light-grey: #DEE2E6;
+--simba-text-dark: #212529;
+--simba-text-medium: #495057;
+
+--shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.12);
+--radius-soft: 8px;
+--radius-round: 25px;
+}
+
+/* --- Base Styles --- */
+
+body {
+margin: 0;
+font-family: var(--font-primary);
+background-color: var(--simba-off-white);
+color: var(--simba-text-dark);
+line-height: 1.5;
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+text-align: center;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+padding: 20px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-start;
 }
 
-.App-link {
-  color: #61dafb;
+h1, h2, h3 {
+color: var(--simba-brown-dark);
+font-weight: 600;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.logo {
+width: 100px;
+height: auto;
+margin-bottom: 20px;
+}
+
+/* --- Header Component Styles (.simba-header) --- */
+.simba-header {
+width: 100%;
+position: sticky;
+top: 0;
+z-index: 10;
+background-color: var(--simba-off-white);
+box-shadow: var(--shadow-medium);
+transition: box-shadow 0.3s ease;
+}
+
+.header-container {
+max-width: 1280px; /* Max width equivalent */
+margin: 0 auto;
+padding: 12px 16px; /* Default mobile padding */
+}
+
+.header-content {
+display: flex;
+justify-content: space-between;
+align-items: center;
+height: 64px;
+}
+
+/* Logo Section */
+.logo-section {
+display: flex;
+align-items: center;
+gap: 2px;
+cursor: pointer;
+transition: transform 0.2s ease;
+}
+
+.logo-section:hover {
+transform: scale(1.03);
+}
+
+/* The image placeholder from the React component */
+.logo-icon {
+width: 120px; /* Ensure image size is consistent with icon size */
+height: auto;
+/* If using a vector icon, you'd use 'color: var(--simba-orange-light);' */
+}
+
+.logo-text {
+font-size: 1.5rem;
+font-weight: 600;
+letter-spacing: 0.05em;
+text-transform: uppercase;
+color: var(--simba-brown-dark);
+display: none; /* Hidden by default on mobile */
+}
+
+/* Responsive rule: Show logo text on screens >= 640px */
+@media (min-width: 640px) {
+.logo-text {
+display: block;
+}
+}
+
+/* Profile Group and Button */
+.profile-group {
+display: flex;
+align-items: center;
+}
+
+.profile-button {
+margin-left: 24px;
+padding: 8px;
+border: none;
+outline: none;
+cursor: pointer;
+background-color: var(--simba-brown-dark);
+border-radius: var(--radius-round);
+box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+color: var(--simba-off-white); /* Icon color */
+transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.profile-button:hover {
+background-color: var(--simba-orange-dark);
+transform: scale(1.05);
+}
+
+.profile-button:focus {
+/* Accessibility focus ring */
+box-shadow: 0 0 0 4px var(--simba-orange-light);
+}
+
+/* --- Navigation Styles (.nav-links) --- */
+.nav-links {
+display: none; /* Hidden by default */
+gap: 24px;
+}
+
+.nav-links a {
+text-decoration: none;
+color: var(--simba-text-medium);
+font-weight: 500;
+padding: 8px 0;
+transition: color 0.15s ease;
+}
+
+.nav-links a:hover {
+color: var(--simba-orange-dark);
+}
+
+/* Responsive rule: Show navigation links on screens >= 768px */
+@media (min-width: 768px) {
+.nav-links {
+display: flex;
+align-items: center;
+}
+}
+
+/* --- Global App Navigation Styles (.app-nav) --- */
+.app-nav {
+padding: 8px;
+background-color: #f8f9fa; /* Light grey background for nav */
+border-bottom: 1px solid var(--simba-light-grey);
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+}
+
+.nav-link {
+margin: 4px 10px;
+padding: 8px 12px;
+text-decoration: none;
+color: var(--simba-text-medium);
+font-weight: 500;
+border-radius: 4px;
+transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-link:hover {
+background-color: var(--simba-light-grey);
+color: var(--simba-brown-dark);
+}
+
+.nav-link.active {
+background-color: var(--simba-orange-light);
+color: var(--simba-white);
+font-weight: 600;
+}
+
+/* --- Page Content Styles --- */
+.page-content {
+padding: 2rem;
+max-width: 1280px;
+margin: 0 auto;
+}
+
+.page-card {
+background-color: var(--simba-white);
+padding: 2rem;
+border-radius: var(--radius-soft);
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+min-height: 50vh;
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
 }

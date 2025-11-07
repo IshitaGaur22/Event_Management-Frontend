@@ -1,37 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
+import { FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
+import emLogo from "../emLogo.png";
+import '../App.css';
 
-const Header = ({ location }) => {
+const Header = () => {
+  // This component assumes all necessary CSS classes (simba-header, logo-section, profile-button, etc.)
+  // and CSS variables are defined in the external file imported as '../App.css'.
+  
   return (
-    <header className="w-full shadow-sm border-b bg-white">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
-        
-        {/* Left: Logo */}
-        <div className="flex items-center space-x-2">
-          <img src="./emLogo.png" alt="Logo" className="w-8 h-8" />
-          <span className="font-bold text-lg">SIMBA</span>
-        </div>
+    <header className="simba-header">
+      <div className="header-container">
+        <div className="header-content">
+          
+          {/* Logo Section (Extreme Left) */}
+          <div className="logo-section">
+            {/* Renders the image imported from emLogo.png */}
+            <img src={emLogo} alt="Simba Logo" className="logo-icon" />
+            <span className="logo-text">
+              Simba Events
+            </span>
+          </div>
 
-        {/* Center: Location (hidden on small screens) */}
-        {/* <div className="hidden md:flex flex-col text-sm">
-          <span className="font-semibold">{location.city}</span>
-          <span className="text-gray-500">{location.state}</span>
-        </div> */}
+          {/* Navigation/Profile Section (Extreme Right) */}
+          <div className="profile-group">
+            
+            {/* Simple Navigation Placeholder */}
+            {/* <nav className="nav-links">
+              <a href="#">Products</a>
+              <a href="#">About</a>
+              <a href="#">Contact</a>
+            </nav> */}
 
-        {/* Right: Profile Icon */}
-        <div>
-          <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center">
-            <img src="/profile.jpg" alt="Profile" />
+            {/* Profile Icon/Button */}
+            <button 
+              className="profile-button"
+              onClick={() => console.log('Profile clicked')}
+              aria-label="User Profile"
+            >
+              {/* Uses the imported icon from react-icons/fa */}
+              <FaUserCircle size={24} />
+            </button>
+            
           </div>
         </div>
       </div>
-
-      {/* Mobile: Location below header */}
-      {/* <div className="md:hidden px-4 pb-2 text-sm">
-        <span className="font-semibold">{location.city}</span>,{" "}
-        <span className="text-gray-500">{location.state}</span>
-      </div> */}
     </header>
   );
 };
 
 export default Header;
+
+
+// create the header of the website having logo in left and profile icon on right. the colors are given in app.css as follows-
+// :root {
+//   --font-primary: 'Poppins', sans-serif;
+//   --simba-brown-dark: #6C4234;
+//   --simba-orange-dark: #C27040;
+//   --simba-orange-light: #E0914A;
+//   --simba-white: #FFFFFF;
+//   --simba-off-white: #F8F9FA;
+//   --simba-light-grey: #DEE2E6;
+//   --simba-text-dark: #212529;
+//   --simba-text-medium: #495057;
+ 
+//   --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.12);
+//   --radius-soft: 8px;
+//   --radius-round: 25px;
+// }
+// keep is responsive and bg of header light cause the logo is dark
