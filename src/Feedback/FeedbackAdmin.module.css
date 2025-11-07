@@ -1,5 +1,3 @@
-/* This single file now styles the Admin Panel, Filter, and Top Events */
-
 .adminContainer {
     width: 95%;
     max-width: 1400px;
@@ -11,6 +9,8 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    background: var(--simba-bg-gradient);
+    border: 1px solid var(--simba-white);
 }
 
 .adminContainer h2 {
@@ -20,17 +20,22 @@
 }
 
 /* --- Back Button --- */
+
 .backButton {
     align-self: flex-start;
-    background-color: var(--simba-white);
+    font-family: var(--font-primary);
+    font-weight: 600;
     border: 1px solid var(--simba-light-grey);
-    color: var(--simba-text-medium);
     border-radius: var(--radius-round);
-    font-size: 0.9em;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    background-color: var(--simba-off-white);
+    color: var(--simba-text-medium);
 }
 .backButton:hover {
-    background-color: var(--simba-off-white);
-    color: var(--simba-brown-dark);
+    background-color: var(--simba-orange-light);
+    color: var(--simba-white);
 }
 
 /* --- Stats Container (Top Events) --- */
@@ -101,16 +106,25 @@
 }
 .filterForm button[type="submit"]:hover {
     background-color: var(--simba-orange-light);
+    cursor: pointer;
 }
 .filterForm button[type="button"] {
     background-color: var(--simba-light-grey);
     color: var(--simba-text-medium);
 }
 .filterForm button[type="button"]:hover {
-    background-color: #E9ECEF;
+    background-color: var(--simba-white);
+    cursor: pointer;
 }
 
 /* --- Feedback Table --- */
+.tableWrapper {
+    width: 100%;
+    overflow-x: auto; 
+    margin-top: 1rem;
+}
+
+
 .feedbackTable {
     width: 100%;
     border-collapse: collapse;
@@ -142,7 +156,7 @@
 }
 
 .feedbackTable tbody tr:hover {
-    background-color: #f0f4f7;
+    background-color: var(--simba-hover-light);
 }
 
 .commentCell {
@@ -182,6 +196,7 @@
 }
 .actionsCell button:not(:disabled):hover {
     background-color: var(--simba-orange-dark);
+    cursor: pointer;
 }
 
 /* Archive/Unarchive Buttons */
@@ -191,6 +206,7 @@
 }
 .archiveButton:hover {
     background-color: #C82333;
+    cursor: pointer;
 }
 .unarchiveButton {
     background-color: #28A745;
@@ -254,9 +270,9 @@
 }
 /* --- Responsive Table --- */
 /* Desktop Styles */
-@media (min-width: 768px) {
+@media (min-width: 800px) {
   .container {
-    max-width: 800px; /* Or 900px, your choice */
+    max-width: 1000px; /* Or 900px, your choice */
   }
 
   .grid {

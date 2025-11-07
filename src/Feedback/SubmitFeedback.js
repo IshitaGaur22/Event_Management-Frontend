@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Rating } from 'react-simple-star-rating'; 
 import styles from './FeedbackForm.module.css'; 
-
+import api from '../Login/Api';
+import { useAuth } from '../AuthContext';
 
 function SubmitFeedback({onViewPrevious}) {
+    const { userId } = useAuth();
     // State for all form fields
     const [eventId, setEventId] = useState("");
-    const [userId, setUserId] = useState("");
+    //const [userId, setUserId] = useState("");
     const [overallExperience, setOverallExperience] = useState(0);
     const [contentQuality, setContentQuality] = useState(0);
     const [venueFacilities, setVenueFacilities] = useState(0);
@@ -25,10 +26,7 @@ function SubmitFeedback({onViewPrevious}) {
             alert('Please enter an Event ID.');
             return;
         }
-        if (!userId) {
-            alert('Please enter a User ID.');
-            return;
-        }
+        
         if (overallExperience === 0) {
             alert('Please provide an "Overall Experience" rating.');
             return;
@@ -65,11 +63,11 @@ function SubmitFeedback({onViewPrevious}) {
         };
 
         // API Call
-        axios.post('https://localhost:7283/api/Feedbacks/SubmitFeedback', feedbackData)
+        api.post('/Feedbacks/SubmitFeedback', feedbackData)
             .then(response => {
                 alert('Thank you! Your feedback has been submitted.');
                 setEventId("");
-                setUserId("");
+                //setUserId("");
                 setOverallExperience(0);
                 setContentQuality(0);
                 setVenueFacilities(0);
@@ -78,25 +76,20 @@ function SubmitFeedback({onViewPrevious}) {
                 setComments("");
             })
             .catch(err => {
-            // --- START: UPDATED ERROR HANDLING ---
                 let errorMessage = "An error occurred.";
 
                 if (err.response && err.response.data && err.response.data.errors) {
-                    // This will find the *first* specific validation error
-                    // e.g., "The Rating field must be between 1 and 5."
-                    // or "The Comments field must be a string with a minimum length of 10."
-                    
+                    // This will find the first specific validation error
                     const errors = err.response.data.errors;
-                    const errorKey = Object.keys(errors)[0]; // Get the first field name (e.g., "Rating")
+                    const errorKey = Object.keys(errors)[0]; // Get the first field name 
                     errorMessage = errors[errorKey][0];     // Get the first error message for that field
-                
-                } else if (err.response && err.response.data && err.response.data.title) {
+                } 
+                else if (err.response && err.response.data && err.response.data.title) {
                     // Fallback for the generic message
                     errorMessage = err.response.data.title;
                 }
 
                 alert(`Error: ${errorMessage}`);
-                // --- END: UPDATED ERROR HANDLING ---
             });
         };
 
@@ -115,22 +108,13 @@ function SubmitFeedback({onViewPrevious}) {
                         placeholder="Enter Event ID"
                     />
                 </div>
-                <div className={styles.inputGroup}>
-                    <label>User ID:</label>
-                    <input
-                        type="number"
-                        value={userId}
-                        onChange={(e) => setUserId(e.target.value)}
-                        className={styles.inputField}
-                        placeholder="Enter User ID"
-                    />
-                </div>
+                
                 <label className={styles.heading}>Overall Experience</label>
                 <div className={styles.starRating}>
                     <Rating
                         onClick={(rate) => handleRating(rate, setOverallExperience)}
                         initialValue={overallExperience}
-                        size={30}
+                        size={40}
                     />
                 </div>
 
@@ -138,19 +122,19 @@ function SubmitFeedback({onViewPrevious}) {
                 <div className={styles.ratingGrid}> 
                     <div className={styles.ratingGridRow}>
                         <label>Content Quality</label>
-                        <Rating onClick={(rate) => handleRating(rate, setContentQuality)} initialValue={contentQuality} size={20} />
+                        <Rating onClick={(rate) => handleRating(rate, setContentQuality)} initialValue={contentQuality} size={23} />
                     </div>
                     <div className={styles.ratingGridRow}>
                         <label>Venue & Facilities</label>
-                        <Rating onClick={(rate) => handleRating(rate, setVenueFacilities)} initialValue={venueFacilities} size={20} />
+                        <Rating onClick={(rate) => handleRating(rate, setVenueFacilities)} initialValue={venueFacilities} size={23} />
                     </div>
                     <div className={styles.ratingGridRow}>
                         <label>Event Organization</label>
-                        <Rating onClick={(rate) => handleRating(rate, setEventOrganization)} initialValue={eventOrganization} size={20} />
+                        <Rating onClick={(rate) => handleRating(rate, setEventOrganization)} initialValue={eventOrganization} size={23} />
                     </div>
                     <div className={styles.ratingGridRow}>
                         <label>Value for Money</label>
-                        <Rating onClick={(rate) => handleRating(rate, setValueForMoney)} initialValue={valueForMoney} size={20} />
+                        <Rating onClick={(rate) => handleRating(rate, setValueForMoney)} initialValue={valueForMoney} size={23} />
                     </div>
                 </div>
 

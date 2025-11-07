@@ -57,3 +57,27 @@
 .closeButton:hover {
     color: var(--simba-text-medium);
 }
+/* ... (all your existing styles: .modalBackdrop, etc.) ... */
+
+/* Widen the modal */
+.modalContent {
+    background-color: var(--simba-white);
+    padding: 25px 35px;
+    border-radius: var(--radius-soft);
+    box-shadow: var(--shadow-medium);
+    width: 90%;
+    max-width: 550px; /* <-- Widen from 400px to 500px */
+    position: relative;
+}
+
+/* ... (styles for .summaryItem, .starRating, .closeButton) ... */
+
+.chartContainer {
+    margin-top: 25px;
+}
+.chartContainer h4 {
+    text-align: center;
+    color: var(--simba-text-medium);
+    margin-bottom: 15px;
+    font-weight: 500;
+}

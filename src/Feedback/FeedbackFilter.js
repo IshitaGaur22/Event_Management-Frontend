@@ -11,13 +11,13 @@ function FeedbackFilter({
     onFilterSubmit, onClearFilters 
 }) {
 
-    // This now just tells the parent to filter
+    // tells the parent to filter
     const handleSubmit = (e) => {
         e.preventDefault();
         onFilterSubmit();
     };
 
-    // This now just tells the parent to clear
+    // tells the parent to clear
     const handleClear = () => {
         onClearFilters();
     };
@@ -34,16 +34,16 @@ function FeedbackFilter({
                 <input
                     type="number"
                     placeholder="Min Rating (1-5)"
-                    value={filterMinRating} // Use value from props
-                    onChange={e => setFilterMinRating(e.target.value)} // Call setter from props
+                    value={filterMinRating} 
+                    onChange={e => setFilterMinRating(e.target.value)} 
                     min="1"
                     max="5"
                 />
                 <input
                     type="text"
                     placeholder="Search in comments..."
-                    value={filterSearch} // Use value from props
-                    onChange={e => setFilterSearch(e.target.value)} // Call setter from props
+                    value={filterSearch} 
+                    onChange={e => setFilterSearch(e.target.value)} 
                 />
 
                 <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
