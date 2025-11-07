@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import SimbaLogo from '../images/SimbaLogo.png'; // Make sure this path is correct
+import SimbaLogo from '../images/simba-dark.png'; // Make sure this path is correct
 import styles from './Header.module.css';
 import { useAuth } from '../AuthContext'; // 1. Make sure this path is correct
 

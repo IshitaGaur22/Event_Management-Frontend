@@ -2,7 +2,7 @@ import React, { useState , useEffect} from 'react';
 import './App.css';
 import FeedbackAdmin from './Feedback/FeedbackAdmin';
 import SubmitFeedback from './Feedback/SubmitFeedback';
-import { BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink} from 'react-router-dom';
 import GetBookings from './Booking/GetBookings';
 import BookTicketsForm from './Booking/BookTicketsForm';
 import UpdateBookingForm from './Booking/UpdateBookingForm';
@@ -25,9 +25,9 @@ function AppContent() {
   const { token, theme, role } = useAuth();
   useEffect(() => {
     if (role === 'Organiser') {
-      setShowList(true); // If Organiser, default to the admin list
+      setShowList(true); // If Organiser, go to the previous feedbacks directly
     } else {
-      setShowList(false); // If User (or logged out), default to the submit form
+      setShowList(false); // If User, go to the submit feedback form
     }
   }, [role]);
   return (
@@ -36,14 +36,14 @@ function AppContent() {
       {/* Show nav only if logged in */}
       {token && (
         <nav className="main-nav">
-          <Link to="/" style={{ margin: '10px' }}>Bookings</Link>
-          <Link to="/add" style={{ margin: '10px' }}>Book Tickets</Link>
-          <Link to="/search" style={{ margin: '10px' }}>Search</Link>
-          <Link to="/availability" style={{ margin: '10px' }}>Seat Availability</Link>
-          <Link to="/top-events" style={{ margin: '10px' }}>Top Events</Link>
-          <Link to="/payment" style={{ margin: '10px' }}>Payment</Link>
-          <Link to="/update-completed" style={{ margin: '10px' }}>Update Completed</Link>
-          <Link to="/feedback" style={{ margin: '10px' }}>Feedback</Link>
+          <NavLink to="/" style={{ margin: '10px' }}>Bookings</NavLink>
+          <NavLink to="/add" style={{ margin: '10px' }}>Book Tickets</NavLink>
+          <NavLink to="/search" style={{ margin: '10px' }}>Search</NavLink>
+          <NavLink to="/availability" style={{ margin: '10px' }}>Seat Availability</NavLink>
+          <NavLink to="/top-events" style={{ margin: '10px' }}>Top Events</NavLink>
+          <NavLink to="/payment" style={{ margin: '10px' }}>Payment</NavLink>
+          <NavLink to="/update-completed" style={{ margin: '10px' }}>Update Completed</NavLink>
+          <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
         </nav>
       )}
 
@@ -53,7 +53,7 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         
         {/* --- Protected Routes --- */}
-        {/* If 'token' exists, it shows the page. If not, it shows <Login />. */}
+        {/* If token exists, it shows the page. If not, it shows Login page. */}
         
         <Route path="/" element={token ? <GetBookings /> : <Login />} />
         <Route path="/add" element={token ? <BookTicketsForm /> : <Login />} />
@@ -71,7 +71,7 @@ function AppContent() {
           } 
         />
         
-        {/* A catch-all route that redirects to login if no token */}
+        {/* Go to login if no token */}
         <Route path="*" element={token ? <GetBookings /> : <Login />} />
       </Routes>
       </main>

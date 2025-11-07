@@ -62,7 +62,7 @@ h1, h2, h3 {
   --simba-light-grey: #3b3b3b;      /* borders / subtle separators */
   --simba-text-dark: #F5F5F5;       /* primary text color on dark bg */
   --simba-text-medium: #CFCFCF;     /* secondary text color */
-  --simba-brown-dark: #bda69c;      /* brand brown adjusted for contrast */
+  --simba-brown-dark: #9a857b;      /* brand brown adjusted for contrast */
   --simba-orange-dark: #be5e0a;     /* brand accent for buttons in dark */
   --simba-orange-light: #c17634;    /* lighter accent */
   --simba-bg-light: #0b0b0b;
@@ -109,9 +109,17 @@ body {
   text-decoration: none;
   font-weight: 500;
   color: var(--simba-text-medium);
+  padding-bottom: 5px; /* Add space for the border */
+  border-bottom: 2px solid transparent; 
+  transition: all 0.2s ease-in-out;
 }
 .main-nav a:hover {
   color: var(--simba-orange-dark);
+}
+.main-nav a.active {
+  color: var(--simba-orange-dark);
+  font-weight: 600;
+  border-bottom-color: var(--simba-orange-dark); /* Highlight with border */
 }
 
 html[data-theme='dark'] .main-nav {
@@ -122,5 +130,9 @@ html[data-theme='dark'] .main-nav a {
   color: var(--simba-off-white);
 }
 html[data-theme='dark'] .main-nav a:hover {
-  color: var(--simba-orange-dark);
+  color: rgb(97, 94, 94);
+}
+html[data-theme='dark'] .main-nav a.active {
+  color: var(--simba-white);
+  border-bottom-color: var(--simba-orange-dark);
 }

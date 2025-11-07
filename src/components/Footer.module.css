@@ -92,19 +92,15 @@
 }
 
 /* --- DARK MODE STYLES --- */
-body[data-theme='dark'] .footer {
-  background-color: var(--simba-white);
+html[data-theme='dark'] .legalText {
+  color: var(--simba-off-white);
 }
 
-body[data-theme='dark'] .footerLogo span {
-  color: var(--simba-orange-light);
+html[data-theme='dark'] .footerLinks a {
+  color: var(--simba-off-white);
 }
-
-body[data-theme='dark'] .footerLinks a {
-  color: var(--simba-text-medium);
-}
-body[data-theme='dark'] .footerLinks a:hover {
-  color: var(--simba-orange-light);
+html[data-theme='dark'] .footerLinks a:hover {
+  color: var(--simba-light-grey);
 }
 
 body[data-theme='dark'] .footerBottom {
@@ -114,9 +110,6 @@ body[data-theme='dark'] .legalText {
   color: var(--simba-text-medium);
 }
 
-body[data-theme='dark'] .socialIcons a {
-  color: var(--simba-text-dark);
-}
-body[data-theme='dark'] .socialIcons a:hover {
-  color: var(--simba-orange-light);
+html[data-theme='dark'] .socialIcons a:hover {
+  color: var(--simba-light-grey);
 }
