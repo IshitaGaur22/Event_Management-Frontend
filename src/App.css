@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,58 @@
   to {
     transform: rotate(360deg);
   }
+} */
+
+
+ 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+ 
+ 
+:root {
+  --font-primary: 'Poppins', sans-serif;
+  --simba-brown-dark: #6C4234;
+  --simba-orange-dark: #C27040;
+  --simba-orange-light: #E0914A;
+  --simba-white: #FFFFFF;
+  --simba-off-white: #F8F9FA;
+  --simba-light-grey: #DEE2E6;
+  --simba-text-dark: #212529;
+  --simba-text-medium: #495057;
+ 
+  --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.12);
+  --radius-soft: 8px;
+  --radius-round: 25px;
 }
+ 
+body {
+  margin: 0;
+  font-family: var(--font-primary);
+  background-color: var(--simba-off-white); /* Light bg for the whole page */
+  color: var(--simba-text-dark);
+}
+ 
+.App {
+  text-align: center;
+}
+ 
+.App-header {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+ 
+ 
+h1, h2, h3 {
+  color: var(--simba-brown-dark);
+  font-weight: 600;
+}
+ 
+ 
+.logo {
+  width: 100px;
+  height: auto;
+  margin-bottom: 20px;
+}
+ 
