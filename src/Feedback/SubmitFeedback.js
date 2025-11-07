@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Rating } from 'react-simple-star-rating'; 
 import styles from './FeedbackForm.module.css'; 
 import api from '../Login/Api';
+import { useAuth } from '../AuthContext';
 
 function SubmitFeedback({onViewPrevious}) {
+    const { userId } = useAuth();
     // State for all form fields
     const [eventId, setEventId] = useState("");
-    const [userId, setUserId] = useState("");
+    //const [userId, setUserId] = useState("");
     const [overallExperience, setOverallExperience] = useState(0);
     const [contentQuality, setContentQuality] = useState(0);
     const [venueFacilities, setVenueFacilities] = useState(0);
@@ -24,10 +26,7 @@ function SubmitFeedback({onViewPrevious}) {
             alert('Please enter an Event ID.');
             return;
         }
-        if (!userId) {
-            alert('Please enter a User ID.');
-            return;
-        }
+        
         if (overallExperience === 0) {
             alert('Please provide an "Overall Experience" rating.');
             return;
@@ -68,7 +67,7 @@ function SubmitFeedback({onViewPrevious}) {
             .then(response => {
                 alert('Thank you! Your feedback has been submitted.');
                 setEventId("");
-                setUserId("");
+                //setUserId("");
                 setOverallExperience(0);
                 setContentQuality(0);
                 setVenueFacilities(0);
@@ -109,16 +108,7 @@ function SubmitFeedback({onViewPrevious}) {
                         placeholder="Enter Event ID"
                     />
                 </div>
-                <div className={styles.inputGroup}>
-                    <label>User ID:</label>
-                    <input
-                        type="number"
-                        value={userId}
-                        onChange={(e) => setUserId(e.target.value)}
-                        className={styles.inputField}
-                        placeholder="Enter User ID"
-                    />
-                </div>
+                
                 <label className={styles.heading}>Overall Experience</label>
                 <div className={styles.starRating}>
                     <Rating

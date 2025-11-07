@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -12,15 +12,16 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      // Call your NEW Users/login endpoint
       const response = await axios.post(
         "https://localhost:7283/api/Users/login", 
         { email, password }
       );
       
-      const { token, role } = response.data;
+      const { token, role, userId } = response.data;
       
       // Use the AuthContext to save the login state
-      login(token, role);
+      login(token, role, userId);
 
       // Navigate home
       navigate("/");

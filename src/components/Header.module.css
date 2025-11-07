@@ -17,7 +17,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.2rem 1rem; /* 12px 16px */
+  padding: 1rem 1rem; /* 12px 16px */
 }
 
 /* --- Left: Logo & Title --- */
@@ -29,8 +29,8 @@
 }
 
 .logo {
-  width: 80px ;
-  height: 80px;
+  width: 60px ;
+  height: 60px;
 }
 
 .logoText {
@@ -86,4 +86,66 @@
   /* Fills in on hover */
   background-color: var(--simba-orange-dark);
   color: var(--simba-white);
+}
+
+/* ... (your existing .header, .headerContent, .logoContainer, etc. styles) ... */
+
+/* NEW: A container for all items on the right */
+.rightContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* 12px */
+}
+
+/* ... (all your existing styles) ... */
+
+/* --- NEW: Style for the Notification Bell --- */
+.notificationBell {
+  background-color: var(--simba-off-white);
+  border: 1px solid var(--simba-light-grey);
+  color: var(--simba-text-dark);
+  font-size: 1.1rem; /* Bell icon size */
+  width: 2.5rem; /* 40px */
+  height: 2.5rem; /* 40px */
+  border-radius: 50%; /* Circle */
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  cursor: pointer;
+}
+.notificationBell:hover {
+  background-color: var(--simba-light-grey);
+  border-color: #ccc;
+}
+
+/* --- ADD THIS to your DARK MODE section at the bottom --- */
+
+body[data-theme='dark'] .notificationBell {
+  background-color: var(--simba-off-white);
+  border-color: var(--simba-light-grey);
+}
+body[data-theme='dark'] .notificationBell:hover {
+  background-color: var(--simba-light-grey);
+}
+/* NEW: Style for the theme toggle button */
+.themeToggle {
+  background-color: var(--simba-off-white);
+  border: 1px solid var(--simba-light-grey);
+  color: var(--simba-text-dark);
+  font-size: 1.25rem; /* Makes the emoji bigger */
+  width: 2.5rem; /* 40px */
+  height: 2.5rem; /* 40px */
+  border-radius: 50%; /* Make it a circle */
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  cursor: pointer;
+}
+.themeToggle:hover {
+  background-color: var(--simba-light-grey);
+  border-color: #ccc;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import './App.css';
 import FeedbackAdmin from './Feedback/FeedbackAdmin';
 import SubmitFeedback from './Feedback/SubmitFeedback';
@@ -13,7 +13,8 @@ import PaymentDetails from './Booking/PaymentDetails';
 import UpdateCompleted from './Booking/UpdateCompleted';
 import Header from './components/Header';
 import Login from './Login/Login';
-import { useAuth } from './Login/AuthContext'; 
+import { useAuth } from './AuthContext'; 
+import Footer from './components/Footer';
 
 function AppContent() {
   const [showList, setShowList] = useState(false);
@@ -21,16 +22,20 @@ function AppContent() {
     setShowList(prevShowList => !prevShowList);
   };
   
-  const { token} = useAuth(); 
- 
+  const { token, theme, role } = useAuth();
+  useEffect(() => {
+    if (role === 'Organiser') {
+      setShowList(true); // If Organiser, default to the admin list
+    } else {
+      setShowList(false); // If User (or logged out), default to the submit form
+    }
+  }, [role]);
   return (
-    <div className="App">
+    <div className="App" data-theme={theme}>
       <Header />
-      
-      
       {/* Show nav only if logged in */}
       {token && (
-        <nav style={{ padding: '10px', background: '#f0f0f0' }}>
+        <nav className="main-nav">
           <Link to="/" style={{ margin: '10px' }}>Bookings</Link>
           <Link to="/add" style={{ margin: '10px' }}>Book Tickets</Link>
           <Link to="/search" style={{ margin: '10px' }}>Search</Link>
@@ -41,13 +46,13 @@ function AppContent() {
           <Link to="/feedback" style={{ margin: '10px' }}>Feedback</Link>
         </nav>
       )}
-      
+
+      <main className="main-content">
       <Routes>
         {/* --- Public Routes --- */}
         <Route path="/login" element={<Login />} />
         
         {/* --- Protected Routes --- */}
-        {/* This structure protects all your pages. */}
         {/* If 'token' exists, it shows the page. If not, it shows <Login />. */}
         
         <Route path="/" element={token ? <GetBookings /> : <Login />} />
@@ -69,6 +74,8 @@ function AppContent() {
         {/* A catch-all route that redirects to login if no token */}
         <Route path="*" element={token ? <GetBookings /> : <Login />} />
       </Routes>
+      </main>
+      <Footer />
     </div>
   );
 }

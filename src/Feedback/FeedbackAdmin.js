@@ -3,7 +3,7 @@ import styles from './FeedbackAdmin.module.css';
 import GetTopEvents from './TopEvents';
 import FeedbackFilter from './FeedbackFilter';
 import SummaryModal from './SummaryModal';
-import { useAuth } from '../Login/AuthContext';
+import { useAuth } from '../AuthContext';
 import api from '../Login/Api';
 
 
@@ -156,9 +156,11 @@ function FeedbackAdmin({onShowForm}) {
 
     return (
         <div className={styles.adminContainer}>
+            {role === 'User' && (
             <button className={styles.backButton} onClick={onShowForm}>
                 ← Back to Submit Feedback
             </button>
+            )}
             <h2>Feedbacks</h2>
                 {/* 2. Add the toggle button */}
                 <button 

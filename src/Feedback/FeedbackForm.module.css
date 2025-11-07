@@ -125,8 +125,22 @@
   border: 1px solid var(--simba-light-grey);
 }
 .secondaryButton:hover {
-  background-color: #E9ECEF;
+  background-color: var(--simba-white);
   border-color: #ccc;
+}
+
+html[data-theme='dark'] .inputField:focus,
+html[data-theme='dark'] .textarea:focus {
+  border-color: var(--simba-orange-light) !important;
+  box-shadow: 0 0 0 3px rgba(189,166,156,0.16) !important;
+  outline: none;
+  background-color: var(--simba-brown-dark) !important;
+  color: var(--simba-text-dark) !important;
+  caret-color: var(--simba-text-dark) !important;
+}
+:global(body[data-theme='dark']) .inputField::placeholder,
+:global(body[data-theme='dark']) .textarea::placeholder {
+  color: var(--simba-text-medium) !important;
 }
 
 @media (min-width: 768px) {
