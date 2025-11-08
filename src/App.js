@@ -50,7 +50,7 @@ function AppContent() {
   useEffect(() => {
     setShowList(isOrganiser);
   }, [isOrganiser, token]);
- 
+
   /**
    * This component handles all root redirects.
    * It sends logged-out users to /login.
@@ -97,7 +97,7 @@ function AppContent() {
           {/* --- Public Route --- */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
- 
+
           {/* --- Home/Redirector --- */}
           <Route path="/" element={<HomeRedirect />} />
  

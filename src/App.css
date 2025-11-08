@@ -14,7 +14,7 @@
   --simba-text-medium: #495057;
   --simba-hover-light: #F1F3F5;
 
-  --simba-bg-light: #FFFBF5; /* A very light, warm cream color from your logo */
+  --simba-bg-light: #FFFBF5; 
   --simba-bg-gradient: linear-gradient(50deg, #FFFBF5 0%, #FFFFFF 95%);
 
   --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.12);
@@ -25,7 +25,7 @@
 body {
   margin: 0;
   font-family: var(--font-primary);
-  background-color: var(--simba-off-white); /* Light bg for the whole page */
+  background-color: var(--simba-off-white); 
   color: var(--simba-text-dark);
 }
 
@@ -54,12 +54,11 @@ h1, h2, h3 {
   margin-bottom: 20px;
 }
 
-/* --- NEW: Dark Mode Palette --- */
+/* ---  Dark Mode Palette --- */
 :root[data-theme='dark'] {
-  /* Inverted surface / text variables for dark mode */
   --simba-white: #121212;           /* primary surfaces (cards, header bg) */
   --simba-off-white: #202020;       /* secondary surfaces / page bg */
-  --simba-light-grey: #3b3b3b;      /* borders / subtle separators */
+  --simba-light-grey: #474747;      /* borders / subtle separators */
   --simba-text-dark: #F5F5F5;       /* primary text color on dark bg */
   --simba-text-medium: #CFCFCF;     /* secondary text color */
   --simba-brown-dark: #9a857b;      /* brand brown adjusted for contrast */
@@ -69,21 +68,19 @@ h1, h2, h3 {
   --simba-bg-gradient: linear-gradient(50deg, #080808 0%, #121212 95%);
   --simba-brown-medium: rgba(255,255,255,0.06);
   --simba-hover-light: rgba(255, 255, 255, 0.1);
-  /* Shadows slightly stronger on dark mode */
+ 
   --shadow-medium: 0 6px 20px rgba(0, 0, 0, 0.65);
   --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.55);
 
-  /* Radii remain the same */
   --radius-soft: 8px;
   --radius-round: 25px;
 }
 
 
-/* This makes the color switch smooth */
 body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
-/* This makes the footer stick to the bottom */
+
 .App {
   display: flex;
   flex-direction: column;
@@ -109,7 +106,7 @@ body {
   text-decoration: none;
   font-weight: 500;
   color: var(--simba-text-medium);
-  padding: 8px; /* Add space for the border */
+  padding: 8px; 
   border-bottom: 2px solid transparent; 
   transition: all 0.2s ease-in-out;
 }
@@ -119,7 +116,7 @@ body {
 .main-nav a.active {
   color: var(--simba-orange-dark);
   font-weight: 600;
-  border-bottom-color: var(--simba-orange-dark); /* Highlight with border */
+  border-bottom-color: var(--simba-orange-dark); 
 }
 
 html[data-theme='dark'] .main-nav {
