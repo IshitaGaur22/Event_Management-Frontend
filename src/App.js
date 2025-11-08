@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './Login/Login';
+import Signup from './Login/Signup';
 import { useAuth } from './AuthContext';
 
 // --- ORGANISER PAGES ---
@@ -48,7 +49,7 @@ function AppContent() {
   // Effect to set initial Feedback view based on role
   useEffect(() => {
     setShowList(isOrganiser);
-  }, [isOrganiser]);
+  }, [isOrganiser, token]);
 
   /**
    * This component handles all root redirects.
@@ -95,6 +96,7 @@ function AppContent() {
         <Routes>
           {/* --- Public Route --- */}
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
           {/* --- Home/Redirector --- */}
           <Route path="/" element={<HomeRedirect />} />

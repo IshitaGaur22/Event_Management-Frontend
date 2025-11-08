@@ -104,10 +104,9 @@ function SubmitFeedback({onViewPrevious}) {
                     errorMessage = errors[errorKey][0];     // Get the first error message for that field
                 } 
                 else if (err.response && err.response.data && err.response.data.title) {
-                    // Fallback for the generic message
+                    // generic message
                     errorMessage = err.response.data.title;
                 }
-
                 alert(`Error: ${errorMessage}`);
             });
         };

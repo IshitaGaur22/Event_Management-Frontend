@@ -1,13 +1,10 @@
 import React from 'react';
 import styles from './SummaryModal.module.css'; 
-import { Rating } from 'react-simple-star-rating'; 
 import BarChart from './BarChart';
 
 function SummaryModal({ data, onClose }) {
     if (!data) return null;
 
-    const ratingValue = data.averageRating *20;
-    
     return (
         <div className={styles.modalBackdrop} onClick={onClose}>
             <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
@@ -25,13 +22,6 @@ function SummaryModal({ data, onClose }) {
                     <span>{data.averageRating.toFixed(2)} / 5</span>
                 </div>
 
-                <div className={styles.starRating}>
-                    <Rating 
-                        rating={ratingValue} 
-                        readonly={true} 
-                        size={30} 
-                    />
-                </div>
                 <div className={styles.chartContainer}>
                     <h4>Rating Distribution</h4>
                     <BarChart chartData={data.ratingDistribution} />
