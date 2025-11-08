@@ -1,143 +1,120 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import api from '../Login/Api' 
-import styles from '../Feedback/FeedbackForm.module.css'; 
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
+import "./mainn.css";
 
 const Signup = () => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        userName: '',
-        email: '',
-        password: '',
-        role: '', 
-        phoneNumber: '',
-        location: ''
-    });
-    const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("User");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [location, setLocation] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!userName || !email || !password || !phoneNumber || !location) {
+      setError("Please fill out all required fields.");
+      return;
+    }
+
+    const dataToSend = {
+      userName,
+      email,
+      password,
+      role,
+      phoneNumber: parseInt(phoneNumber, 10),
+      location,
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
+    try {
+      await axios.post("https://localhost:7283/api/Users/register", dataToSend);
+      alert("Registration successful! Please log in.");
+      navigate("/login");
+    } catch (err) {
+      if (err.response && err.response.data) {
+        if (err.response.data.error) setError(err.response.data.error);
+        else if (err.response.data.errors) {
+          const firstError = Object.values(err.response.data.errors)[0];
+          setError(firstError[0]);
+        } else setError("Registration failed. Please try again.");
+      } else setError("Network error. Please check your connection.");
+    }
+  };
 
-        if (!formData.email.endsWith('@gmail.com')) {
-            setError('Email must be a valid @gmail.com address.');
-            return;
-        }
-        if (formData.phoneNumber.length !== 10) {
-            setError('Phone number must be exactly 10 digits.');
-            return;
-        }
+  return (
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2>Create Your Account</h2>
+        {error && <div className="auth-error">{error}</div>}
 
-        try {
-            // Convert phoneNumber to a number 
-            const dataToSend = {
-                ...formData,
-                phoneNumber: parseInt(formData.phoneNumber, 10)
-            };
+        <form onSubmit={handleSubmit}>
+          <label>Full Name</label>
+          <input
+            type="text"
+            placeholder="Enter your name"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            required
+          />
 
-            await api.post('/Users/register', dataToSend);
-            
-            alert('Registration successful! Please login.');
-            navigate('/login');
+          <label>Email Address</label>
+          <input
+            type="email"
+            placeholder="you@gmail.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        } catch (err) {
-            // backend validation errors
-            if (err.response && err.response.data) {
-                 // Email already exists
-                 if (err.response.data.error) {
-                     setError(err.response.data.error);
-                 } 
-                 // general validation error 
-                 else if (err.response.data.errors) {
-                     const firstError = Object.values(err.response.data.errors)[0];
-                     setError(firstError);
-                 } else {
-                     setError('Registration failed. Please try again.');
-                 }
-            } else {
-                setError('An error occurred. Please check your connection.');
-            }
-        }
-    };
+          <label>Password</label>
+          <input
+            type="password"
+            placeholder="Create a strong password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-    return (
-        <div className={styles.container} style={{ maxWidth: '400px', marginTop: '50px' }}>
-            <h2>Sign Up</h2>
-            {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
-            
-            <form onSubmit={handleSubmit} className={styles.form}>
-                <input
-                    name="userName"
-                    placeholder="Full Name"
-                    value={formData.userName}
-                    onChange={handleChange}
-                    className={styles.inputField}
-                    required
-                />
-                <input
-                    name="email"
-                    type="email"
-                    placeholder="Email (@gmail.com)"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={styles.inputField}
-                    required
-                />
-                <input
-                    name="password"
-                    type="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={styles.inputField}
-                    required
-                />
-                <select
-                    name="role"
-                    value={formData.role}
-                    onChange={handleChange}
-                    className={styles.inputField}
-                    style={{ backgroundColor: 'var(--simba-white)' }}
-                >
-                    <option value="">-- Select Role --</option>
-                    <option value="User">User</option>
-                    <option value="Organiser">Organiser</option>
-                </select>
-                <input
-                    name="phoneNumber"
-                    type="number"
-                    placeholder="Phone Number (10 digits)"
-                    value={formData.phoneNumber}
-                    onChange={handleChange}
-                    className={styles.inputField}
-                    required
-                />
-                <input
-                    name="location"
-                    placeholder="Location (City)"
-                    value={formData.location}
-                    onChange={handleChange}
-                    className={styles.inputField}
-                    required
-                />
+          <label>Role</label>
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="User">User</option>
+            <option value="Organiser">Organiser</option>
+          </select>
 
-                <button type="submit" className={styles.primaryButton}>
-                    Create Account
-                </button>
+          <label>Phone Number</label>
+          <input
+            type="tel"
+            placeholder="10 digits"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            required
+          />
 
-                <p style={{ textAlign: 'center', marginTop: '1rem' }}>
-                    Already have an account? <Link to="/login" style={{ color: 'var(--simba-orange-dark)' }}>Login here</Link>
-                </p>
-            </form>
-        </div>
-    );
+          <label>Location</label>
+          <input
+            type="text"
+            placeholder="City or area"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            required
+          />
+
+          <button type="submit">Create Account</button>
+        </form>
+
+        <p className="auth-footer-text">
+          Already have an account?{" "}
+          <Link to="/login">Login here</Link>
+        </p>
+      </div>
+    </div>
+  );
 };
 
 export default Signup;

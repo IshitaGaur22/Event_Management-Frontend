@@ -3,20 +3,20 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+ 
 // --- CORE & AUTH ---
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './Login/Login';
 import Signup from './Login/Signup';
 import { useAuth } from './AuthContext';
-
+ 
 // --- ORGANISER PAGES ---
 import Dashboard from './OrganiserDashboard/Dashboard';
 import CreateEventForm from './OrganiserDashboard/CreateEventForm';
 import UpdateEventPage from './OrganiserDashboard/UpdateEventPage';
 import EventDetails from './OrganiserDashboard/EventDetails';
-
+ 
 // --- USER PAGES ---
 import UserDashboard from './Dashboard/UserDashboard';
 import GetBookings from './Booking/GetBookings';
@@ -27,11 +27,11 @@ import SeatAvailability from './Booking/SeatAvailability';
 import TopEvents from './Booking/TopEvents';
 import PaymentDetails from './Booking/PaymentDetails';
 import UpdateCompleted from './Booking/UpdateCompleted';
-
+ 
 // --- SHARED PAGES ---
 import FeedbackAdmin from './Feedback/FeedbackAdmin';
 import SubmitFeedback from './Feedback/SubmitFeedback';
-
+ 
 /**
  * This component is the main router and layout.
  * It's inside <Router> so it can use hooks like useAuth.
@@ -39,7 +39,7 @@ import SubmitFeedback from './Feedback/SubmitFeedback';
 function AppContent() {
   const { token, theme, role } = useAuth();
   const isOrganiser = role === 'Organiser';
-
+ 
   // --- State for Feedback Page Toggle ---
   const [showList, setShowList] = useState(false);
   const toggleView = () => {
@@ -60,11 +60,11 @@ function AppContent() {
     if (!token) {
       return <Navigate to="/login" replace />;
     }
-    return isOrganiser ? 
-      <Navigate to="/organiser-dashboard" replace /> : 
+    return isOrganiser ?
+      <Navigate to="/organiser-dashboard" replace /> :
       <Navigate to="/user-dashboard" replace />;
   };
-
+ 
   return (
     <div className="App" data-theme={theme}>
       <Header />
@@ -127,7 +127,7 @@ function AppContent() {
                   <Route path="/update-completed" element={<UpdateCompleted />} />
                 </>
               )}
-              
+             
               {/* --- SHARED FEEDBACK ROUTE --- */}
               <Route
                 path="/feedback"
@@ -140,7 +140,7 @@ function AppContent() {
              /* --- If no token, all other paths redirect to login --- */
             <Route path="*" element={<Navigate to="/login" replace />} />
           )}
-
+ 
           {/* --- Final catch-all if logged in but route doesn't exist --- */}
            <Route path="*" element={<HomeRedirect />} />
         </Routes>
@@ -150,7 +150,7 @@ function AppContent() {
   );
 }
  
-
+ 
 function App() {
   return (
     <Router>
@@ -158,5 +158,6 @@ function App() {
     </Router>
   );
 }
+ 
  
 export default App;
