@@ -245,8 +245,9 @@ html[data-theme='dark'] .dashboard-container p {
   
 }
 html[data-theme='dark'] .dashboard-container {
-  background-color: var(--simba-dark);
+  background-color: #1f1f1f;
   border: #333;
+  box-shadow: 0 4px 8px #5e5e5e;
 }
 html[data-theme='dark'] .category-card {
   box-shadow: 0 4px 8px rgba(255, 255, 255, 0.05);
