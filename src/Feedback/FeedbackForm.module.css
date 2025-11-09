@@ -12,6 +12,7 @@
   border: 1px solid var(--simba-white);
   will-change: opacity, transform;
   animation: fadeInUp 300ms cubic-bezier(.2,.8,.2,1) both;
+  animation-delay: 40ms;
 }
 
 .container h2 {
