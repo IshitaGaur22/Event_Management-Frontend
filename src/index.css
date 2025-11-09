@@ -81,11 +81,6 @@ code {
 }
 
 
-.login-landing .container > *,
-.authBackground .container > * {
-  background: rgba(18,18,18,0.45); padding: 18px; border-radius: 12px; 
-}
-
 
 @media (prefers-reduced-motion: reduce) {
   .login-landing,
@@ -98,7 +93,6 @@ code {
 .authBackground {
   flex-direction: column;
   gap: 20px;
-  padding-top: 40px;
   padding-bottom: 40px;
   align-items: center;
   justify-content: center;
@@ -116,7 +110,7 @@ code {
 
 .authBackground .welcome-box h1 {
   margin: 0 0 6px 0;
-  font-size: 1.9rem;
+  font-size: 2.6rem;
   line-height: 1.05;
   color: inherit;
 }
@@ -163,6 +157,41 @@ html[data-theme='dark'] .container.auth-card {
   color: var(--simba-off-white);
 }
 
+
+/* Make typed input and react-select text lighter in dark mode */
+html[data-theme='dark'] .auth-card input,
+html[data-theme='dark'] .auth-card textarea,
+html[data-theme='dark'] .auth-card select,
+html[data-theme='dark'] .auth-card .inputField, /* CSS module inputs */
+html[data-theme='dark'] .auth-card .react-select__single-value,
+html[data-theme='dark'] .auth-card .react-select__input,
+html[data-theme='dark'] .auth-card .react-select__value-container,
+html[data-theme='dark'] .auth-card .react-select__control,
+html[data-theme='dark'] .auth-card .react-select__control .react-select__value-container input {
+  color: rgba(255,255,255,0.92) !important; /* lighter typed text */
+}
+
+/* Lighter placeholder color */
+html[data-theme='dark'] .auth-card input::placeholder,
+html[data-theme='dark'] .auth-card textarea::placeholder,
+html[data-theme='dark'] .auth-card .react-select__placeholder {
+  color: rgba(255,255,255,0.65) !important;
+}
+
+/* Dropdown/menu items */
+html[data-theme='dark'] .auth-card .react-select__menu,
+html[data-theme='dark'] .auth-card .react-select__menu-list,
+html[data-theme='dark'] .auth-card .react-select__option {
+  background: rgba(18, 18, 18, 0.167);
+  color: rgba(255,255,255,0.92) !important;
+}
+
+/* Focused / selected option contrast */
+html[data-theme='dark'] .auth-card .react-select__option--is-focused,
+html[data-theme='dark'] .auth-card .react-select__option--is-selected {
+  background: rgba(255, 255, 255, 0.342);
+  color: rgba(255,255,255,0.96) !important;
+}
 
 html[data-theme='dark'] .auth-card input,
 html[data-theme='dark'] .auth-card textarea,
@@ -221,6 +250,92 @@ html[data-theme='dark'] .auth-card .react-select__menu {
   border: 1px solid rgba(255,255,255,0.06);
 }
 
+
+html[data-theme='dark'] .auth-card .react-select__control,
+html[data-theme='dark'] .auth-card .react-select__control--menu-is-open {
+  background: rgba(114, 114, 114, 0.854);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: var(--simba-light-grey);
+  box-shadow: none;
+}
+
+
+html[data-theme='dark'] .auth-card .react-select__control--is-focused {
+  box-shadow: 0 8px 22px rgba(193,112,64,0.12);
+  border-color: rgba(193,112,64,0.35);
+}
+
+/* Placeholder / single value color */
+html[data-theme='dark'] .auth-card .react-select__placeholder,
+html[data-theme='dark'] .auth-card .react-select__single-value {
+  color: rgba(255,255,255,0.9);
+}
+
+/* Menu (dropdown) appearance — also target global menu if not rendered inside card) */
+html[data-theme='dark'] .auth-card .react-select__menu,
+html[data-theme='dark'] .react-select__menu {
+  background: rgba(18,18,18,0.96);
+  color: var(--simba-off-white);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+  z-index: 9999;
+}
+
+/* Menu list padding */
+html[data-theme='dark'] .auth-card .react-select__menu-list,
+html[data-theme='dark'] .react-select__menu-list {
+  padding: 6px 4px;
+}
+
+/* Options */
+html[data-theme='dark'] .auth-card .react-select__option,
+html[data-theme='dark'] .react-select__option {
+  background: transparent;
+  color: var(--simba-off-white);
+  padding: 8px 12px;
+}
+
+/* Hover / focused option */
+html[data-theme='dark'] .auth-card .react-select__option--is-focused,
+html[data-theme='dark'] .react-select__option--is-focused {
+  background: rgba(255,255,255,0.04);
+  color: var(--simba-off-white);
+}
+
+/* Selected option */
+html[data-theme='dark'] .auth-card .react-select__option--is-selected,
+html[data-theme='dark'] .react-select__option--is-selected {
+  background: rgba(193,112,64,0.18);
+  color: #111;
+}
+
+/* Indicator / dropdown arrow color */
+html[data-theme='dark'] .auth-card .react-select__indicator,
+html[data-theme='dark'] .react-select__indicator {
+  color: rgba(255,255,255,0.86);
+}
+
+/* Ensure any portal-mounted menus get proper color when dark */
+html[data-theme='dark'] .react-select__menu--portal {
+  background: rgba(18,18,18,0.96);
+  color: var(--simba-off-white);
+}
+
+/* Optional: smooth transitions */
+.react-select__control,
+.react-select__menu,
+.react-select__option {
+  transition: background-color 180ms ease, color 160ms ease, box-shadow 200ms ease;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .react-select__control,
+  .react-select__menu,
+  .react-select__option {
+    transition: none !important;
+  }
+}
 
 @media (max-width: 480px) {
   .authBackground .welcome-box h1 { font-size: 1.4rem; }

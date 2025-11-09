@@ -3,8 +3,7 @@
 
 .header {
   width: 100%;
-  /* DARK BACKGROUND */
-  background-color: var(--simba-brown-dark);
+  background: linear-gradient(135deg, #6C4234 0%, #8B5A3C 50%, #6C4234 100%);
   border-bottom: 1px solid var(--simba-brown-dark); 
   box-shadow: var(--shadow-light);
   position: sticky;
@@ -12,6 +11,7 @@
   z-index: 50;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
+
 
 .headerContent {
   max-width: 80rem; 
@@ -130,8 +130,10 @@ html[data-theme='dark'] .notificationBell:hover {
 }
 
 html[data-theme='dark'] .header {
-  background-color: var(--simba-white);
+  background: linear-gradient(135deg, var(--simba-white) 0%, var(--simba-light-grey) 50%, var(--simba-white) 100%);
+  border-bottom: 1px solid var(--simba-white); 
 }
+
 
 html[data-theme='dark'] .logoText {
   color: rgb(218, 218, 189);

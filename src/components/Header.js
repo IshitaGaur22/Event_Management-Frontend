@@ -27,16 +27,11 @@ const Header = () => {
           <span className={styles.logoText}>SIMBA Events</span>
         </Link>
 
-        {/* 3. Create a new container for right-side items */}
         <div className={styles.rightContainer}>
-          
-          {/* 4. Add the Theme Toggle Button */}
           <button onClick={toggleTheme} className={styles.themeToggle}>
-            {/* Show a moon for light mode, sun for dark mode */}
             {theme === 'light' ? '🌙' : '☀️'}
           </button>
           
-          {/* This part is the same */}
           {token && (
             
             <div className={styles.profileContainer}>
@@ -45,7 +40,7 @@ const Header = () => {
                 className={styles.notificationBell}
                 aria-label="View notifications"
                 >
-                <i className="fas fa-bell"></i> {/* Font Awesome Bell Icon */}
+                <i className="fas fa-bell"></i> 
               </button>
               <div className={styles.profileIcon}>
                 <svg fill="currentColor" viewBox="0 0 20 20">
