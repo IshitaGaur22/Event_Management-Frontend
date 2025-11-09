@@ -19,8 +19,8 @@ const GetEventById = async (id) => {
         date: apiData.eventDate,
         time: apiData.eventTime,
         organiser: apiData.organizer,
-        images: apiData.images || [],
-        // title: apiData.eventName
+        imagePath: apiData.imagePath,
+        images: apiData.images || []
     }
   } catch (error) {
     console.error(`Error fetching event ${id}:`, error);

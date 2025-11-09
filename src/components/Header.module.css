@@ -1,16 +1,18 @@
 /* Import variables from your main App.css */
 @import '../App.css';
-
+ 
 .header {
   width: 100%;
-  background-color: var(--simba-white);
-  border-bottom: 1px solid var(--simba-light-grey);
-  box-shadow: var(--shadow-light); /* Use the soft shadow */
-  position: sticky; /* Makes the header stay at the top */
+  /* 1. SET THE DARK BACKGROUND */
+  background-color: var(--simba-brown-dark);
+  border-bottom: 1px solid var(--simba-brown-dark); /* Dark border */
+  box-shadow: var(--shadow-light);
+  position: sticky;
   top: 0;
   z-index: 50;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
-
+ 
 .headerContent {
   max-width: 80rem; /* Same as Tailwind's max-w-7xl */
   margin: 0 auto;
@@ -19,35 +21,39 @@
   justify-content: space-between;
   padding: 1rem 1rem; /* 12px 16px */
 }
-
+ 
 /* --- Left: Logo & Title --- */
 .logoContainer {
   display: flex;
   align-items: center;
-  gap: 0.75rem; /* 12px space */
-  text-decoration: none; /* Removes underline from link */
+  gap: 0.75rem; 
+  text-decoration: none;
+  transition: opacity 0.2s ease; 
 }
-
+.logoContainer:hover {
+  opacity: 0.8;
+}
 .logo {
   width: 60px ;
   height: 60px;
 }
-
+ 
 .logoText {
   font-family: var(--font-primary);
   font-weight: 700;
-  font-size: 1.25rem; /* 20px */
-  color: var(--simba-brown-dark); /* Use your brand color */
-  padding-bottom: 2px; /* Small adjustment for font alignment */
+  font-size: 1.25rem; 
+  /* 2. Make text light */
+  color: var(--simba-off-white); /* Use brand color */
+  padding-bottom: 2px;
 }
-
+ 
 /* --- Right: Profile & Logout --- */
 .profileContainer {
   display: flex;
   align-items: center;
   gap: 0.75rem; /* 12px space */
 }
-
+ 
 .profileIcon {
   width: 2.5rem; /* 40px */
   height: 2.5rem; /* 40px */
@@ -59,46 +65,41 @@
   justify-content: center;
   overflow: hidden;
 }
-
+ 
 .profileIcon svg {
   width: 1.5rem; /* 24px */
   height: 1.5rem; /* 24px */
   color: var(--simba-text-medium);
 }
-
+ 
 /* --- New Logout Button Style --- */
 .logoutButton {
   font-family: var(--font-primary);
   font-weight: 500;
   font-size: 0.9em;
-  padding: 0.5rem 1rem; /* 8px 16px */
+  padding: 0.5rem 1rem;
   border-radius: var(--radius-round);
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  
-  /* Branded "outline" style */
-  background-color: var(--simba-white);
-  color: var(--simba-orange-dark);
-  border: 1px solid var(--simba-orange-dark);
-}
-
-.logoutButton:hover {
-  /* Fills in on hover */
+  /* 4. Make logout a "call to action" button */
   background-color: var(--simba-orange-dark);
   color: var(--simba-white);
+  border: 1px solid var(--simba-orange-dark);
 }
-
-/* ... (your existing .header, .headerContent, .logoContainer, etc. styles) ... */
-
+ 
+.logoutButton:hover {
+  background-color: var(--simba-orange-light);
+  border-color: var(--simba-orange-light);
+  box-shadow: var(--shadow-light);
+}
+ 
 /* NEW: A container for all items on the right */
 .rightContainer {
   display: flex;
   align-items: center;
   gap: 0.75rem; /* 12px */
 }
-
-/* ... (all your existing styles) ... */
-
+ 
 /* --- NEW: Style for the Notification Bell --- */
 .notificationBell {
   background-color: var(--simba-off-white);
@@ -119,33 +120,80 @@
   background-color: var(--simba-light-grey);
   border-color: #ccc;
 }
-
+ 
 /* --- ADD THIS to your DARK MODE section at the bottom --- */
-
-body[data-theme='dark'] .notificationBell {
-  background-color: var(--simba-off-white);
+ 
+html[data-theme='dark'] .notificationBell {
+  background-color: var(--simba-light-grey);
   border-color: var(--simba-light-grey);
 }
-body[data-theme='dark'] .notificationBell:hover {
+html[data-theme='dark'] .notificationBell:hover {
+  background-color: var(--simba-text-dark);
+}
+ 
+html[data-theme='dark'] .header {
+  background-color: var(--simba-white);
+}
+ 
+ 
+html[data-theme='dark'] .logoText {
+  color: rgb(218, 218, 189);
+}
+ 
+html[data-theme='dark'] .profileIcon {
   background-color: var(--simba-light-grey);
+  border: 1px solid var(--simba-brown-medium);
+}
+ 
+html[data-theme='dark'] .profileIcon:hover{
+  color: var(--simba-dark);
+}
+ 
+html[data-theme='dark'] .themeToggle {
+  background-color: var(--simba-light-grey);
+  color: var(--simba-white);
+}
+ 
+html[data-theme='dark'] .themeToggle:hover {
+  background-color: var(--simba-text-dark);
+  color: var(--simba-white);
 }
 /* NEW: Style for the theme toggle button */
-.themeToggle {
-  background-color: var(--simba-off-white);
-  border: 1px solid var(--simba-light-grey);
-  color: var(--simba-text-dark);
-  font-size: 1.25rem; /* Makes the emoji bigger */
+.themeToggle,
+.notificationBell,
+.profileIcon {
   width: 2.5rem; /* 40px */
   height: 2.5rem; /* 40px */
-  border-radius: 50%; /* Make it a circle */
-  padding: 0;
+  border-radius: 50%; /* Circle */
+  /* 3. Make buttons blend with dark header */
+  background-color: #984e31; /* Lighter brown */
+  border: 1px solid var(--simba-brown-medium);
+  color: var(--simba-white); /* Light icon */
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 0;
+  padding: 0;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
-.themeToggle:hover {
-  background-color: var(--simba-light-grey);
-  border-color: #ccc;
+ 
+.themeToggle:hover,
+.notificationBell:hover,
+.profileIcon:hover {
+  background-color: var(--simba-orange-light);
+  border-color: var(--simba-off-white);
+  color: var(--simba-white);
+}
+ 
+.themeToggle {
+  font-size: 1.25rem; /* Emoji size */
+}
+.notificationBell {
+  font-size: 1.1rem; /* Bell icon size */
+}
+ 
+.profileIcon svg {
+  width: 1.5rem; /* 24px */
+  height: 1.5rem; /* 24px */
+  color: var(--simba-white); /* Light icon */
 }

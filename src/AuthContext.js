@@ -1,31 +1,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
-const AuthContext = createContext();
-
-export const AuthProvider = ({ children }) => {
-  // --- Your existing auth state ---
+ 
+const AuthContext = createContext(null);
+ 
+export function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [role, setRole] = useState(localStorage.getItem('role'));
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
-
-  // --- NEW: Theme State ---
-  // Get theme from storage, default to 'light'
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
-
-  // This effect runs when the theme state changes
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+ 
   useEffect(() => {
-    // Apply the theme to the <html> tag for CSS to use
     document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
   }, [theme]);
-
-  // --- NEW: Theme Toggle Function ---
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    localStorage.setItem('theme', newTheme);
-    setTheme(newTheme);
-  };
-
-  // --- Your existing auth functions ---
+ 
+  const toggleTheme = () => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+ 
+ 
   const login = (newToken, newRole, newUserId) => {
     localStorage.setItem('token', newToken);
     localStorage.setItem('role', newRole);
@@ -34,25 +24,20 @@ export const AuthProvider = ({ children }) => {
     setRole(newRole);
     setUserId(newUserId);
   };
-
+ 
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('userId');
-    // Also remove theme on logout
-    localStorage.removeItem('theme'); 
     setToken(null);
     setRole(null);
     setUserId(null);
-    setTheme('light'); // Reset to light
   };
-
-  // --- Provide theme and toggleTheme to the app ---
+ 
   return (
-    <AuthContext.Provider value={{ token, role, userId, theme, toggleTheme, login, logout }}>
+    <AuthContext.Provider value={{ token, role, userId, theme, setTheme, toggleTheme, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
-
+}
 export const useAuth = () => useContext(AuthContext);

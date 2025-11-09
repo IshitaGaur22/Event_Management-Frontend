@@ -1,80 +1,156 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './App.css';
+import { BrowserRouter as Router, Routes, Route, NavLink, Link } from 'react-router-dom';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// Booking & User Components
+// import BookingHistory from './BookingHistory/BookingHistory'; 
+// import NotificationTab from './BookingHistory/NotificationTab';
+import TopEvents from './Booking/TopEvents';
+import EventDetailsPage from './Booking/EventDetailsPage';
+import ReviewBookingPage from './Booking/ReviewBookingPage';
+import BookingConfirmationPage from './Booking/BookingConfirmationPage';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Login from './Login/Login';
+
+// Feedback Components
 import FeedbackAdmin from './Feedback/FeedbackAdmin';
 import SubmitFeedback from './Feedback/SubmitFeedback';
-import { BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import Header from './components/Header';
-import GetBookings from './Booking/GetBookings';
-import BookTicketsForm from './Booking/BookTicketsForm';
-import UpdateBookingForm from './Booking/UpdateBookingForm';
-import SearchByUsername from './Booking/SearchByUsername';
-import SeatAvailability from './Booking/SeatAvailability';
-import TopEvents from './Booking/TopEvents';
-import PaymentDetails from './Booking/PaymentDetails';
-import UpdateCompleted from './Booking/UpdateCompleted';
-import BookingPage from './Booking/EventDetailsPage';
-import ReviewBookingPage from './Booking/ReviewBookingPage';
-import BookingPageWrapper from './Booking/BookingWrapper';
-import BookingConfirmationPage from './Booking/BookingConfirmationPage';
-import ProtectedRoute from './Login/ProtectedRoute';
-import UserDashboard from './Dashboard/UserDashboard';
-import Login from './Login/Login';
-import { useAuth } from './AuthContext'; 
-import Footer from './components/Footer';
 
-function App() {
+// Organiser Components
+import Dashboard from './OrganiserDashboard/Dashboard';
+import CreateEventForm from './OrganiserDashboard/CreateEventForm';
+import UpdateEventPage from './OrganiserDashboard/UpdateEventPage';
+import EventDetails from './OrganiserDashboard/EventDetails';
+
+// Context & Services
+import { useAuth } from './AuthContext';
+// import { startConnection, onNotificationReceived } from './BookingHistory/SignalService';
+// import { NotificationContext } from './BookingHistory/NotificationContext';
+
+import UserDashboard from './Dashboard/UserDashboard';
+import { User } from 'lucide-react';
+
+function AppContent() {
+  const { token, theme, role } = useAuth();
+  // const { addNotification } = useContext(NotificationContext);
+  
+  // State and toggles for Feedback section
   const [showList, setShowList] = useState(false);
   const toggleView = () => {
     setShowList(prevShowList => !prevShowList);
   };
-  
-  const { token, theme, role } = useAuth();
+
+  // Effect to set initial view for Feedback based on user role
   useEffect(() => {
     if (role === 'Organiser') {
-      setShowList(true); // If Organiser, default to the admin list
+      setShowList(true); // If Organiser, go to the previous feedbacks directly
     } else {
-      setShowList(false); // If User (or logged out), default to the submit form
+      setShowList(false); // If User, go to the submit feedback form
     }
   }, [role]);
+
+  // Effect for SignalR connection and notifications
+  // useEffect(() => {
+  //   startConnection();
+  //   onNotificationReceived((notification) => {
+  //     addNotification(notification);
+  //     toast.info(notification.message, {
+  //       position: "top-right",
+  //       autoClose: 5000,
+  //     });
+  //   });
+  // }, []); // Run only once on mount
+
+  // Determine if the user is an Organiser
+  const isOrganiser = role === 'Organiser';
+
+  return (
+    <div className="App" data-theme={theme}>
+      <Header />
+      <ToastContainer />
+      {/* <UserDashboard /> */}
+
+      {/* Show nav only if logged in */}
+      {token && (
+        <nav className="main-nav">
+          {/* Organiser Navigation */}
+          {isOrganiser ? (
+            <>
+              <NavLink to="/dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
+              <NavLink to="/create-event" style={{ margin: '10px' }}>Create Event</NavLink>
+              {/* Note: /update-event and /event-details paths are typically navigated to from the Dashboard */}
+              <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
+              
+            </>
+          ) : (
+            /* User/Booking Navigation */
+            <>
+              <NavLink to="/user-dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
+              <NavLink to="/booking-history" style={{ margin: '10px' }}>Booking History</NavLink>
+              {/* <NavLink to="/Notification" style={{ margin: '10px' }}>Notification 🔔</NavLink> */}
+              <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
+              {/* <NavLink to="/check-event" style={{ margin: '10px' }}>Check Event</NavLink */}
+              <NavLink to="/top-events" style={{ margin: '10px' }}>Top Events</NavLink>
+            </>
+          )}
+        </nav>
+      )}
+
+      <main className="main-content">
+        <Routes>
+          {/* --- Public Route --- */}
+          <Route path="/login" element={<Login />} />
+
+          {/* --- Protected Routes --- */}
+          {/* If token exists, show the page. If not, show Login page. */}
+
+          {isOrganiser ? (
+            /* Organiser Routes */
+            <>
+              <Route path="/" element={token ? <Dashboard /> : <Login />} />
+              <Route path="/create-event" element={token ? <CreateEventForm /> : <Login />} />
+              <Route path="/update-event" element={token ? <UpdateEventPage /> : <Login />} />
+              <Route path="/event-details" element={token ? <EventDetails /> : <Login />} />
+            </>
+          ) : (
+            /* User/Booking Routes */
+            <>
+              <Route path="/" element={token ? <UserDashboard /> : <Login />} />
+              <Route path="/top-events" element={token ? <TopEvents /> : <Login />} />
+              {/* <Route path="/check-event" element={token ? <BookingWrapper /> : <Login />} /> */}
+              <Route path="/event/:eventId" element={<EventDetailsPage />} />
+              <Route path="/review-booking" element={<ReviewBookingPage />} />
+              <Route path="/booking-confirmation" element={<BookingConfirmationPage />} />
+              {/* <Route path="/booking-history" element={token ? <BookingHistory /> : <Login />} /> */}
+              {/* <Route path="/Notification" element={token ? <NotificationTab /> : <Login />} /> */}
+            </>
+          )}
+          
+          {/* Feedback Route (Shared but with role logic inside) */}
+          <Route 
+            path="/feedback" 
+            element={token ? 
+              (showList ? <FeedbackAdmin onShowForm={toggleView} /> : <SubmitFeedback onViewPrevious={toggleView} />
+              ) : <Login />
+            }
+          />
+
+          {/* Fallback Route: Go to the respective default view if no token, otherwise the default view (Booking or Dashboard) */}
+          <Route path="*" element={token ? (isOrganiser ? <Dashboard /> : <UserDashboard />) : <Login />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-simba-off-white font-poppins text-simba-text-dark">
-        <Header onLogoClick={() => window.location.href = '/'} />
-
-        <nav className="p-2 bg-gray-100 flex flex-wrap justify-center sm:justify-start border-b border-gray-300">
-          <Link to="/" className="m-2">Bookings</Link>
-          <Link to="/add" className="m-2">Book Tickets</Link>
-          <Link to="/search" className="m-2">Search</Link>
-          <Link to="/availability" className="m-2">Seat Availability</Link>
-          <Link to="/top-events" className="m-2">Top Events</Link>
-          <Link to="/payment" className="m-2">Payment</Link>
-          <Link to="/update-completed" className="m-2">Update Completed</Link>
-          <Link to="/check-event" className="m-2">Check Event</Link>
-          <Link to="/login" className="m-2">Login</Link>
-          <Link to="/dashboard" className="m-2">Dashboard</Link>
-        </nav>
-
-        <main className="p-4 max-w-7xl mx-auto">
-          <Routes>
-            <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
-            <Route path="/" element={<GetBookings />} />
-            <Route path="/add" element={<BookTicketsForm />} />
-            <Route path="/edit/:id" element={<UpdateBookingForm />} />
-            <Route path="/search" element={<SearchByUsername />} />
-            <Route path="/availability" element={<SeatAvailability />} />
-            <Route path="/top-events" element={<TopEvents />} />
-            <Route path="/payment" element={<PaymentDetails />} />
-            <Route path="/update-completed" element={<UpdateCompleted />} />
-            <Route path="/review-booking" element={<ReviewBookingPage />} />
-            <Route path="/event/:eventId" element={<BookingPage />} />
-            <Route path="/check-event" element={<BookingPageWrapper />} />
-            <Route path="/booking-confirmation" element={<BookingConfirmationPage />} />
-            <Route path="*" element={<h2>Page Not Found</h2>} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
-        </main>
-      </div>
+      <AppContent />
     </Router>
   );
 }
