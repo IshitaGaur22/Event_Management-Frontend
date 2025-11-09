@@ -119,7 +119,7 @@ const Signup = () => {
 
     return (
         <div className="authBackground">
-        <div className={styles.container} style={{ maxWidth: '400px', marginTop: '50px' }}>
+        <div className={`${styles.container} auth-card`} style={{ maxWidth: '400px', marginTop: '50px' }}>
             <h2>Sign Up</h2>
             {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
             

@@ -60,20 +60,18 @@ const Login = () => {
     };
 
     return (
-      <div>
-        <div className="welcome-box">
-        <h1>Welcome to <span>SIMBA Events</span></h1>
-        <p>Explore, manage, and create unforgettable experiences.</p>
+      <div className="authBackground">
+         <div className="welcome-box">
+         <h1>Welcome to <span>SIMBA Events</span></h1>
+         <p>Explore, manage, and create unforgettable experiences.</p>
         </div>
         
-        <div className={styles.container} style={{ maxWidth: '400px', marginTop: '50px' }}>
+        <div className={`${styles.container} auth-card`} style={{ maxWidth: '400px', marginTop: '50px' }}>
             <h2>Login</h2>
             {globalError && <p style={{ color: 'red', textAlign: 'center' }}>{globalError}</p>}
             
-            {/* Error messages are now inside the form */}
             <form onSubmit={handleLogin} className={styles.form}>
             
-                {/* Email error is right above its field */}
                 {errors.email && <small style={{ color: 'red', display: 'block', marginBottom: '5px' }}>{errors.email}</small>}
                 <input
                     value={email}
@@ -83,7 +81,6 @@ const Login = () => {
                     required
                 />
 
-                {/* Password error is right above its field */}
                 {errors.password && <small style={{ color: 'red', display: 'block', marginBottom: '5px', marginTop: '10px' }}>{errors.password}</small>}
                 <input
                     value={password}
