@@ -11,3 +11,40 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.react-select__control {
+  padding: 6px 8px !important;
+  font-size: 1em !important;
+  font-family: var(--font-primary) !important;
+  border: 1px solid var(--simba-light-grey) !important;
+  border-radius: var(--radius-soft) !important;
+  background-color: var(--simba-off-white) !important;
+  box-shadow: none !important; /* Remove default blue glow */
+  transition: all 0.2s ease !important;
+}
+
+/* This targets the focused state */
+.react-select__control--is-focused {
+  border-color: var(--simba-orange-light) !important;
+  box-shadow: 0 0 0 3px rgba(224, 145, 74, 0.2) !important;
+  outline: none !important;
+}
+
+/* Styles the placeholder text */
+.react-select__placeholder {
+  color: #6c757d !important; /* A standard placeholder color */
+}
+
+/* Styles the dropdown menu */
+.react-select__menu {
+  font-family: var(--font-primary) !important;
+  border-radius: var(--radius-soft) !important;
+}
+
+[data-theme='dark'] .react-select__menu {
+  background-color: #6c757d;
+  border-color: var(--simba-text-dark) !important;
+  color: var(--simba-off-white) !important;
+}
+
+

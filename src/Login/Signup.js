@@ -1,120 +1,200 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
-import "./mainn.css";
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import api from '../Login/Api';
+import styles from '../Feedback/FeedbackForm.module.css';
+import { toast } from 'react-toastify';
+import Select from 'react-select';
+
+export const indianCities = [
+  "Mumbai",
+  "Delhi",
+  "Bangalore",
+  "Hyderabad",
+  "Ahmedabad",
+  "Chennai",
+  "Kolkata",
+  "Surat",
+  "Pune",
+  "Jaipur",
+  "Lucknow",
+  "Kanpur",
+  "Nagpur",
+  "Indore",
+  "Thane",
+  "Bhopal",
+  "Visakhapatnam",
+  "Patna",
+  "Vadodara",
+  "Ghaziabad",
+  "Ludhiana",
+  "Agra",
+  "Nashik",
+  "Faridabad",
+  "Meerut",
+  "Rajkot",
+  "Varanasi",
+  "Srinagar",
+  "Amritsar",
+  "Bhubaneswar",
+  "Chandigarh",
+  "Coimbatore",
+  "Guwahati",
+  "Jodhpur",
+  "Kochi",
+  "Mysore"
+];
+
+const cityOptions = indianCities.map(city => ({
+  value: city,
+  label: city
+}));
+const roleOptions = [
+  { value: 'User', label: 'User' },
+  { value: 'Organiser', label: 'Organiser' }
+];
 
 const Signup = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        userName: '',
+        email: '',
+        password: '',
+        role: '', 
+        phoneNumber: '',
+        location: '' 
+    });
+    const [error, setError] = useState('');
 
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("User");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [location, setLocation] = useState("");
-  const [error, setError] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    if (!userName || !email || !password || !phoneNumber || !location) {
-      setError("Please fill out all required fields.");
-      return;
-    }
-
-    const dataToSend = {
-      userName,
-      email,
-      password,
-      role,
-      phoneNumber: parseInt(phoneNumber, 10),
-      location,
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
     };
 
-    try {
-      await axios.post("https://localhost:7283/api/Users/register", dataToSend);
-      alert("Registration successful! Please log in.");
-      navigate("/login");
-    } catch (err) {
-      if (err.response && err.response.data) {
-        if (err.response.data.error) setError(err.response.data.error);
-        else if (err.response.data.errors) {
-          const firstError = Object.values(err.response.data.errors)[0];
-          setError(firstError[0]);
-        } else setError("Registration failed. Please try again.");
-      } else setError("Network error. Please check your connection.");
-    }
-  };
+    const handleRoleChange = (selectedOption) => {
+        setFormData({
+            ...formData,
+            role: selectedOption ? selectedOption.value : ''
+        });
+    };
+    const handleLocationChange = (selectedOption) => {
+        setFormData({
+            ...formData,
+            location: selectedOption ? selectedOption.value : ''
+        });
+    };
 
-  return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Create Your Account</h2>
-        {error && <div className="auth-error">{error}</div>}
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
 
-        <form onSubmit={handleSubmit}>
-          <label>Full Name</label>
-          <input
-            type="text"
-            placeholder="Enter your name"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            required
-          />
+        try {
+            const dataToSend = {
+                ...formData,
+                phoneNumber: parseInt(formData.phoneNumber, 10)
+            };
 
-          <label>Email Address</label>
-          <input
-            type="email"
-            placeholder="you@gmail.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+            await api.post('/Users/register', dataToSend);
+            
+            toast.success('Registration successful! Please login.');
+            navigate('/login');
 
-          <label>Password</label>
-          <input
-            type="password"
-            placeholder="Create a strong password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        } catch (err) {
+            if (err.response && err.response.data) {
+                if (err.response.data.error) {
+                    setError(err.response.data.error);
+                } 
+                else if (err.response.data.errors) {
+                    const firstError = Object.values(err.response.data.errors)[0];
+                    setError(firstError);
+                } else {
+                    setError('Registration failed. Please try again.');
+                }
+            } else {
+                setError('An error occurred. Please check your connection.');
+            }
+        }
+    };
 
-          <label>Role</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="User">User</option>
-            <option value="Organiser">Organiser</option>
-          </select>
+    return (
+        <div className="authBackground">
+        <div className={styles.container} style={{ maxWidth: '400px', marginTop: '50px' }}>
+            <h2>Sign Up</h2>
+            {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+            
+            <form onSubmit={handleSubmit} className={styles.form}>
+                
+                <input
+                    name="userName"
+                    placeholder="Full Name"
+                    value={formData.userName}
+                    onChange={handleChange}
+                    className={styles.inputField}
+                    required
+                />
+                 <input
+                    name="email"
+                    type="email"
+                    placeholder="Email (@gmail.com)"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={styles.inputField}
+                    required
+                />
+                <input
+                    name="password"
+                    type="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className={styles.inputField}
+                    required
+                />
+                <Select
+                  options={roleOptions}
+                  onChange={handleRoleChange}
+                  value={roleOptions.find(option => option.value === formData.role)}
+                  placeholder="-- Select Role --"
+                  className={styles.selectContainer} 
+                  classNamePrefix="react-select"     
+                  required
+                />
 
-          <label>Phone Number</label>
-          <input
-            type="tel"
-            placeholder="10 digits"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            required
-          />
+                <input
+                    name="phoneNumber"
+                    type="number"
+                    placeholder="Phone Number (10 digits)"
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                    className={styles.inputField}
+                    required
+                />
+                
+                <Select
+                  options={cityOptions}
+                  onChange={handleLocationChange}
+                  value={cityOptions.find(option => option.value === formData.location)}
+                  placeholder="Location (City)"
+                  isClearable
+                  isSearchable
+                  className={styles.selectContainer}
+                  classNamePrefix="react-select"
+                  required
+                />
 
-          <label>Location</label>
-          <input
-            type="text"
-            placeholder="City or area"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            required
-          />
+                <button type="submit" className={styles.primaryButton}>
+                    Create Account
+                </button>
 
-          <button type="submit">Create Account</button>
-        </form>
-
-        <p className="auth-footer-text">
-          Already have an account?{" "}
-          <Link to="/login">Login here</Link>
-        </p>
-      </div>
-    </div>
-  );
+                <p style={{ textAlign: 'center', marginTop: '1rem' }}>
+                    Already have an account? <Link to="/login" style={{ color: 'var(--simba-orange-dark)' }}>Login here</Link>
+                </p>
+            </form>
+        </div>
+        </div>
+    );
 };
 
 export default Signup;
+

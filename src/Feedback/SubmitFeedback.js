@@ -3,12 +3,12 @@ import { Rating } from 'react-simple-star-rating';
 import styles from './FeedbackForm.module.css'; 
 import api from '../Login/Api';
 import { useAuth } from '../AuthContext';
+import { toast } from 'react-toastify';
 
 function SubmitFeedback({onViewPrevious}) {
     const { userId } = useAuth();
-    // State for all form fields
+    
     const [eventId, setEventId] = useState("");
-    //const [userId, setUserId] = useState("");
     const [allEvents, setAllEvents] = useState([]);
     const [isLoadingEvents, setIsLoadingEvents] = useState(true);
 
@@ -40,32 +40,32 @@ function SubmitFeedback({onViewPrevious}) {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!eventId) {
-            alert('Please select an event.');
+            toast.error('Please select an event.');
             return;
         }
         
         if (overallExperience === 0) {
-            alert('Please provide an "Overall Experience" rating.');
+            toast.error('Please provide an "Overall Experience" rating.');
             return;
         }
         if (contentQuality === 0) {
-            alert('Please provide a "Content Quality" rating.');
+            toast.error('Please provide a "Content Quality" rating.');
             return;
         }
         if (venueFacilities === 0) {
-            alert('Please provide a "Venue & Facilities" rating.');
+            toast.error('Please provide a "Venue & Facilities" rating.');
             return;
         }
         if (eventOrganization === 0) {
-            alert('Please provide an "Event Organization" rating.');
+            toast.error('Please provide an "Event Organization" rating.');
             return;
         }
         if (valueForMoney === 0) {
-            alert('Please provide a "Value for Money" rating.');
+            toast.error('Please provide a "Value for Money" rating.');
             return;
         }
         if (comments.length < 2) {
-            alert('Please provide a comment of at least 2 characters.');
+            toast.error('Please provide a comment of at least 2 characters.');
             return;
         }
         const feedbackData = {
@@ -82,7 +82,7 @@ function SubmitFeedback({onViewPrevious}) {
         // API Call
         api.post('/Feedbacks/SubmitFeedback', feedbackData)
             .then(response => {
-                alert('Thank you! Your feedback has been submitted.');
+                toast.success('Thank you! Your feedback has been submitted.');
                 setEventId("");
                 //setUserId("");
                 setOverallExperience(0);
@@ -107,7 +107,7 @@ function SubmitFeedback({onViewPrevious}) {
                     // generic message
                     errorMessage = err.response.data.title;
                 }
-                alert(`Error: ${errorMessage}`);
+                toast.error(`Error: ${errorMessage}`);
             });
         };
 
