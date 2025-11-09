@@ -190,7 +190,11 @@ function FeedbackAdmin({onShowForm}) {
                     <tr>
                         <th>Event</th>
                         <th>User</th>
-                        <th>Rating</th>
+                        <th>Overall Rating</th>
+                        <th>Content</th>
+                        <th>Venue</th>
+                        <th>Organization</th>
+                        <th>Value for Money</th>
                         <th>Comment</th>
                         <th>Submitted At</th>
                         <th>Reply</th>
@@ -198,40 +202,46 @@ function FeedbackAdmin({onShowForm}) {
                     </tr>
                 </thead>
                 <tbody>
-                    {feedbacks.map((fb) => (
-                        <tr key={fb.feedbackId}>
-                            <td data-label="Event">
-                                
-                                <button 
-                                    className={styles.eventlink} 
-                                    onClick={() => handleEventClick(fb.eventId, fb.eventName)}
-                                >
-                                    {fb.eventName || 'N/A'}
-                                </button>
-                            </td>
-                            <td>{fb.userName || 'N/A'}</td>
-                            <td>{fb.rating} / 5</td>
-                            <td className={styles.commentCell}>{fb.comments}</td>
-                            <td data-label="Submitted">{formatDate(fb.submittedAt)}</td>
-                            <td>{fb.reply || 'N/A'}</td>
-                            
+                    {feedbacks.map((fb) => {
+                        const content = (fb.contentQuality ?? fb.ContentQuality ?? 0);
+                        const venue = (fb.venueFacilities ?? fb.VenueFacilities ?? 0);
+                        const org = (fb.eventOrganization ?? fb.EventOrganization ?? 0);
+                        const value = (fb.valueForMoney ?? fb.ValueForMoney ?? 0);
+                        return (
+                            <tr key={fb.feedbackId}>
+                                <td data-label="Event">
+                                    <button 
+                                        className={styles.eventlink} 
+                                        onClick={() => handleEventClick(fb.eventId, fb.eventName)}
+                                    >
+                                        {fb.eventName || 'N/A'}
+                                    </button>
+                                </td>
+                                <td>{fb.userName || 'N/A'}</td>
+                                <td>{fb.rating} / 5</td>
+                                <td>{content} / 5</td>
+                                <td>{venue} / 5</td>
+                                <td>{org} / 5</td>
+                                <td>{value} / 5</td>
+                                <td className={styles.commentCell}>{fb.comments}</td>
+                                <td data-label="Submitted">{formatDate(fb.submittedAt)}</td>
+                                <td>{fb.reply || 'N/A'}</td>
                                 {role === 'Organiser' && (
                                     <td className={styles.actionsCell}>
                                         <button onClick={() => handleReply(fb.feedbackId)} disabled={fb.reply}>
                                             Reply
                                         </button>
-                                
                                         <button 
                                             onClick={() => handleArchive(fb.feedbackId)} 
                                             className={styles.archiveButton}
                                         >
-                                        Archive
+                                            Archive
                                         </button>
                                     </td>
                                 )}
-                                
-                        </tr>
-                    ))}
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
             </div>

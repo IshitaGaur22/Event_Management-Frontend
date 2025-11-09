@@ -81,15 +81,18 @@
   resize: vertical;
 }
 
-.heading {
+.heading, .headingevent{
   font-weight: 600;
   font-size: 1.2em;
   color: var(--simba-brown-dark);
   margin-top: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--simba-light-grey);
+  
 }
 
+.heading {
+  border-bottom: 1px solid var(--simba-light-grey);
+}
 .starRating {
   text-align: center;
   margin-top: 5px;

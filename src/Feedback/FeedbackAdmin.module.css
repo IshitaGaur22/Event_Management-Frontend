@@ -129,19 +129,14 @@
 .feedbackTable {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
-    border-radius: var(--radius-soft);
-    overflow: hidden; 
-    box-shadow: var(--shadow-light);
-    border: 1px solid var(--simba-light-grey);
+    border-spacing: 0;
 }
 
 .feedbackTable th,
 .feedbackTable td {
-    padding: 12px 15px;
-    text-align: left;
-    vertical-align: top;
-    
+    padding: 10px 12px;
+    vertical-align: middle;
+    border-right: 1px solid rgba(0,0,0,0.08);
 }
 .feedbackTable tbody tr {
     border-bottom: 1px solid var(--simba-light-grey);
@@ -151,6 +146,7 @@
     background-color: var(--simba-brown-dark);
     color: var(--simba-white);
     font-weight: 500;
+    border-bottom: 2px solid rgba(0,0,0,0.06);
 }
 
 .feedbackTable tbody tr:nth-child(even) {
@@ -330,5 +326,22 @@
   .feedbackTable tbody tr {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+html[data-theme='dark'] .feedbackTable th,
+html[data-theme='dark'] .feedbackTable td {
+  border-right: 1px solid rgba(255, 255, 255, 0.135);
+}
+
+
+@media (max-width: 720px) {
+  .feedbackTable th,
+  .feedbackTable td {
+    border-right: none;
+  }
+
+  .feedbackTable tbody tr + tr td {
+    border-top: 1px solid rgba(0,0,0,0.06);
   }
 }

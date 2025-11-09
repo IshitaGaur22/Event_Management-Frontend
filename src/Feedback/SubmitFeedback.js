@@ -43,31 +43,6 @@ function SubmitFeedback({onViewPrevious}) {
             toast.error('Please select an event.');
             return;
         }
-        
-        if (overallExperience === 0) {
-            toast.error('Please provide an "Overall Experience" rating.');
-            return;
-        }
-        if (contentQuality === 0) {
-            toast.error('Please provide a "Content Quality" rating.');
-            return;
-        }
-        if (venueFacilities === 0) {
-            toast.error('Please provide a "Venue & Facilities" rating.');
-            return;
-        }
-        if (eventOrganization === 0) {
-            toast.error('Please provide an "Event Organization" rating.');
-            return;
-        }
-        if (valueForMoney === 0) {
-            toast.error('Please provide a "Value for Money" rating.');
-            return;
-        }
-        if (comments.length < 2) {
-            toast.error('Please provide a comment of at least 2 characters.');
-            return;
-        }
         const feedbackData = {
             EventId: parseInt(eventId, 10),
             UserId: parseInt(userId, 10),
@@ -84,7 +59,6 @@ function SubmitFeedback({onViewPrevious}) {
             .then(response => {
                 toast.success('Thank you! Your feedback has been submitted.');
                 setEventId("");
-                //setUserId("");
                 setOverallExperience(0);
                 setContentQuality(0);
                 setVenueFacilities(0);
@@ -116,8 +90,9 @@ function SubmitFeedback({onViewPrevious}) {
             <h2>Event Feedback</h2>
             
             <form onSubmit={handleSubmit} className={styles.form}>
-                <div className={styles.inputGroup}>
-                    <label>Event:</label>
+                
+                <div >
+                    <label className={styles.headingevent}>Event:  </label>
                     <select
                         value={eventId}
                         onChange={(e) => setEventId(e.target.value)}

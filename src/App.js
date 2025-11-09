@@ -9,6 +9,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './Login/Login';
 import Signup from './Login/Signup';
+import ProtectedRoute from './Login/ProtectedRoute';
 import { useAuth } from './AuthContext';
  
 // --- ORGANISER PAGES ---
@@ -32,10 +33,7 @@ import UpdateCompleted from './Booking/UpdateCompleted';
 import FeedbackAdmin from './Feedback/FeedbackAdmin';
 import SubmitFeedback from './Feedback/SubmitFeedback';
  
-/**
- * This component is the main router and layout.
- * It's inside <Router> so it can use hooks like useAuth.
- */
+
 function AppContent() {
   const { token, theme, role } = useAuth();
   const isOrganiser = role === 'Organiser';
@@ -51,11 +49,7 @@ function AppContent() {
     setShowList(isOrganiser);
   }, [isOrganiser, token]);
 
-  /**
-   * This component handles all root redirects.
-   * It sends logged-out users to /login.
-   * It sends logged-in users to their correct dashboard.
-   */
+ 
   const HomeRedirect = () => {
     if (!token) {
       return <Navigate to="/login" replace />;
@@ -102,44 +96,38 @@ function AppContent() {
           <Route path="/" element={<HomeRedirect />} />
  
           {/* --- Protected Routes --- */}
-          {/* We check for 'token' to protect all routes */}
-          {token ? (
+          {isOrganiser ? (
+            /* --- ORGANISER-ONLY ROUTES --- */
             <>
-              {isOrganiser ? (
-                /* --- ORGANISER-ONLY ROUTES --- */
-                <>
-                  <Route path="/organiser-dashboard" element={<Dashboard />} />
-                  <Route path="/create-event" element={<CreateEventForm />} />
-                  <Route path="/update-event" element={<UpdateEventPage />} />
-                  <Route path="/event-details" element={<EventDetails />} />
-                </>
-              ) : (
-                /* --- USER-ONLY ROUTES --- */
-                <>
-                  <Route path="/user-dashboard" element={<UserDashboard />} />
-                  <Route path="/bookings" element={<GetBookings />} />
-                  <Route path="/add" element={<BookTicketsForm />} />
-                  <Route path="/edit/:id" element={<UpdateBookingForm />} />
-                  <Route path="/search" element={<SearchByUsername />} />
-                  <Route path="/availability" element={<SeatAvailability />} />
-                  <Route path="/top-events" element={<TopEvents />} />
-                  <Route path="/payment" element={<PaymentDetails />} />
-                  <Route path="/update-completed" element={<UpdateCompleted />} />
-                </>
-              )}
-             
-              {/* --- SHARED FEEDBACK ROUTE --- */}
-              <Route
-                path="/feedback"
-                element={
-                  showList ? <FeedbackAdmin onShowForm={toggleView} /> : <SubmitFeedback onViewPrevious={toggleView} />
-                }
-              />
+              <Route path="/organiser-dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/create-event" element={<ProtectedRoute><CreateEventForm /></ProtectedRoute>} />
+              <Route path="/update-event" element={<ProtectedRoute><UpdateEventPage /></ProtectedRoute>} />
+              <Route path="/event-details" element={<ProtectedRoute><EventDetails /></ProtectedRoute>} />
             </>
           ) : (
-             /* --- If no token, all other paths redirect to login --- */
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            /* --- USER-ONLY ROUTES --- */
+            <>
+              <Route path="/user-dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
+              <Route path="/bookings" element={<ProtectedRoute><GetBookings /></ProtectedRoute>} />
+              <Route path="/add" element={<ProtectedRoute><BookTicketsForm /></ProtectedRoute>} />
+              <Route path="/edit/:id" element={<ProtectedRoute><UpdateBookingForm /></ProtectedRoute>} />
+              <Route path="/search" element={<ProtectedRoute><SearchByUsername /></ProtectedRoute>} />
+              <Route path="/availability" element={<ProtectedRoute><SeatAvailability /></ProtectedRoute>} />
+              <Route path="/top-events" element={<ProtectedRoute><TopEvents /></ProtectedRoute>} />
+              <Route path="/payment" element={<ProtectedRoute><PaymentDetails /></ProtectedRoute>} />
+              <Route path="/update-completed" element={<ProtectedRoute><UpdateCompleted /></ProtectedRoute>} />
+            </>
           )}
+         
+          {/* --- SHARED FEEDBACK ROUTE --- */}
+          <Route
+            path="/feedback"
+            element={
+              <ProtectedRoute>
+                {showList ? <FeedbackAdmin onShowForm={toggleView} /> : <SubmitFeedback onViewPrevious={toggleView} />}
+              </ProtectedRoute>
+            }
+          />
  
           {/* --- Final catch-all if logged in but route doesn't exist --- */}
            <Route path="*" element={<HomeRedirect />} />
