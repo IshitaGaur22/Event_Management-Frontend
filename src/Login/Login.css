@@ -1,0 +1,143 @@
+:root {
+  --primary-color: #7a4f3e;      /* Coffee Brown */
+  --accent-color: #ffa726;       /* Warm Gold */
+  --secondary-color: #4b2c20;    /* Deep Brown */
+  --text-light: #fff8e1;
+}
+
+/* ===== Full Page Layout ===== */
+.login-landing {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)),
+    url("./blur-background-energetic-crowd-enjoying-600nw-2588558777.webp")
+      no-repeat center center/cover;
+  font-family: "Poppins", sans-serif;
+  color: white;
+  text-align: center;
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Welcome Box ===== */
+.welcome-box {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 3rem 4rem;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  max-width: 600px;
+  width: 90%;
+  animation: slideUp 1.2s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Headings ===== */
+.welcome-box h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+}
+
+.welcome-box span {
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+.welcome-box p {
+  color: #f5f5f5;
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+/* ===== Buttons Container ===== */
+.landing-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+/* ===== Button Base Style ===== */
+.btn {
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 130px;
+}
+
+/* ===== Login Button ===== */
+.btn-login {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.btn-login:hover {
+  background-color: var(--accent-color);
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* ===== Signup Button ===== */
+.btn-signup {
+  background-color: var(--accent-color);
+  color: #fff;
+}
+
+.btn-signup:hover {
+  background-color: var(--primary-color);
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+  .welcome-box {
+    padding: 2rem 1.5rem;
+  }
+
+  .welcome-box h1 {
+    font-size: 2rem;
+  }
+
+  .welcome-box p {
+    font-size: 1rem;
+  }
+
+  .landing-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

@@ -1,35 +1,24 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, NavLink, Link, useLocation } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-// Booking & User Components
-// import BookingHistory from './BookingHistory/BookingHistory'; 
-// import NotificationTab from './BookingHistory/NotificationTab';
-import TopEvents from './Booking/TopEvents';
-import EventDetailsPage from './Booking/EventDetailsPage';
-import ReviewBookingPage from './Booking/ReviewBookingPage';
-import BookingConfirmationPage from './Booking/BookingConfirmationPage';
+ 
+// --- CORE & AUTH ---
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './Login/Login';
-
-// Feedback Components
-import FeedbackAdmin from './Feedback/FeedbackAdmin';
-import SubmitFeedback from './Feedback/SubmitFeedback';
-
-// Organiser Components
+import Signup from './Login/Signup';
+import ProtectedRoute from './Login/ProtectedRoute';
+import { useAuth } from './AuthContext';
+ 
+// --- ORGANISER PAGES ---
 import Dashboard from './OrganiserDashboard/Dashboard';
 import CreateEventForm from './OrganiserDashboard/CreateEventForm';
 import UpdateEventPage from './OrganiserDashboard/UpdateEventPage';
 import EventDetails from './OrganiserDashboard/EventDetails';
-
-// Context & Services
-import { useAuth } from './AuthContext';
-// import { startConnection, onNotificationReceived } from './BookingHistory/SignalService';
-// import { NotificationContext } from './BookingHistory/NotificationContext';
-
+ 
+// --- USER PAGES ---
 import UserDashboard from './Dashboard/UserDashboard';
 import { User } from 'lucide-react';
 import ProfilePage from './Login/ProfilePage';
@@ -46,31 +35,22 @@ function AppContent() {
   const toggleView = () => {
     setShowList(prevShowList => !prevShowList);
   };
-
-  // Effect to set initial view for Feedback based on user role
+ 
+  // Effect to set initial Feedback view based on role
   useEffect(() => {
-    if (role === 'Organiser') {
-      setShowList(true); // If Organiser, go to the previous feedbacks directly
-    } else {
-      setShowList(false); // If User, go to the submit feedback form
+    setShowList(isOrganiser);
+  }, [isOrganiser, token]);
+
+ 
+  const HomeRedirect = () => {
+    if (!token) {
+      return <Navigate to="/login" replace />;
     }
-  }, [role]);
-
-  // Effect for SignalR connection and notifications
-  // useEffect(() => {
-  //   startConnection();
-  //   onNotificationReceived((notification) => {
-  //     addNotification(notification);
-  //     toast.info(notification.message, {
-  //       position: "top-right",
-  //       autoClose: 5000,
-  //     });
-  //   });
-  // }, []); // Run only once on mount
-
-  // Determine if the user is an Organiser
-  const isOrganiser = role === 'Organiser';
-
+    return isOrganiser ?
+      <Navigate to="/organiser-dashboard" replace /> :
+      <Navigate to="/user-dashboard" replace />;
+  };
+ 
   return (
     <div className="App" data-theme={theme}>
       
@@ -82,29 +62,25 @@ function AppContent() {
       {/* Show nav only if logged in */}
       {token && showNav && (
         <nav className="main-nav">
-          {/* Organiser Navigation */}
           {isOrganiser ? (
+            /* --- ORGANISER NAV --- */
             <>
-              <NavLink to="/dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
-              <NavLink to="/create-event" style={{ margin: '10px' }}>Create Event</NavLink>
-              {/* Note: /update-event and /event-details paths are typically navigated to from the Dashboard */}
-              <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
-              
+              <NavLink to="/organiser-dashboard">Dashboard</NavLink>
+              <NavLink to="/create-event">Create Event</NavLink>
+              <NavLink to="/feedback">Feedback</NavLink>
             </>
           ) : (
-            /* User/Booking Navigation */
+            /* --- USER NAV --- */
             <>
-              <NavLink to="/user-dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
-              <NavLink to="/booking-history" style={{ margin: '10px' }}>Booking History</NavLink>
-              {/* <NavLink to="/Notification" style={{ margin: '10px' }}>Notification 🔔</NavLink> */}
-              <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
-              {/* <NavLink to="/check-event" style={{ margin: '10px' }}>Check Event</NavLink */}
-              <NavLink to="/top-events" style={{ margin: '10px' }}>Top Events</NavLink>
+              <NavLink to="/user-dashboard">Home</NavLink>
+              <NavLink to="/bookings">My Bookings</NavLink>
+              <NavLink to="/top-events">Top Events</NavLink>
+              <NavLink to="/feedback">Feedback</NavLink>
             </>
           )}
         </nav>
       )}
-
+ 
       <main className="main-content">
         <Routes>
           {/* Public login */}
@@ -140,7 +116,8 @@ function AppContent() {
     </div>
   );
 }
-
+ 
+ 
 function App() {
   return (
     <Router>
@@ -148,5 +125,6 @@ function App() {
     </Router>
   );
 }
-
+ 
+ 
 export default App;
