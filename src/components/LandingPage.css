@@ -116,3 +116,55 @@
     transform: translateY(-3px);
     box-shadow: 0 6px 12px rgba(204, 102, 0, 0.4);
   }
+  
+  /* Responsive adjustments */
+@media (max-width: 1200px) {
+  .landing-content {
+    padding: 1.75rem;
+  }
+  .welcome-text {
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+  }
+  .sub-text {
+    font-size: 1.2rem;
+  }
+  .option-card {
+    width: 260px;
+    padding: 1.6rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .landing-content {
+    padding: 1.25rem;
+    align-items: center;
+  }
+
+  /* stack option cards vertically on narrower screens */
+  .options-container {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .option-card {
+    width: calc(100% - 3rem);
+    max-width: 520px;
+    padding: 1.25rem;
+  }
+
+  .welcome-text {
+    font-size: clamp(1.9rem, 6vw, 2.8rem);
+    line-height: 1.2;
+  }
+
+  .sub-text {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .landing-btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
