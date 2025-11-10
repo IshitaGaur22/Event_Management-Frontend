@@ -1,20 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Rating } from 'react-simple-star-rating'; 
 import styles from './FeedbackForm.module.css'; 
 import api from '../Login/Api';
 import { useAuth } from '../AuthContext';
+import { toast } from 'react-toastify';
 
 function SubmitFeedback({onViewPrevious}) {
     const { userId } = useAuth();
-    // State for all form fields
+    
     const [eventId, setEventId] = useState("");
-    //const [userId, setUserId] = useState("");
+    const [allEvents, setAllEvents] = useState([]);
+    const [isLoadingEvents, setIsLoadingEvents] = useState(true);
+
     const [overallExperience, setOverallExperience] = useState(0);
     const [contentQuality, setContentQuality] = useState(0);
     const [venueFacilities, setVenueFacilities] = useState(0);
     const [eventOrganization, setEventOrganization] = useState(0);
     const [valueForMoney, setValueForMoney] = useState(0);
     const [comments, setComments] = useState("");
+
+    useEffect(() => {
+        setIsLoadingEvents(true);
+        api.get(`/Feedbacks/GetBookedEventsByUserId/${userId}`) 
+            .then(response => {
+                setAllEvents(response.data);
+            })
+            .catch(err => {
+                console.error("Error fetching all events:", err);
+            })
+            .finally(() => {
+                setIsLoadingEvents(false);
+            });
+    }, [userId]);
 
     const handleRating = (rate, setter) => {
         setter(rate);
@@ -23,32 +40,7 @@ function SubmitFeedback({onViewPrevious}) {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!eventId) {
-            alert('Please enter an Event ID.');
-            return;
-        }
-        
-        if (overallExperience === 0) {
-            alert('Please provide an "Overall Experience" rating.');
-            return;
-        }
-        if (contentQuality === 0) {
-            alert('Please provide a "Content Quality" rating.');
-            return;
-        }
-        if (venueFacilities === 0) {
-            alert('Please provide a "Venue & Facilities" rating.');
-            return;
-        }
-        if (eventOrganization === 0) {
-            alert('Please provide an "Event Organization" rating.');
-            return;
-        }
-        if (valueForMoney === 0) {
-            alert('Please provide a "Value for Money" rating.');
-            return;
-        }
-        if (comments.length < 2) {
-            alert('Please provide a comment of at least 2 characters.');
+            toast.error('Please select an event.');
             return;
         }
         const feedbackData = {
@@ -65,9 +57,8 @@ function SubmitFeedback({onViewPrevious}) {
         // API Call
         api.post('/Feedbacks/SubmitFeedback', feedbackData)
             .then(response => {
-                alert('Thank you! Your feedback has been submitted.');
+                toast.success('Thank you! Your feedback has been submitted.');
                 setEventId("");
-                //setUserId("");
                 setOverallExperience(0);
                 setContentQuality(0);
                 setVenueFacilities(0);
@@ -77,19 +68,20 @@ function SubmitFeedback({onViewPrevious}) {
             })
             .catch(err => {
                 let errorMessage = "An error occurred.";
-
-                if (err.response && err.response.data && err.response.data.errors) {
+                if (err.response && typeof err.response.data === 'string') {
+                    errorMessage = err.response.data;
+                }
+                else if (err.response && err.response.data && err.response.data.errors) {
                     // This will find the first specific validation error
                     const errors = err.response.data.errors;
                     const errorKey = Object.keys(errors)[0]; // Get the first field name 
                     errorMessage = errors[errorKey][0];     // Get the first error message for that field
                 } 
                 else if (err.response && err.response.data && err.response.data.title) {
-                    // Fallback for the generic message
+                    // generic message
                     errorMessage = err.response.data.title;
                 }
-
-                alert(`Error: ${errorMessage}`);
+                toast.error(`Error: ${errorMessage}`);
             });
         };
 
@@ -98,15 +90,26 @@ function SubmitFeedback({onViewPrevious}) {
             <h2>Event Feedback</h2>
             
             <form onSubmit={handleSubmit} className={styles.form}>
-                <div className={styles.inputGroup}>
-                    <label>Event ID:</label>
-                    <input
-                        type="number"
+                
+                <div >
+                    <label className={styles.headingevent}>Event:  </label>
+                    <select
                         value={eventId}
                         onChange={(e) => setEventId(e.target.value)}
-                        className={styles.inputField}
-                        placeholder="Enter Event ID"
-                    />
+                        className={styles.inputField} 
+                    >   
+                        {/* Default "loading" option */}
+                        <option value="">
+                            {isLoadingEvents ? "Loading events..." : "-- Select an event --"}
+                        </option>
+                        
+                        {/* Map over the events from the API */}
+                        {allEvents.map(event => (
+                            <option key={event.eventID} value={event.eventID}>
+                                {event.eventName} 
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 
                 <label className={styles.heading}>Overall Experience</label>

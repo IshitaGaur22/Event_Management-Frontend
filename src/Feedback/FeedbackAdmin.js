@@ -5,7 +5,7 @@ import FeedbackFilter from './FeedbackFilter';
 import SummaryModal from './SummaryModal';
 import { useAuth } from '../AuthContext';
 import api from '../Login/Api';
-
+import { toast } from 'react-toastify';
 
 function FeedbackAdmin({onShowForm}) {
     const{role}=useAuth();
@@ -31,10 +31,9 @@ function FeedbackAdmin({onShowForm}) {
         sortBy: sortBy,
         sortOrder: sortOrder
     });
-    // error message 
+    
     const showErrorMessage = (err) => {
         let errorMessage = "An unknown error occurred."; // Default message
-
         if (err.response && err.response.data) {
             if (typeof err.response.data === 'string') {
                 // If the server sends a plain string 
@@ -47,13 +46,12 @@ function FeedbackAdmin({onShowForm}) {
                 errorMessage = err.response.data.title;
             }
         } else if (err.message) {
-            // Fallback for "Network Error" or other request setup errors
+            // Network Error or other request setup errors
             errorMessage = err.message;
         }
-        alert(`Error: ${errorMessage}`);
+        toast.error(`Error: ${errorMessage}`);
     };
 
-    // --- Data Fetching ---
     const loadFeedbacks = (filterParams = {}) => {
         setIsLoading(true);
         api.get(`/Feedbacks/FilterFeedbacks`, { params: filterParams })
@@ -101,21 +99,19 @@ function FeedbackAdmin({onShowForm}) {
         setSortOrder("descending");
         loadFeedbacks({});
     };
-    // --- CRUD Event Handlers ---
 
-    // U (Update) - Archive
+    // Archive
     const handleArchive = (id) => {
-        if (!window.confirm('Are you sure you want to archive this feedback?')) {
+        if (!toast.confirm('Are you sure you want to archive this feedback?')) {
             return;
         }
         
         api.put(`/Feedbacks/ArchiveFeedback/${id}`)
             .then(() => {
-                alert('Feedback archived!');
+                toast.success('Feedback archived!');
                 loadFeedbacks(getCurrentParams()); // Refresh the list
             })
             .catch(err => {
-                // Use the helper function to show the error
                 showErrorMessage(err);
             });
     };
@@ -130,7 +126,7 @@ function FeedbackAdmin({onShowForm}) {
 
         api.post(`/Feedbacks/ReplyToFeedback/${id}`, { replyText })
             .then(() => {
-                alert('Reply submitted!');
+                toast.success('Reply submitted!');
                 loadFeedbacks(getCurrentParams()); // Refresh the list
             })
             .catch(err => {
@@ -162,7 +158,6 @@ function FeedbackAdmin({onShowForm}) {
             </button>
             )}
             <h2>Feedbacks</h2>
-                {/* 2. Add the toggle button */}
                 <button 
                     className={styles.linkButton} 
                     onClick={() => setShowTopEvents(!showTopEvents)}
@@ -171,7 +166,6 @@ function FeedbackAdmin({onShowForm}) {
                 </button>
             
             {showTopEvents && <GetTopEvents topEvents={topEvents} />}
-            {/* 2. Render the Filter component */}
             <div className={styles.filterContainer}>
             <FeedbackFilter
                 filterEventName={filterEventName}
@@ -196,7 +190,11 @@ function FeedbackAdmin({onShowForm}) {
                     <tr>
                         <th>Event</th>
                         <th>User</th>
-                        <th>Rating</th>
+                        <th>Overall Rating</th>
+                        <th>Content</th>
+                        <th>Venue</th>
+                        <th>Organization</th>
+                        <th>Value for Money</th>
                         <th>Comment</th>
                         <th>Submitted At</th>
                         <th>Reply</th>
@@ -204,40 +202,46 @@ function FeedbackAdmin({onShowForm}) {
                     </tr>
                 </thead>
                 <tbody>
-                    {feedbacks.map((fb) => (
-                        <tr key={fb.feedbackId}>
-                            <td data-label="Event">
-                                
-                                <button 
-                                    className={styles.eventlink} 
-                                    onClick={() => handleEventClick(fb.eventId, fb.eventName)}
-                                >
-                                    {fb.eventName || 'N/A'}
-                                </button>
-                            </td>
-                            <td>{fb.userName || 'N/A'}</td>
-                            <td>{fb.rating} / 5</td>
-                            <td className={styles.commentCell}>{fb.comments}</td>
-                            <td data-label="Submitted">{formatDate(fb.submittedAt)}</td>
-                            <td>{fb.reply || 'N/A'}</td>
-                            
+                    {feedbacks.map((fb) => {
+                        const content = (fb.contentQuality ?? fb.ContentQuality ?? 0);
+                        const venue = (fb.venueFacilities ?? fb.VenueFacilities ?? 0);
+                        const org = (fb.eventOrganization ?? fb.EventOrganization ?? 0);
+                        const value = (fb.valueForMoney ?? fb.ValueForMoney ?? 0);
+                        return (
+                            <tr key={fb.feedbackId}>
+                                <td data-label="Event">
+                                    <button 
+                                        className={styles.eventlink} 
+                                        onClick={() => handleEventClick(fb.eventId, fb.eventName)}
+                                    >
+                                        {fb.eventName || 'N/A'}
+                                    </button>
+                                </td>
+                                <td>{fb.userName || 'N/A'}</td>
+                                <td>{fb.rating} / 5</td>
+                                <td>{content} / 5</td>
+                                <td>{venue} / 5</td>
+                                <td>{org} / 5</td>
+                                <td>{value} / 5</td>
+                                <td className={styles.commentCell}>{fb.comments}</td>
+                                <td data-label="Submitted">{formatDate(fb.submittedAt)}</td>
+                                <td>{fb.reply || 'N/A'}</td>
                                 {role === 'Organiser' && (
                                     <td className={styles.actionsCell}>
                                         <button onClick={() => handleReply(fb.feedbackId)} disabled={fb.reply}>
                                             Reply
                                         </button>
-                                
                                         <button 
                                             onClick={() => handleArchive(fb.feedbackId)} 
                                             className={styles.archiveButton}
                                         >
-                                        Archive
+                                            Archive
                                         </button>
                                     </td>
                                 )}
-                                
-                        </tr>
-                    ))}
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
             </div>

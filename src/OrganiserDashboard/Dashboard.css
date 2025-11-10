@@ -175,3 +175,83 @@
     gap: 15px;
   }
 }
+
+/* --- DARK MODE STYLES --- */
+
+html[data-theme='dark'] .dashboard-container {
+  background-color: var(--simba-off-white);
+}
+
+html[data-theme='dark'] .dashboard-card {
+  background: var(--simba-white);
+}
+
+/* Stat blocks are accents, so we keep their gradient, but we can make the text pop */
+html[data-theme='dark'] .stat-block h2 {
+  color: var(--simba-white);
+}
+
+html[data-theme='dark'] .category-card {
+  background-color: var(--simba-white); /* Use the dark card background */
+}
+
+html[data-theme='dark'] .category-icon {
+  color: var(--simba-orange-light); /* Make the brand icon lighter */
+}
+
+html[data-theme='dark'] .add-icon {
+  color: var(--simba-orange-light);
+}
+
+html[data-theme='dark'] .add-category-form input {
+  background-color: var(--simba-off-white);
+  border-color: var(--simba-light-grey);
+  color: var(--simba-text-dark);
+}
+
+/* Primary 'Add' button can stay the same, but let's invert the 'Cancel' button */
+html[data-theme='dark'] .btn.cancel {
+  background-color: var(--simba-light-grey);
+  color: var(--simba-text-dark);
+}
+html[data-theme='dark'] .btn.cancel:hover {
+  background-color: var(--simba-text-medium);
+}
+
+html[data-theme='dark'] .search-box,
+html[data-theme='dark'] .sort-dropdown {
+  background-color: var(--simba-off-white);
+  border-color: var(--simba-light-grey);
+  color: var(--simba-text-dark);
+}
+
+html[data-theme='dark'] .message {
+  color: var(--simba-orange-light);
+}
+
+/* Lighter headings in dark theme */
+html[data-theme='dark'] .dashboard-container h3,
+html[data-theme='dark'] .stat-block h2 {
+  color: var(--simba-text-medium);
+  
+}
+
+html[data-theme='dark'] .dashboard-container p {
+  color: #8d8d8d;
+  
+}
+html[data-theme='dark'] .dashboard-container p {
+  color: #8d8d8d;
+  
+}
+html[data-theme='dark'] .dashboard-container {
+  background-color: #1f1f1f;
+  border: #333;
+  box-shadow: 0 4px 8px #5e5e5e;
+}
+html[data-theme='dark'] .category-card {
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.05);
+  background-color: #080808;
+}
+
+
