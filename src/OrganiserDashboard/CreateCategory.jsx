@@ -1,125 +1,186 @@
-import React, { useState, useEffect } from 'react';
+// import React, { useState } from 'react';
+// import './CreateCategory.css'; 
+// import { FaPlusCircle } from 'react-icons/fa';
+
+// const CreateCategory = () => {
+//   const [categoryName, setCategoryName] = useState('');
+//   const [message, setMessage] = useState('');
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     const payload = {
+//       categoryID: 0,
+//       categoryName: categoryName
+//     };
+
+//     try {
+//       const response = await fetch('https://localhost:7283/api/Categories', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Accept': '*/*'
+//         },
+//         body: JSON.stringify(payload)
+//       });
+
+//       const result = await response.json();
+
+//       if (response.status === 201) {
+//         setMessage(result.message);
+//         setCategoryName('');
+//       } else {
+//         setMessage(result.error || 'Something went wrong.');
+//       }
+//     } catch (error) {
+//       setMessage('Failed to connect to the server.');
+//     }
+//   };
+
+//   return (
+//     <div className="create-category-container">
+//       <h2><FaPlusCircle /> Create New Category</h2>
+//       <form className="create-category-form" onSubmit={handleSubmit}>
+//         <input
+//           type="text"
+//           placeholder="Enter category name"
+//           value={categoryName}
+//           onChange={(e) => setCategoryName(e.target.value)}
+//           required
+//         />
+//         <button type="submit">Create Category</button>
+//       </form>
+//       {message && <div className="message">{message}</div>}
+//     </div>
+//   );
+// };
+
+// export default CreateCategory;
+
+
+
+
+
+// // import React, { useState } from 'react';
+// // // import './CreateCategory.css';
+// // import { FaPlusCircle } from 'react-icons/fa';
+// // import axios from 'axios';
+
+// // const CreateCategory = ({ onCategoryCreated }) => {
+// //   const [categoryName, setCategoryName] = useState('');
+// //   const [message, setMessage] = useState('');
+
+// //   const handleSubmit = async (e) => {
+// //     e.preventDefault();
+
+// //     if (!categoryName.trim()) {
+// //       setMessage('Please enter a category name.');
+// //       return;
+// //     }
+
+// //     const payload = {
+// //       categoryID: 0,
+// //       categoryName: categoryName.trim()
+// //     };
+
+// //     try {
+// //       const response = await axios.post('https://localhost:7283/api/Categories', payload);
+
+// //       if (response.status === 201) {
+// //         setMessage('✅ Category created successfully!');
+// //         setCategoryName('');
+// //         if (onCategoryCreated) onCategoryCreated(); // Refresh categories
+// //       } else {
+// //         setMessage('❌ Something went wrong.');
+// //       }
+// //     } catch (error) {
+// //       console.error('Error creating category:', error.response?.data || error.message);
+// //       setMessage(error.response?.data?.title || '❌ Failed to create category.');
+// //     }
+// //   };
+
+// //   return (
+// //     <div className="create-category-container">
+// //       <h2><FaPlusCircle /> Create New Category</h2>
+// //       <form className="create-category-form" onSubmit={handleSubmit}>
+// //         <input
+// //           type="text"
+// //           placeholder="Enter category name"
+// //           value={categoryName}
+// //           onChange={(e) => setCategoryName(e.target.value)}
+// //           required
+// //         />
+// //         <button type="submit">Create Category</button>
+// //       </form>
+// //       {message && <div className="message">{message}</div>}
+// //     </div>
+// //   );
+// // };
+
+// // export default CreateCategory;
+
+
+import React, { useState } from 'react';
+import './CreateCategory.css';
+import { FaPlusCircle } from 'react-icons/fa';
 import axios from 'axios';
-import './CreateEventForm.css';
 
-const CreateEventForm = () => {
-  const [formData, setFormData] = useState({
-    eventName: '',
-    description: '',
-    location: '',
-    categoryID: '',
-    totalSeats: '',
-    pricePerTicket: '',
-    eventDate: '',
-    eventTime: '',
-    endTime: ''
-  });
+const CreateCategory = ({ onCategoryCreated }) => {
+  const [categoryName, setCategoryName] = useState('');
+  const [message, setMessage] = useState('');
 
-  const [image, setImage] = useState(null);
-  const [categories, setCategories] = useState([]);
-
-  useEffect(() => {
-    axios.get('https://localhost:7283/api/Categories')
-      .then(res => setCategories(res.data))
-      .catch(() => alert("Failed to load categories"));
-  }, []);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) setImage(file);
-  };
-
-  const uploadImageAndGetUrl = async (file) => {
-    // Simulate image upload and return a URL
-    return 'https://yourcdn.com/uploaded/' + file.name;
+  const validateCategoryName = (name) => {
+    if (!name.trim()) return 'Please enter something.';
+    if (!/[a-zA-Z]/.test(name)) return 'Must contain letters.';
+    return '';
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Basic validation
-    if (!formData.eventName || !formData.categoryID || !formData.eventDate) {
-      alert("Please fill all required fields");
+    const errorMsg = validateCategoryName(categoryName);
+    if (errorMsg) {
+      setMessage(errorMsg);
       return;
     }
 
-    const imageUrl = image ? await uploadImageAndGetUrl(image) : '';
-
-    // ✅ Payload matches backend model
     const payload = {
-      EventName: formData.eventName,
-      Description: formData.description,
-      Location: formData.location,
-      CategoryId: parseInt(formData.categoryID),
-      TotalSeats: parseInt(formData.totalSeats),
-      PricePerTicket: parseFloat(formData.pricePerTicket),
-      EventDate: formData.eventDate,
-      EventTime: formData.eventTime,
-      EndTime: formData.endTime,
-      ImagePath: imageUrl
+      categoryID: 0,
+      categoryName: categoryName.trim()
     };
 
-    console.log("Payload:", payload); // Debugging
-
     try {
-      await axios.post('https://localhost:7283/api/Events/create', payload);
-      alert("Event created successfully");
-      // ✅ Reset form after success
-      setFormData({
-        eventName: '',
-        description: '',
-        location: '',
-        categoryID: '',
-        totalSeats: '',
-        pricePerTicket: '',
-        eventDate: '',
-        eventTime: '',
-        endTime: ''
-      });
-      setImage(null);
-    } catch (err) {
-      console.error(err);
-      alert("Error creating event");
+      const response = await axios.post('https://localhost:7283/api/Categories', payload);
+
+      if (response.status === 201) {
+        setMessage('✅ Category created successfully!');
+        setCategoryName('');
+        if (onCategoryCreated) onCategoryCreated();
+      } else {
+        setMessage('❌ Something went wrong.');
+      }
+    } catch (error) {
+      console.error('Error creating category:', error.response?.data || error.message);
+      setMessage(error.response?.data?.title || '❌ Failed to create category.');
     }
   };
 
   return (
-    <div className="form-container">
-      <h2>Create Your Event</h2>
-      <form onSubmit={handleSubmit}>
-        <input name="eventName" value={formData.eventName} onChange={handleChange} placeholder="Event Name" />
-        <input name="location" value={formData.location} onChange={handleChange} placeholder="Location" />
-
-        <select name="categoryID" value={formData.categoryID} onChange={handleChange}>
-          <option value="">Select Category</option>
-          {categories.map(cat => (
-            <option key={cat.categoryID} value={cat.categoryID}>{cat.categoryName}</option>
-          ))}
-        </select>
-
-        <input type="number" name="totalSeats" value={formData.totalSeats} onChange={handleChange} placeholder="Total Seats" />
-        <input type="number" name="pricePerTicket" value={formData.pricePerTicket} onChange={handleChange} placeholder="Price Per Ticket" />
-        <input type="date" name="eventDate" value={formData.eventDate} onChange={handleChange} />
-        <input type="time" name="eventTime" value={formData.eventTime} onChange={handleChange} />
-        <input type="time" name="endTime" value={formData.endTime} onChange={handleChange} />
-
-        <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description"></textarea>
-
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-
-        <div className="form-actions-separated">
-          <button type="submit" className="submit-btn">Create Event</button>
-          <button type="reset" className="reset-btn" onClick={() => setFormData({
-            eventName: '', description: '', location: '', categoryID: '', totalSeats: '', pricePerTicket: '', eventDate: '', eventTime: '', endTime: ''
-          })}>Reset</button>
-        </div>
+    <div className="create-category-container">
+      {/* <h2><FaPlusCircle /> Create New Category</h2> */}
+      <form className="create-category-form" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Enter category name"
+          value={categoryName}
+          onChange={(e) => setCategoryName(e.target.value)}
+          required
+        />
+        <button type="submit">Create Category</button>    
       </form>
+      {message && <div className="message">{message}</div>}
     </div>
   );
 };
 
-export default CreateEventForm;
+export default CreateCategory;
