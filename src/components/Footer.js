@@ -5,18 +5,15 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className={styles.footer}>
-      <div className={styles.footerContent}>
-        
+<footer className={styles.footer}>
+<div className={styles.footerContent}>
         {/* --- Top Section --- */}
-        <div className={styles.footerTop}>
-          
+<div className={styles.footerTop}>
           {/* Logo */}
-          <div className={styles.footerLogo}>
-            <img src={SimbaLogo} alt="SIMBA Events" />
-            <span>SIMBA Events</span>
-          </div>
-          
+<div className={styles.footerLogo}>
+<img src={SimbaLogo} alt="SIMBA Events" />
+<span>SIMBA Events</span>
+</div>
           {/* Links */}
           <div className={styles.footerLinks}>
             <Link to="/">Terms & Conditions</Link>
@@ -27,11 +24,10 @@ const Footer = () => {
         </div>
         
         {/* --- Bottom Section --- */}
-        <div className={styles.footerBottom}>
-          <p className={styles.legalText}>
+<div className={styles.footerBottom}>
+<p className={styles.legalText}>
             © 2025 SIMBA Events. All rights reserved.
-          </p>
-          
+</p>
           {/* Updated Social Icons */}
           <div className={styles.socialIcons}>
             <Link to="/" aria-label="WhatsApp"><i className="fab fa-whatsapp"></i></Link>
@@ -45,5 +41,5 @@ const Footer = () => {
     </footer>
   );
 };
-
+ 
 export default Footer;

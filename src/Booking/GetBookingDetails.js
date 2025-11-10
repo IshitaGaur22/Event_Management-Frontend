@@ -14,7 +14,8 @@ const GetBookingDetails = async (eventId) => {
         EventDate: event.date,
         Time: event.time,
         PricePerTicket: parseFloat(event.price),
-        TotalSeats: event.seats // Used for max count
+        TotalSeats: event.seats,
+        ImagePath: event.imagePath
     };
 };
 export default GetBookingDetails;

@@ -12,29 +12,16 @@ const iconMap = {
   Sports: <FaFutbol />,
 };
 
-const CategoryList = () => {
+const CategoryList = ({ onCategoryClick, activeCategoryId }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get('https://localhost:7283/api/Categories');
-      if (Array.isArray(response.data)) {
-        setCategories(response.data);
-      } else {
-        setErrorMsg('No Categories Found');
-      }
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-      setErrorMsg('Failed to load categories.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchCategories();
+    axios.get('https://localhost:7283/api/Categories')
+      .then(res => setCategories(res.data))
+      .catch(() => setErrorMsg('Failed to load categories.'))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -45,8 +32,12 @@ const CategoryList = () => {
         <p>{errorMsg}</p>
       ) : (
         <div className="category-grid">
-          {categories.map((cat) => (
-            <div key={cat.categoryID} className="category-card">
+          {categories.map(cat => (
+            <div
+              key={cat.categoryID}
+              className={`category-card ${activeCategoryId === cat.categoryID ? 'active' : ''}`}
+              onClick={() => onCategoryClick(cat.categoryID)}
+            >
               <div className="category-icon">{iconMap[cat.categoryName] || <FaTheaterMasks />}</div>
               <h2>{cat.categoryName}</h2>
             </div>
