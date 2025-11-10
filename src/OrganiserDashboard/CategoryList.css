@@ -1,21 +1,45 @@
-.category-container {
-  margin: 20px 0;
-  font-family: 'Poppins', sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --font-primary: 'Poppins', sans-serif;
+  --simba-brown-dark: #6C4234;
+  --simba-orange-dark: #C27040;
+  --simba-orange-light: #E0914A;
+  --simba-white: #FFFFFF;
+  --simba-off-white: #F8F9FA;
+  --simba-light-grey: #DEE2E6;
+  --simba-text-dark: #212529;
+  --simba-text-medium: #495057;
+
+  --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.12);
+  --radius-soft: 8px;
 }
 
+/* Category Container */
+.category-container {
+  margin: 20px 0;
+  font-family: var(--font-primary);
+}
+
+/* Category Grid */
 .category-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
+  gap: 30px; /* Increased spacing for better layout */
 }
 
+/* Category Card */
 .category-card {
-  background-color: #FAF0F2;
-  border-radius: 10px;
+  background-color: var(--simba-off-white);
+  border-radius: var(--radius-soft);
   padding: 20px;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  box-shadow: var(--shadow-medium);
   transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .category-card:hover {
@@ -24,13 +48,16 @@
 
 .category-icon {
   font-size: 40px;
-  color: #D72F59;
+  color: var(--simba-orange-dark);
   margin-bottom: 10px;
 }
 
 .category-card h2 {
   font-size: 16px;
-  color: #D72F59;
+  color: var(--simba-brown-dark);
+  font-weight: 600;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Spinner */
@@ -38,8 +65,8 @@
   margin: 20px auto;
   width: 40px;
   height: 40px;
-  border: 4px solid #eee;
-  border-top: 4px solid #D72F59;
+  border: 4px solid var(--simba-light-grey);
+  border-top: 4px solid var(--simba-orange-dark);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -47,5 +74,12 @@
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .category-grid {
+    gap: 20px;
   }
 }

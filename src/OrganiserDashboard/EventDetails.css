@@ -1,15 +1,36 @@
-.event-table-container {
-  margin-top: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --font-primary: 'Poppins', sans-serif;
+  --simba-brown-dark: #6C4234;
+  --simba-orange-dark: #C27040;
+  --simba-orange-light: #E0914A;
+  --simba-white: #FFFFFF;
+  --simba-off-white: #F8F9FA;
+  --simba-light-grey: #DEE2E6;
+  --simba-text-dark: #212529;
+  --simba-text-medium: #495057;
+
+  --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.12);
+  --radius-soft: 8px;
+  --radius-round: 25px;
 }
 
+/* Container */
+.event-table-container {
+  margin-top: 20px;
+  font-family: var(--font-primary);
+}
+
+/* Heading */
 .table-heading {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 600;
-  color: #c1581b;
+  color: var(--simba-brown-dark);
   margin-bottom: 15px;
 }
 
-/* Controls section */
+/* Controls */
 .controls {
   display: flex;
   gap: 10px;
@@ -19,47 +40,47 @@
 
 .search-box,
 .sort-dropdown {
-  padding: 8px;
+  padding: 10px;
   font-size: 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  border-radius: var(--radius-soft);
+  border: 1px solid var(--simba-light-grey);
 }
 
 .add-event-btn {
-  background-color: #C27040;
-  color: #fff;
+  background-color: var(--simba-orange-dark);
+  color: var(--simba-white);
   font-size: 14px;
   font-weight: 600;
   padding: 10px 20px;
   border: none;
-  border-radius: 50px;
+  border-radius: var(--radius-round);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .add-event-btn:hover {
-  background-color: #8a3a0c;
+  background-color: var(--simba-orange-light);
   transform: scale(1.05);
 }
 
 .reset-btn {
-  background-color: #6c757d;
-  color: #fff;
+  background-color: var(--simba-light-grey);
+  color: var(--simba-text-dark);
   font-size: 14px;
   font-weight: 600;
   padding: 10px 20px;
   border: none;
-  border-radius: 50px;
+  border-radius: var(--radius-round);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .reset-btn:hover {
-  background-color: #5a6268;
+  background-color: #b0b0b0;
   transform: scale(1.05);
 }
 
-/* Card Grid Layout */
+/* Event Card Grid */
 .event-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -68,41 +89,42 @@
 }
 
 .event-card {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 12px;
+  background-color: var(--simba-white);
+  border: 1px solid var(--simba-light-grey);
+  border-radius: var(--radius-soft);
   padding: 15px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
+  box-shadow: var(--shadow-medium);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .event-card:hover {
   transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
-
 
 .event-image {
-  width: 100%;          /* Full width of the container */
-  height: 300px;        /* Fixed height for consistency */
-  object-fit: cover;    /* Crop image to fit without distortion */
-  border-radius: 8px;   /* Rounded corners */
-  display: block;
-  margin: 20px auto;    /* Center and add spacing */
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: var(--radius-soft);
+  margin-bottom: 15px;
 }
+
 .event-card-name {
   font-size: 18px;
   font-weight: 600;
-  margin-top: 10px;
-  color: #C27040;
+  color: var(--simba-orange-dark);
+  margin-bottom: 8px;
 }
 
 .event-card-details,
 .event-card-location {
   font-size: 14px;
-  color: #555;
-  margin-top: 5px;
+  color: var(--simba-text-medium);
+  margin-bottom: 5px;
 }
 
+/* Actions */
 .event-card-actions {
   display: flex;
   gap: 10px;
@@ -112,7 +134,7 @@
 .btn {
   padding: 6px 12px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-soft);
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
@@ -120,17 +142,17 @@
 }
 
 .btn.update {
-  background-color: #E0914A;
-  color: white;
+  background-color: var(--simba-orange-light);
+  color: var(--simba-white);
 }
 
 .btn.update:hover {
-  background-color: #c7640d;
+  background-color: var(--simba-orange-dark);
 }
 
 .btn.delete {
   background-color: #dc3545;
-  color: white;
+  color: var(--simba-white);
 }
 
 .btn.delete:hover {
@@ -139,14 +161,14 @@
 
 .btn.view {
   background-color: #17a2b8;
-  color: white;
+  color: var(--simba-white);
 }
 
 .btn.view:hover {
   background-color: #117a8b;
 }
 
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 768px) {
   .controls {
     flex-direction: column;

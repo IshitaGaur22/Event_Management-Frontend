@@ -1,14 +1,36 @@
-.event-table-container {
-  margin-top: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --font-primary: 'Poppins', sans-serif;
+  --simba-brown-dark: #6C4234;
+  --simba-orange-dark: #C27040;
+  --simba-orange-light: #E0914A;
+  --simba-white: #FFFFFF;
+  --simba-off-white: #F8F9FA;
+  --simba-light-grey: #DEE2E6;
+  --simba-text-dark: #212529;
+  --simba-text-medium: #495057;
+
+  --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.12);
+  --radius-soft: 8px;
+  --radius-round: 25px;
 }
 
+/* Container */
+.event-table-container {
+  margin-top: 20px;
+  font-family: var(--font-primary);
+}
+
+/* Heading */
 .table-heading {
   font-size: 24px;
   font-weight: 600;
-  color: #6C4234;
+  color: var(--simba-brown-dark);
   margin-bottom: 20px;
 }
 
+/* Controls */
 .controls {
   display: flex;
   gap: 10px;
@@ -22,8 +44,8 @@
   min-width: 200px;
   padding: 12px;
   font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  border-radius: var(--radius-soft);
+  border: 1px solid var(--simba-light-grey);
 }
 
 .filter-toggle {
@@ -31,6 +53,7 @@
   align-items: center;
   cursor: pointer;
   font-size: 16px;
+  color: var(--simba-text-medium);
 }
 
 .filter-icon {
@@ -43,38 +66,39 @@
   gap: 10px;
 }
 
+/* Buttons */
 .add-event-btn,
 .reset-btn {
   font-size: 14px;
   font-weight: 600;
   padding: 10px 20px;
   border: none;
-  border-radius: 50px;
+  border-radius: var(--radius-round);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .add-event-btn {
-  background-color: #D72F59;
-  color: #fff;
+  background-color: var(--simba-orange-dark);
+  color: var(--simba-white);
 }
 
 .add-event-btn:hover {
-  background-color: #b71c3c;
+  background-color: var(--simba-orange-light);
   transform: scale(1.05);
 }
 
 .reset-btn {
-  background-color: #6c757d;
-  color: #fff;
+  background-color: var(--simba-light-grey);
+  color: var(--simba-text-dark);
 }
 
 .reset-btn:hover {
-  background-color: #5a6268;
+  background-color: #b0b0b0;
   transform: scale(1.05);
 }
 
-/* Card Grid Layout */
+/* Event Card Grid */
 .event-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -83,11 +107,11 @@
 }
 
 .event-card {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 12px;
+  background-color: var(--simba-white);
+  border: 1px solid var(--simba-light-grey);
+  border-radius: var(--radius-soft);
   padding: 15px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-medium);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 }
@@ -101,23 +125,24 @@
   width: 100%;
   height: 180px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: var(--radius-soft);
 }
 
 .event-card-name {
   font-size: 18px;
   font-weight: 600;
   margin-top: 10px;
-  color: #D72F59;
+  color: var(--simba-orange-dark);
 }
 
 .event-card-details,
 .event-card-location {
   font-size: 14px;
-  color: #555;
+  color: var(--simba-text-medium);
   margin-top: 5px;
 }
 
+/* Actions */
 .event-card-actions {
   display: flex;
   gap: 12px; 
@@ -126,7 +151,7 @@
 }
 
 .event-card.inactive {
-  background-color: #f0f0f0;
+  background-color: var(--simba-light-grey);
   opacity: 0.6;
   position: relative;
 }
@@ -135,26 +160,28 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  background-color: #6c757d;
-  color: white;
+  background-color: var(--simba-brown-dark);
+  color: var(--simba-white);
   padding: 4px 10px;
-  border-radius: 20px;
+  border-radius: var(--radius-round);
   font-size: 12px;
   font-weight: 600;
 }
 
+/* Group Heading */
 .group-heading {
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: var(--simba-text-dark);
   margin-top: 30px;
   margin-bottom: 10px;
 }
 
+/* Buttons inside cards */
 .btn {
   padding: 6px 12px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-soft);
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
@@ -162,17 +189,17 @@
 }
 
 .btn.update {
-  background-color: #E0914A;
-  color: white;
+  background-color: var(--simba-orange-light);
+  color: var(--simba-white);
 }
 
 .btn.update:hover {
-  background-color: #C27040;
+  background-color: var(--simba-orange-dark);
 }
 
 .btn.delete {
   background-color: #dc3545;
-  color: white;
+  color: var(--simba-white);
 }
 
 .btn.delete:hover {
@@ -181,20 +208,20 @@
 
 .btn.view {
   background-color: #17a2b8;
-  color: white;
+  color: var(--simba-white);
 }
 
 .btn.view:hover {
   background-color: #117a8b;
 }
 
-/* Inline confirmation inside event card */
+/* Inline confirmation */
 .inline-confirm {
   margin-top: 8px;
   background-color: #fff3f3;
   padding: 10px;
   border: 1px solid #f5c2c2;
-  border-radius: 6px;
+  border-radius: var(--radius-soft);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -213,18 +240,18 @@
   padding: 6px 12px;
   font-size: 13px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-soft);
   cursor: pointer;
 }
 
 .inline-confirm button:first-of-type {
   background-color: #dc3545;
-  color: white;
+  color: var(--simba-white);
 }
 
 .inline-confirm button:last-of-type {
-  background-color: #6c757d;
-  color: white;
+  background-color: var(--simba-light-grey);
+  color: var(--simba-text-dark);
 }
 
 /* Responsive */
