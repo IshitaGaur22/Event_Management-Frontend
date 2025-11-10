@@ -1,81 +1,104 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, NavLink, Link, useLocation } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LandingPage from './components/LandingPage'; // make sure this path is correct
  
-// --- CORE & AUTH ---
+// Booking & User Components
+// import BookingHistory from './BookingHistory/BookingHistory';
+// import NotificationTab from './BookingHistory/NotificationTab';
+import TopEvents from './Booking/TopEvents';
+import EventDetailsPage from './Booking/EventDetailsPage';
+import ReviewBookingPage from './Booking/ReviewBookingPage';
+import BookingConfirmationPage from './Booking/BookingConfirmationPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './Login/Login';
 import Signup from './Login/Signup';
-import ProtectedRoute from './Login/ProtectedRoute';
-import { useAuth } from './AuthContext';
  
-// --- ORGANISER PAGES ---
+// Feedback Components
+import FeedbackAdmin from './Feedback/FeedbackAdmin';
+import SubmitFeedback from './Feedback/SubmitFeedback';
+ 
+// Organiser Components
 import Dashboard from './OrganiserDashboard/Dashboard';
 import CreateEventForm from './OrganiserDashboard/CreateEventForm';
 import UpdateEventPage from './OrganiserDashboard/UpdateEventPage';
 import EventDetails from './OrganiserDashboard/EventDetails';
  
-// --- USER PAGES ---
+// Context & Services
+import { useAuth } from './AuthContext';
+// import { startConnection, onNotificationReceived } from './BookingHistory/SignalService';
+// import { NotificationContext } from './BookingHistory/NotificationContext';
+ 
 import UserDashboard from './Dashboard/UserDashboard';
 import { User } from 'lucide-react';
-import ProfilePage from './Login/ProfilePage';
-import LandingPage from './components/LandingPage';
-
+ 
 function AppContent() {
   const { token, theme, role } = useAuth();
   const location = useLocation();
-  const showNav = location.pathname !== '/'; // hide navbar only on LandingPage ('/')
+  const showNav = location.pathname !== '/'; // hide navbar only on LandingPage
   // const { addNotification } = useContext(NotificationContext);
-  
+ 
   // State and toggles for Feedback section
   const [showList, setShowList] = useState(false);
   const toggleView = () => {
     setShowList(prevShowList => !prevShowList);
   };
  
-  // Effect to set initial Feedback view based on role
+  // Effect to set initial view for Feedback based on user role
   useEffect(() => {
-    setShowList(isOrganiser);
-  }, [isOrganiser, token]);
-
- 
-  const HomeRedirect = () => {
-    if (!token) {
-      return <Navigate to="/login" replace />;
+    if (role === 'Organiser') {
+      setShowList(true); // If Organiser, go to the previous feedbacks directly
+    } else {
+      setShowList(false); // If User, go to the submit feedback form
     }
-    return isOrganiser ?
-      <Navigate to="/organiser-dashboard" replace /> :
-      <Navigate to="/user-dashboard" replace />;
-  };
+  }, [role]);
+ 
+  // Effect for SignalR connection and notifications
+  // useEffect(() => {
+  //   startConnection();
+  //   onNotificationReceived((notification) => {
+  //     addNotification(notification);
+  //     toast.info(notification.message, {
+  //       position: "top-right",
+  //       autoClose: 5000,
+  //     });
+  //   });
+  // }, []); // Run only once on mount
+ 
+  // Determine if the user is an Organiser
+  const isOrganiser = role === 'Organiser';
  
   return (
     <div className="App" data-theme={theme}>
-      
       <Header />
-      {/* <LandingPage/> */}
       <ToastContainer />
       {/* <UserDashboard /> */}
-
-      {/* Show nav only if logged in */}
-      {token && showNav && (
+ 
+      {/* Show nav on all routes except LandingPage ('/') */}
+      {showNav && (
         <nav className="main-nav">
-          {isOrganiser ? (
-            /* --- ORGANISER NAV --- */
-            <>
-              <NavLink to="/organiser-dashboard">Dashboard</NavLink>
-              <NavLink to="/create-event">Create Event</NavLink>
-              <NavLink to="/feedback">Feedback</NavLink>
-            </>
+          {token ? (
+            isOrganiser ? (
+              <>
+                <NavLink to="/dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
+                <NavLink to="/create-event" style={{ margin: '10px' }}>Create Event</NavLink>
+                <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink to="/user-dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
+                <NavLink to="/booking-history" style={{ margin: '10px' }}>Booking History</NavLink>
+                <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
+                <NavLink to="/top-events" style={{ margin: '10px' }}>Top Events</NavLink>
+              </>
+            )
           ) : (
-            /* --- USER NAV --- */
             <>
-              <NavLink to="/user-dashboard">Home</NavLink>
-              <NavLink to="/bookings">My Bookings</NavLink>
-              <NavLink to="/top-events">Top Events</NavLink>
-              <NavLink to="/feedback">Feedback</NavLink>
+              <NavLink to="/login" style={{ margin: '10px' }}>Login</NavLink>
+              <NavLink to="/top-events" style={{ margin: '10px' }}>Top Events</NavLink>
             </>
           )}
         </nav>
@@ -83,32 +106,42 @@ function AppContent() {
  
       <main className="main-content">
         <Routes>
-          {/* Public login */}
+          {/* Public routes */}
           <Route path="/login" element={<Login />} />
-
-          {/* Always show LandingPage as the home screen (header/footer remain) */}
+          <Route path="/signup" element={<Signup />} />
+          {/* LandingPage is the public home screen */}
           <Route path="/" element={<LandingPage />} />
-
-          {/* Organiser Routes (protected) */}
-          <Route path="/create-event" element={token ? <CreateEventForm /> : <Login />} />
-          <Route path="/update-event" element={token ? <UpdateEventPage /> : <Login />} />
-          <Route path="/event-details" element={token ? <EventDetails /> : <Login />} />
-
-          {/* User / Booking Routes (require login for booking flow) */}
-          <Route path="/top-events" element={token ? <TopEvents /> : <Login />} />
-          <Route path="/event/:eventId" element={token ? <EventDetailsPage /> : <Login />} />
-          <Route path="/review-booking" element={token ? <ReviewBookingPage /> : <Login />} />
-          <Route path="/booking-confirmation" element={token ? <BookingConfirmationPage /> : <Login />} />
-
-          {/* Feedback (shared) */}
-          <Route 
+          {/* --- Protected Routes --- */}
+          {/* If token exists, show the page. If not, show Login page. */}
+ 
+          {isOrganiser ? (
+             /* Organiser Routes */
+             <>
+               <Route path="/create-event" element={token ? <CreateEventForm /> : <Login />} />
+               <Route path="/update-event" element={token ? <UpdateEventPage /> : <Login />} />
+               <Route path="/event-details" element={token ? <EventDetails /> : <Login />} />
+             </>
+           ) : (
+             /* User/Booking Routes */
+             <>
+               <Route path="/user-dashboard" element={token ? <UserDashboard /> : <Login />} />
+               <Route path="/top-events" element={token ? <TopEvents /> : <Login />} />
+               {/* Viewing event details / booking requires login — redirect to Login if not authenticated */}
+               <Route path="/event/:eventId" element={token ? <EventDetailsPage /> : <Login />} />
+               <Route path="/review-booking" element={token ? <ReviewBookingPage /> : <Login />} />
+               <Route path="/booking-confirmation" element={token ? <BookingConfirmationPage /> : <Login />} />
+             </>
+           )}
+         
+          {/* Feedback Route (Shared but with role logic inside) */}
+          <Route
             path="/feedback"
-            element={token ? (showList ? <FeedbackAdmin onShowForm={toggleView} /> : <SubmitFeedback onViewPrevious={toggleView} />) : <Login />}
+            element={token ?
+              (showList ? <FeedbackAdmin onShowForm={toggleView} /> : <SubmitFeedback onViewPrevious={toggleView} />
+              ) : <Login />
+            }
           />
-
-          <Route path="/profile" element={token ? <ProfilePage /> : <Login />} />
-
-          {/* fallback -> show landing for anonymous, otherwise route to dashboard by role */}
+          {/* Fallback: anonymous -> LandingPage, authenticated -> role default */}
           <Route path="*" element={token ? (isOrganiser ? <Dashboard /> : <UserDashboard />) : <LandingPage />} />
         </Routes>
       </main>
@@ -117,7 +150,6 @@ function AppContent() {
   );
 }
  
- 
 function App() {
   return (
     <Router>
@@ -125,6 +157,5 @@ function App() {
     </Router>
   );
 }
- 
  
 export default App;
