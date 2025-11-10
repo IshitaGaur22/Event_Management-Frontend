@@ -13,7 +13,7 @@
   max-width: 1200px;
   margin: 0 auto;
 }
-
+ 
 /* --- Top Section Layout --- */
 .footerTop {
   display: flex;
@@ -22,7 +22,7 @@
   align-items: center;
   gap: 2rem;
 }
-
+ 
 /* Logo */
 .footerLogo {
   display: flex;
@@ -38,7 +38,7 @@
   font-weight: 600;
   color: var(--simba-white);
 }
-
+ 
 /* Links */
 .footerLinks {
   display: flex;
@@ -55,7 +55,7 @@
 .footerLinks a:hover {
   color: var(--simba-orange-light);
 }
-
+ 
 /* --- Bottom Section Layout --- */
 .footerBottom {
   display: flex;
@@ -67,9 +67,8 @@
   padding-top: 1rem;
   border-top: 1px solid var(--simba-brown-medium);
 }
-
-
-
+ 
+ 
 .legalText {
   font-size: 0.8em;
   color: var(--simba-light-grey);
@@ -77,7 +76,7 @@
   flex: 1;
   min-width: 300px; 
 }
-
+ 
 .socialIcons {
   display: flex;
   gap: 1.5rem; /* Increased gap */
@@ -91,26 +90,26 @@
 .socialIcons a:hover {
   color: var(--simba-orange-light);
 }
-
+ 
 /* --- DARK MODE STYLES --- */
 html[data-theme='dark'] .legalText {
   color: var(--simba-off-white);
 }
-
+ 
 html[data-theme='dark'] .footerLinks a {
   color: var(--simba-off-white);
 }
 html[data-theme='dark'] .footerLinks a:hover {
   color: var(--simba-light-grey);
 }
-
+ 
 body[data-theme='dark'] .footerBottom {
   border-top-color: var(--simba-light-grey);
 }
 body[data-theme='dark'] .legalText {
   color: var(--simba-text-medium);
 }
-
+ 
 html[data-theme='dark'] .socialIcons a:hover {
   color: var(--simba-light-grey);
 }

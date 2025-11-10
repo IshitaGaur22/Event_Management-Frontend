@@ -1,33 +1,126 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Share2 } from 'lucide-react';
-import BookingSummaryHeader from '../components/Booking/BookingSummaryHeader';
-import TicketDetailsCard from '../components/Booking/TicketDetailsCard';
-import PaymentSummaryCard from '../components/Booking/PaymentSummaryCard';
+import { ArrowLeft, Share2, CreditCard, MapPin, Calendar, IndianRupee, Ticket, Plus, Minus } from 'lucide-react';
 import GetBookingDetails from './GetBookingDetails';
 import { useLocation, useNavigate } from 'react-router-dom';
+import api from '../Login/Api';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './ReviewBookingPage.css';
+import { useAuth } from '../AuthContext';
+
+const BookingSummaryHeader = ({ booking }) => (
+    <div className="flex p-4 border-b">
+        <div style={{ flexGrow: 1 }}>
+            <h2 style={{ color: 'var(--simba-brown-dark)', fontSize: '1.4rem', marginBottom: '0.25rem' }}>
+                {booking.EventName}
+            </h2>
+            <p style={{ color: 'var(--simba-text-medium)', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <MapPin size={16} style={{ color: 'var(--simba-orange-dark)' }} />
+                {booking.Location}
+            </p>
+        </div>
+    </div>
+);
+
+const SeatCounter = ({ count, setCount, maxSeats }) => {
+    return (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem', borderTop: '1px solid var(--simba-light-grey)', paddingTop: '1rem' }}>
+            <span style={{ fontWeight: 600, color: 'var(--simba-text-dark)' }}>Selected Seats:</span>
+            
+            <button 
+                onClick={() => setCount(c => Math.max(1, c - 1))}
+                disabled={count <= 1}
+                style={{ 
+                    background: 'var(--simba-orange-light)', 
+                    border: 'none', 
+                    borderRadius: '4px', 
+                    padding: '0.5rem', 
+                    cursor: 'pointer' 
+                }}
+            >
+                <Minus size={18} />
+            </button>
+            <span style={{ fontWeight: 700 }}>{count}</span>
+            <button 
+                onClick={() => setCount(c => Math.min(maxSeats, c + 1))}
+                disabled={count >= maxSeats}
+                style={{ 
+                    background: 'var(--simba-orange-dark)', 
+                    border: 'none', 
+                    borderRadius: '4px', 
+                    padding: '0.5rem', 
+                    cursor: 'pointer' 
+                }}
+            >
+                <Plus size={18} />
+            </button>
+            <span style={{ color: 'var(--simba-text-medium)', fontSize: '0.85rem' }}> (Max: {maxSeats})</span>
+        </div>
+    );
+};
+
+const TicketDetailsCard = ({ booking, selectedSeats, maxSeats, setSelectedSeats }) => {
+    const eventDateTime = `${booking.EventDate} at ${booking.Time}`;
+
+    return (
+        <div className="page-card">
+            <h3 style={{ color: 'var(--simba-orange-dark)', fontSize: '1.2rem', marginBottom: '1rem', borderBottom: '1px solid var(--simba-light-grey)', paddingBottom: '0.5rem' }}>
+                <Ticket size={20} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Booking Details
+            </h3>
+
+            <div className="detail-item">
+                <span><Calendar size={16} /> Date & Time:</span>
+                <span>{eventDateTime}</span>
+            </div>
+            
+            <div className="detail-item">
+                <span><IndianRupee size={16} /> Price/Ticket:</span>
+                <span>₹{booking.PricePerTicket.toFixed(2)}</span>
+            </div>
+            
+            <SeatCounter 
+                count={selectedSeats} 
+                setCount={setSelectedSeats} 
+                maxSeats={maxSeats} 
+            />
+        </div>
+    );
+};
+
+const PaymentSummaryCard = ({ totalAmount, onPaymentAdd }) => (
+    <div className="page-card">
+        <h3 style={{ color: 'var(--simba-orange-dark)', fontSize: '1.2rem', marginBottom: '1rem', borderBottom: '1px solid var(--simba-light-grey)', paddingBottom: '0.5rem' }}>
+            <CreditCard size={20} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Payment Summary
+        </h3>
+
+        <div className="detail-item" style={{marginTop: '1rem', borderTop: '1px solid var(--simba-text-dark)', paddingTop: '1rem'}}>
+            <span style={{ color: 'var(--simba-brown-dark)', fontSize: '1.2rem', fontWeight: 600 }}>Total Due:</span>
+            <span style={{ color: 'var(--simba-orange-light)', fontSize: '1.2rem', fontWeight: 700}}>₹{totalAmount.toFixed(2)}</span>
+        </div>
+
+        <button onClick={onPaymentAdd} className="book-button" style={{ marginTop: '1.5rem' }}>
+            Confirm Payment of ₹{totalAmount.toFixed(2)}
+        </button>
+    </div>
+);
 
 const ReviewBookingPage = () => {
-    const navigate= useNavigate();
+    const navigate = useNavigate();
     const location = useLocation();
+    const { userId } = useAuth();
     const routeState = location.state;
-
     const eventId = routeState?.eventId;
 
-    // State for the raw event data and seat selection
     const [eventDetails, setEventDetails] = useState(null);
     const [selectedSeats, setSelectedSeats] = useState(1);
     const [totalAmount, setTotalAmount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
 
-    // const FIXED_FEES = 15.00; // Mock fixed fee
-
-    // Effect to fetch event details on load
     useEffect(() => {
         if (eventId) {
             setIsLoading(true);
             GetBookingDetails(eventId).then(data => {
                 setEventDetails(data);
-                // Initialize selected seats to 1 after data load
                 setSelectedSeats(1); 
                 setIsLoading(false);
             });
@@ -36,15 +129,12 @@ const ReviewBookingPage = () => {
         }
     }, [eventId]);
 
-    // Effect to recalculate total amount when selectedSeats changes
     useEffect(() => {
         if (eventDetails) {
             const baseAmount = selectedSeats * eventDetails.PricePerTicket;
-            // const newTotalAmount = baseAmount + FIXED_FEES;
             setTotalAmount(baseAmount);
         }
     }, [selectedSeats, eventDetails]);
-
 
     if (isLoading) {
         return <div className="page-content" style={{textAlign: 'center', padding: '5rem'}}>Loading booking summary...</div>;
@@ -57,68 +147,105 @@ const ReviewBookingPage = () => {
         </div>;
     }
     
-    // DTO fields from state
     const bookingSummary = {
         ...eventDetails,
         SelectedSeats: selectedSeats,
-        TotalAmount: totalAmount, // Calculated value
+        TotalAmount: totalAmount,
     };
-
 
     const handleBack = () => navigate(`/event/${eventId}`);
     const handleShare = () => alert('Sharing booking details...');
-    // const handlePaymentAdd = () => console.log('Final Payment Confirmation for:', totalAmount);
-    const handlePaymentAdd = () => {
-        navigate('/booking-confirmation', {
-          state: {
-            eventName: bookingSummary.EventName,
-            performer: bookingSummary.Performer,
-            tickets: bookingSummary.SelectedSeats,
-            date: bookingSummary.Date,
-            time: bookingSummary.Time,
-            locationName: bookingSummary.Location,
-            totalAmount: bookingSummary.TotalAmount
-          }
-        });
-      };
+    
+    const handlePaymentAdd = async () => {
+        if (!userId) {
+            toast.error('User not found. Please login again.');
+            navigate('/login');
+            return;
+        }
 
+        // disable UI / indicate processing if needed (optional)
+        let success = false;
+        let serverResponse = null;
+
+        try {
+            // Call backend bookings endpoint (Review page performs the booking)
+            const resp = await api.post('/Bookings', {
+                selectedSeats,
+                userId,
+                eventId
+            }, {
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            success = true;
+            serverResponse = resp.data;
+        } catch (err) {
+            console.error('Booking API error', err);
+            success = false;
+            serverResponse = err.response?.data || err.message || 'Unknown error';
+        }
+
+        // Navigate to confirmation page with booking result and payload for display
+        navigate('/booking-confirmation', {
+            state: {
+                eventId,
+                selectedSeats,
+                eventName: bookingSummary.EventName,
+                performer: 'Event Organizer',
+                date: bookingSummary.EventDate,
+                time: bookingSummary.Time,
+                locationName: bookingSummary.Location,
+                totalAmount: totalAmount,
+                userId,
+                success,
+                serverResponse
+            }
+        });
+    };
 
     return (
         <div className="page-content">
-            {/* Top Bar Navigation/Action */}
+            <ToastContainer position="top-right" autoClose={3000} />
+            
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <button 
-                    onClick={handleBack}
-                    className="back-button"
-                    style={{padding: 0}}
-                >
-                    <ArrowLeft size={20} className="back-button-icon" /> 
-                    Back
+                <button onClick={handleBack} className="back-button">
+                    <ArrowLeft size={20} />
                 </button>
                 <h1 style={{fontSize: '1.5rem', margin: 0}}>Review Booking</h1>
-                <button 
-                    onClick={handleShare}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--simba-text-medium)' }}
-                >
+                <button onClick={handleShare} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--simba-text-medium)' }}>
                     <Share2 size={20} />
                 </button>
             </div>
             
+            {eventDetails.ImagePath && (
+                <img
+                    src={eventDetails.ImagePath}
+                    alt={eventDetails.EventName}
+                    style={{
+                        width: '100%',
+                        maxWidth: '400px',
+                        height: '200px',
+                        objectFit: 'cover',
+                        borderRadius: '8px',
+                        display: 'block',
+                        margin: '0 auto 1.5rem auto'
+                    }}
+                />
+            )}
+            
             <BookingSummaryHeader booking={bookingSummary} />
-
             <TicketDetailsCard 
                 booking={bookingSummary}
                 selectedSeats={selectedSeats}
-                maxSeats={eventDetails.TotalSeats} // Use TotalSeats from fetched data
+                maxSeats={eventDetails.TotalSeats}
                 setSelectedSeats={setSelectedSeats}
             />
-
             <PaymentSummaryCard 
                 totalAmount={totalAmount} 
                 onPaymentAdd={handlePaymentAdd} 
             />
-
         </div>
     );
 };
+
 export default ReviewBookingPage;

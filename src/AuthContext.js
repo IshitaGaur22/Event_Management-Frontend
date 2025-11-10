@@ -24,7 +24,7 @@ export function AuthProvider({ children }) {
     setRole(newRole);
     setUserId(newUserId); 
   };
-
+ 
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
