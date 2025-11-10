@@ -33,7 +33,6 @@ const Header = () => {
             {/* Show a moon for light mode, sun for dark mode */}
             {theme === 'light' ? '🌙' : '☀️'}
 </button>
-          {/* This part is the same */}
           {token && (
 <div className={styles.profileContainer}>
 <button 
@@ -43,12 +42,22 @@ const Header = () => {
 >
 <i className="fas fa-bell"></i> {/* Font Awesome Bell Icon */}
 </button>
-<div className={styles.profileIcon}>
-<svg fill="currentColor" viewBox="0 0 20 20">
-<path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" fillRule="evenodd"></path>
-</svg>
-</div>
-<button onClick={handleLogout} className={styles.logoutButton}>
+
+{/* profile icon now navigates to ProfilePage on click / Enter */}
+<div
+        className={styles.profileIcon}
+        onClick={() => navigate('/profile')}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
+        aria-label="Go to profile"
+      >
+        <svg fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" fillRule="evenodd"></path>
+        </svg>
+      </div>
+
+      <button onClick={handleLogout} className={styles.logoutButton}>
                 Logout
 </button>
 </div>

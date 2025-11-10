@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, NavLink, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, Link, useLocation } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -32,9 +32,13 @@ import { useAuth } from './AuthContext';
 
 import UserDashboard from './Dashboard/UserDashboard';
 import { User } from 'lucide-react';
+import ProfilePage from './Login/ProfilePage';
+import LandingPage from './components/LandingPage';
 
 function AppContent() {
   const { token, theme, role } = useAuth();
+  const location = useLocation();
+  const showNav = location.pathname !== '/'; // hide navbar only on LandingPage ('/')
   // const { addNotification } = useContext(NotificationContext);
   
   // State and toggles for Feedback section
@@ -69,12 +73,14 @@ function AppContent() {
 
   return (
     <div className="App" data-theme={theme}>
+      
       <Header />
+      {/* <LandingPage/> */}
       <ToastContainer />
       {/* <UserDashboard /> */}
 
       {/* Show nav only if logged in */}
-      {token && (
+      {token && showNav && (
         <nav className="main-nav">
           {/* Organiser Navigation */}
           {isOrganiser ? (
@@ -101,45 +107,33 @@ function AppContent() {
 
       <main className="main-content">
         <Routes>
-          {/* --- Public Route --- */}
+          {/* Public login */}
           <Route path="/login" element={<Login />} />
 
-          {/* --- Protected Routes --- */}
-          {/* If token exists, show the page. If not, show Login page. */}
+          {/* Always show LandingPage as the home screen (header/footer remain) */}
+          <Route path="/" element={<LandingPage />} />
 
-          {isOrganiser ? (
-            /* Organiser Routes */
-            <>
-              <Route path="/" element={token ? <Dashboard /> : <Login />} />
-              <Route path="/create-event" element={token ? <CreateEventForm /> : <Login />} />
-              <Route path="/update-event" element={token ? <UpdateEventPage /> : <Login />} />
-              <Route path="/event-details" element={token ? <EventDetails /> : <Login />} />
-            </>
-          ) : (
-            /* User/Booking Routes */
-            <>
-              <Route path="/" element={token ? <UserDashboard /> : <Login />} />
-              <Route path="/top-events" element={token ? <TopEvents /> : <Login />} />
-              {/* <Route path="/check-event" element={token ? <BookingWrapper /> : <Login />} /> */}
-              <Route path="/event/:eventId" element={<EventDetailsPage />} />
-              <Route path="/review-booking" element={<ReviewBookingPage />} />
-              <Route path="/booking-confirmation" element={<BookingConfirmationPage />} />
-              {/* <Route path="/booking-history" element={token ? <BookingHistory /> : <Login />} /> */}
-              {/* <Route path="/Notification" element={token ? <NotificationTab /> : <Login />} /> */}
-            </>
-          )}
-          
-          {/* Feedback Route (Shared but with role logic inside) */}
+          {/* Organiser Routes (protected) */}
+          <Route path="/create-event" element={token ? <CreateEventForm /> : <Login />} />
+          <Route path="/update-event" element={token ? <UpdateEventPage /> : <Login />} />
+          <Route path="/event-details" element={token ? <EventDetails /> : <Login />} />
+
+          {/* User / Booking Routes (require login for booking flow) */}
+          <Route path="/top-events" element={token ? <TopEvents /> : <Login />} />
+          <Route path="/event/:eventId" element={token ? <EventDetailsPage /> : <Login />} />
+          <Route path="/review-booking" element={token ? <ReviewBookingPage /> : <Login />} />
+          <Route path="/booking-confirmation" element={token ? <BookingConfirmationPage /> : <Login />} />
+
+          {/* Feedback (shared) */}
           <Route 
-            path="/feedback" 
-            element={token ? 
-              (showList ? <FeedbackAdmin onShowForm={toggleView} /> : <SubmitFeedback onViewPrevious={toggleView} />
-              ) : <Login />
-            }
+            path="/feedback"
+            element={token ? (showList ? <FeedbackAdmin onShowForm={toggleView} /> : <SubmitFeedback onViewPrevious={toggleView} />) : <Login />}
           />
 
-          {/* Fallback Route: Go to the respective default view if no token, otherwise the default view (Booking or Dashboard) */}
-          <Route path="*" element={token ? (isOrganiser ? <Dashboard /> : <UserDashboard />) : <Login />} />
+          <Route path="/profile" element={token ? <ProfilePage /> : <Login />} />
+
+          {/* fallback -> show landing for anonymous, otherwise route to dashboard by role */}
+          <Route path="*" element={token ? (isOrganiser ? <Dashboard /> : <UserDashboard />) : <LandingPage />} />
         </Routes>
       </main>
       <Footer />
