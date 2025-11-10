@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar, Clock, MapPin } from 'react-feather';
 import { MdCurrencyRupee } from 'react-icons/md';
+import './EventDetailsCard.css';
 
 const EventDetailsCard = ({ event }) => (
     <div className="event-card-detail">

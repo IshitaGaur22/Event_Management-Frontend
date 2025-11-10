@@ -23,6 +23,20 @@
     background-color: var(--simba-orange-light); /* Hover effect */
   }
   
+  .category-card.active {
+    background-color: var(--simba-orange-dark);
+    color: var(--simba-white);
+    transform: scale(1.05);
+  }
+  
+  .category-card.active h2 {
+    color: var(--simba-white);
+  }
+  
+  .category-card.active .category-icon {
+    color: var(--simba-white);
+  }
+  
   .category-icon {
     font-size: 40px;
     color: var(--simba-orange-dark); /* Icon color */

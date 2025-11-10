@@ -38,7 +38,7 @@
     color: var(--simba-white);
 }
 
-/* --- Stats Container (Top Events) --- */
+/* --- Top Events --- */
 .statsContainer {
     background-color: var(--simba-off-white);
     border: 1px solid var(--simba-light-grey);
@@ -83,7 +83,7 @@
     background-color: var(--simba-off-white);
     color: var(--simba-text-dark);
     transition: all 0.2s ease;
-    flex: 1 1 120px; /* Grow, shrink, and base width */
+    flex: 1 1 120px; 
 }
 .filterForm input:focus,
 .filterForm select:focus {
@@ -99,6 +99,7 @@
     font-weight: 500;
     font-size: 0.95em;
     flex-shrink: 0;
+    transition: all 0.2s ease-in-out;
 }
 .filterForm button[type="submit"] {
     background-color: var(--simba-orange-dark);
@@ -128,27 +129,24 @@
 .feedbackTable {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
-    border-radius: var(--radius-soft);
-    overflow: hidden; /* Important for border-radius */
-    box-shadow: var(--shadow-light);
-    border: 1px solid var(--simba-light-grey);
+    border-spacing: 0;
 }
 
 .feedbackTable th,
 .feedbackTable td {
-    padding: 12px 15px;
-    text-align: left;
-    vertical-align: top;
-    
+    padding: 10px 12px;
+    vertical-align: middle;
+    border-right: 1px solid rgba(0,0,0,0.08);
 }
 .feedbackTable tbody tr {
     border-bottom: 1px solid var(--simba-light-grey);
+    transition: all 0.2s ease-in-out;
 }
 .feedbackTable thead th {
     background-color: var(--simba-brown-dark);
     color: var(--simba-white);
     font-weight: 500;
+    border-bottom: 2px solid rgba(0,0,0,0.06);
 }
 
 .feedbackTable tbody tr:nth-child(even) {
@@ -165,7 +163,7 @@
     white-space: pre-wrap;
     word-break: break-word;
     font-size: 0.9em;
-    color: var(--simba-text-medium);
+    color: var(--simba-text-dark);
 }
 
 .actionsCell {
@@ -180,6 +178,7 @@
     border-radius: var(--radius-round);
     font-size: 0.85em;
     font-weight: 500;
+    transition: all 0.2s ease-in-out;
 }
 
 .actionsCell button:disabled {
@@ -234,24 +233,30 @@
 .filterContainer h3 {
     margin-top: 0;
     margin-bottom: 1.25rem;
-    color: var(--simba-brown-dark); /* A different color to distinguish */
+    color: var(--simba-brown-dark); 
     font-size: 1.3em;
 }
 
 .linkButton,.eventlink {
     background: none;
     border: none;
-    color: var(--simba-orange-dark); /* Use your theme's link color */
+    color: var(--simba-orange-dark); 
     text-decoration: underline;
     cursor: pointer;
     font-size: 1em;
     font-weight: bold;
     padding: 0;
     font-family: var(--font-primary);
+    transition: all 0.2s ease;
     
 }
 .eventlink{
     text-align: left;
+    color: var(--simba-orange-dark);
+}
+
+.eventlink:hover {
+    color: var(--simba-orange-light);
 }
 
 .linkButton:hover {
@@ -261,22 +266,82 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; /* Allows link to wrap below title on small screens */
+    flex-wrap: wrap; 
     gap: 1rem;
 }
 
 .adminHeader h2 {
-    margin-bottom: 0; /* Remove default margin from h2 */
+    margin-bottom: 0; 
 }
-/* --- Responsive Table --- */
-/* Desktop Styles */
+
 @media (min-width: 800px) {
   .container {
-    max-width: 1000px; /* Or 900px, your choice */
+    max-width: 1000px; 
   }
 
   .grid {
     grid-template-columns: 1fr 1fr;
     gap: 15px 25px;
+  }
+}
+
+/*  entrance animation */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.adminContainer {
+  will-change: opacity, transform;
+  animation: fadeInScale 320ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+
+.feedbackTable tbody tr {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: fadeInUp 280ms cubic-bezier(.2,.8,.2,1) forwards;
+}
+.feedbackTable tbody tr:nth-child(1) { animation-delay: 40ms; }
+.feedbackTable tbody tr:nth-child(2) { animation-delay: 80ms; }
+.feedbackTable tbody tr:nth-child(3) { animation-delay: 120ms; }
+.feedbackTable tbody tr:nth-child(4) { animation-delay: 160ms; }
+.feedbackTable tbody tr:nth-child(5) { animation-delay: 200ms; }
+
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .adminContainer,
+  .feedbackTable tbody tr {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+html[data-theme='dark'] .feedbackTable th,
+html[data-theme='dark'] .feedbackTable td {
+  border-right: 1px solid rgba(255, 255, 255, 0.135);
+}
+
+
+@media (max-width: 720px) {
+  .feedbackTable th,
+  .feedbackTable td {
+    border-right: none;
+  }
+
+  .feedbackTable tbody tr + tr td {
+    border-top: 1px solid rgba(0,0,0,0.06);
   }
 }

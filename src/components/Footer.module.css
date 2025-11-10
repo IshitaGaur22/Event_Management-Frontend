@@ -1,12 +1,13 @@
 .footer {
   width: 100%;
-  background-color: var(--simba-brown-dark);
+  background: linear-gradient(135deg, #6C4234 0%, #8B5A3C 50%, #6C4234 100%);
   color: var(--simba-white);
   margin-top: auto; 
   padding: 2rem 1rem 1rem 1rem;
   box-sizing: border-box; 
 }
- 
+
+
 .footerContent {
   max-width: 1200px;
   margin: 0 auto;
@@ -110,4 +111,8 @@ body[data-theme='dark'] .legalText {
  
 html[data-theme='dark'] .socialIcons a:hover {
   color: var(--simba-light-grey);
+}
+
+html[data-theme='dark'] .footer {
+  background: linear-gradient(135deg, #b08164 0%, #977865 50%, #b08164 100%);
 }

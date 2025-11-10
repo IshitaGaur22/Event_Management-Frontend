@@ -1,77 +1,94 @@
 import React, { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import CategoryList from './CategoryList';
-import EventCard from './EventCard'; // ✅ Import the new component
+import EventCard from './EventCard';
+import './UserDashboard.css';
 
-const UserDashboard = ({ userId }) => {
+const UserDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
   const [filter, setFilter] = useState('All');
-  const navigate = useNavigate();
+  const [activeCategoryId, setActiveCategoryId] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:7283/api/Events')
-      .then(res => setEvents(res.data))
+    axios.get('https://localhost:7283/api/Events')
+      .then(res => {
+        setEvents(res.data);
+        setFilteredEvents(res.data);
+      })
       .catch(err => console.error('Events fetch error:', err));
   }, []);
 
-  const handleSearch = () => {
-    axios.get(`http://localhost:7283/api/Events/search?query=${searchQuery}`)
-      .then(res => setEvents(res.data))
-      .catch(err => console.error('Search error:', err));
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredEvents(events);
+    } else {
+      const result = events.filter(ev =>
+        ev.eventName.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredEvents(result);
+    }
+  }, [searchQuery, events]);
+
+  const handleCategoryClick = (categoryId) => {
+    if (activeCategoryId === categoryId) {
+      // If same category clicked, reset to show all events
+      setActiveCategoryId(null);
+      setFilteredEvents(events);
+    } else {
+      // Filter by new category
+      setActiveCategoryId(categoryId);
+      const result = events.filter(ev => ev.categoryID === categoryId);
+      setFilteredEvents(result);
+    }
+  };
+
+  const handleDateFilter = (filterType) => {
+    setFilter(filterType);
+    const today = new Date();
+    let result = events;
+
+    if (filterType === 'Today') {
+      result = events.filter(ev => new Date(ev.eventDate).toDateString() === today.toDateString());
+    } else if (filterType === 'Tomorrow') {
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+      result = events.filter(ev => new Date(ev.eventDate).toDateString() === tomorrow.toDateString());
+    } else if (filterType === 'This Week') {
+      const weekEnd = new Date();
+      weekEnd.setDate(today.getDate() + 7);
+      result = events.filter(ev => new Date(ev.eventDate) <= weekEnd);
+    }
+
+    setFilteredEvents(result);
   };
 
   return (
-    <div className="dashboard-container" style={{ padding: '1rem' }}>
+    <div className="dashboard-container">
       {/* Search Bar */}
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+      <div className="search-bar">
         <input
           type="text"
           placeholder="Search for events"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          style={{
-            flex: 1,
-            padding: '0.5rem',
-            borderRadius: '6px',
-            border: '1px solid var(--simba-light-grey)'
-          }}
         />
-        <button
-          onClick={handleSearch}
-          style={{
-            marginLeft: '0.5rem',
-            background: 'var(--simba-orange-dark)',
-            color: '#fff',
-            border: 'none',
-            padding: '0.5rem',
-            borderRadius: '6px'
-          }}
-        >
-          <Search size={18} />
-        </button>
       </div>
 
       {/* Categories */}
-      <h3 style={{ marginBottom: '0.5rem', color: 'var(--simba-brown-dark)' }}>Explore Events</h3>
-      <CategoryList />
+      <h3 className="section-title">Explore Events</h3>
+      <CategoryList onCategoryClick={handleCategoryClick} activeCategoryId={activeCategoryId} />
 
-      {/* All Events */}
-      <h3 style={{ marginBottom: '0.5rem', marginTop: '1rem', color: 'var(--simba-brown-dark)' }}>All Events</h3>
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+      {/* Date Filters */}
+      <h3 className="section-title">All Events</h3>
+      <div className="filter-buttons">
         {['All', 'Today', 'Tomorrow', 'This Week'].map(f => (
           <button
             key={f}
-            onClick={() => setFilter(f)}
-            style={{
-              padding: '0.5rem 1rem',
-              background: filter === f ? 'var(--simba-orange-dark)' : '#eee',
-              color: filter === f ? '#fff' : '#333',
-              border: 'none',
-              borderRadius: '6px'
-            }}
+            onClick={() => handleDateFilter(f)}
+            className={filter === f ? 'active-filter' : ''}
           >
             {f}
           </button>
@@ -79,16 +96,10 @@ const UserDashboard = ({ userId }) => {
       </div>
 
       {/* Event Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-        gap: '1rem'
-      }}>
-        {events
-          .filter(ev => filter === 'All' || ev.dateFilter === filter)
-          .map(event => (
-            <EventCard key={event.eventId} event={event} />
-          ))}
+      <div className="event-grid">
+        {filteredEvents.map(event => (
+          <EventCard key={event.eventID} event={event} />
+        ))}
       </div>
     </div>
   );

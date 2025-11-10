@@ -1,0 +1,40 @@
+.event-details-card {
+  background-color: var(--simba-off-white);
+  padding: 1.5rem;
+  border-radius: 12px; /* ✅ Rounded corners */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-details-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.event-details-card h3 {
+  font-size: 1.3rem;
+  color: var(--simba-brown-dark);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.event-details-card .detail-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.event-details-card .detail-label {
+  color: var(--simba-text-medium);
+  font-weight: 500;
+}
+
+.event-details-card .detail-value {
+  color: var(--simba-orange-dark);
+  font-weight: 600;
+}
