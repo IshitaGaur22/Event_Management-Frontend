@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Search } from 'lucide-react';
 import axios from 'axios';
 import CategoryList from './CategoryList';
 import EventCard from './EventCard';
@@ -65,6 +64,13 @@ const UserDashboard = () => {
     setFilteredEvents(result);
   };
 
+  const resetFilters = () => {
+    setSearchQuery('');
+    setActiveCategoryId(null);
+    setFilter('All');
+    setFilteredEvents(events);
+  };
+
   return (
     <div className="dashboard-container">
       {/* Search Bar */}
@@ -93,14 +99,27 @@ const UserDashboard = () => {
             {f}
           </button>
         ))}
+        {/* <button onClick={resetFilters} style={{ marginLeft: '8px' }}>Reset</button> */}
       </div>
 
       {/* Event Grid */}
-      <div className="event-grid">
-        {filteredEvents.map(event => (
-          <EventCard key={event.eventID} event={event} />
-        ))}
-      </div>
+      {filteredEvents.length === 0 ? (
+        <div className="empty-state" style={{ padding: '2rem', textAlign: 'center' }}>
+          <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--simba-brown-dark)' }}>No events found!</h4>
+          <p style={{ margin: 0, color: 'var(--simba-text-medium)' }}>
+            Try adjusting your search or filters.
+          </p>
+          {/* <div style={{ marginTop: '1rem' }}>
+            <button onClick={resetFilters} className="cta">Show all events</button>
+          </div> */}
+        </div>
+      ) : (
+        <div className="event-grid">
+          {filteredEvents.map(event => (
+            <EventCard key={event.eventID || event.id || event.eventId} event={event} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

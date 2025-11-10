@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, Link, useLocation } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
  
@@ -20,25 +20,17 @@ import EventDetails from './OrganiserDashboard/EventDetails';
  
 // --- USER PAGES ---
 import UserDashboard from './Dashboard/UserDashboard';
-import GetBookings from './Booking/GetBookings';
-import BookTicketsForm from './Booking/BookTicketsForm';
-import UpdateBookingForm from './Booking/UpdateBookingForm';
-import SearchByUsername from './Booking/SearchByUsername';
-import SeatAvailability from './Booking/SeatAvailability';
-import TopEvents from './Booking/TopEvents';
-import PaymentDetails from './Booking/PaymentDetails';
-import UpdateCompleted from './Booking/UpdateCompleted';
- 
-// --- SHARED PAGES ---
-import FeedbackAdmin from './Feedback/FeedbackAdmin';
-import SubmitFeedback from './Feedback/SubmitFeedback';
- 
+import { User } from 'lucide-react';
+import ProfilePage from './Login/ProfilePage';
+import LandingPage from './components/LandingPage';
 
 function AppContent() {
   const { token, theme, role } = useAuth();
-  const isOrganiser = role === 'Organiser';
- 
-  // --- State for Feedback Page Toggle ---
+  const location = useLocation();
+  const showNav = location.pathname !== '/'; // hide navbar only on LandingPage ('/')
+  // const { addNotification } = useContext(NotificationContext);
+  
+  // State and toggles for Feedback section
   const [showList, setShowList] = useState(false);
   const toggleView = () => {
     setShowList(prevShowList => !prevShowList);
@@ -61,11 +53,14 @@ function AppContent() {
  
   return (
     <div className="App" data-theme={theme}>
+      
       <Header />
+      {/* <LandingPage/> */}
       <ToastContainer />
- 
-      {/* --- Role-Based Navigation --- */}
-      {token && (
+      {/* <UserDashboard /> */}
+
+      {/* Show nav only if logged in */}
+      {token && showNav && (
         <nav className="main-nav">
           {isOrganiser ? (
             /* --- ORGANISER NAV --- */
@@ -88,49 +83,33 @@ function AppContent() {
  
       <main className="main-content">
         <Routes>
-          {/* --- Public Route --- */}
+          {/* Public login */}
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
 
-          {/* --- Home/Redirector --- */}
-          <Route path="/" element={<HomeRedirect />} />
- 
-          {/* --- Protected Routes --- */}
-          {isOrganiser ? (
-            /* --- ORGANISER-ONLY ROUTES --- */
-            <>
-              <Route path="/organiser-dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/create-event" element={<ProtectedRoute><CreateEventForm /></ProtectedRoute>} />
-              <Route path="/update-event" element={<ProtectedRoute><UpdateEventPage /></ProtectedRoute>} />
-              <Route path="/event-details" element={<ProtectedRoute><EventDetails /></ProtectedRoute>} />
-            </>
-          ) : (
-            /* --- USER-ONLY ROUTES --- */
-            <>
-              <Route path="/user-dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
-              <Route path="/bookings" element={<ProtectedRoute><GetBookings /></ProtectedRoute>} />
-              <Route path="/add" element={<ProtectedRoute><BookTicketsForm /></ProtectedRoute>} />
-              <Route path="/edit/:id" element={<ProtectedRoute><UpdateBookingForm /></ProtectedRoute>} />
-              <Route path="/search" element={<ProtectedRoute><SearchByUsername /></ProtectedRoute>} />
-              <Route path="/availability" element={<ProtectedRoute><SeatAvailability /></ProtectedRoute>} />
-              <Route path="/top-events" element={<ProtectedRoute><TopEvents /></ProtectedRoute>} />
-              <Route path="/payment" element={<ProtectedRoute><PaymentDetails /></ProtectedRoute>} />
-              <Route path="/update-completed" element={<ProtectedRoute><UpdateCompleted /></ProtectedRoute>} />
-            </>
-          )}
-         
-          {/* --- SHARED FEEDBACK ROUTE --- */}
-          <Route
+          {/* Always show LandingPage as the home screen (header/footer remain) */}
+          <Route path="/" element={<LandingPage />} />
+
+          {/* Organiser Routes (protected) */}
+          <Route path="/create-event" element={token ? <CreateEventForm /> : <Login />} />
+          <Route path="/update-event" element={token ? <UpdateEventPage /> : <Login />} />
+          <Route path="/event-details" element={token ? <EventDetails /> : <Login />} />
+
+          {/* User / Booking Routes (require login for booking flow) */}
+          <Route path="/top-events" element={token ? <TopEvents /> : <Login />} />
+          <Route path="/event/:eventId" element={token ? <EventDetailsPage /> : <Login />} />
+          <Route path="/review-booking" element={token ? <ReviewBookingPage /> : <Login />} />
+          <Route path="/booking-confirmation" element={token ? <BookingConfirmationPage /> : <Login />} />
+
+          {/* Feedback (shared) */}
+          <Route 
             path="/feedback"
-            element={
-              <ProtectedRoute>
-                {showList ? <FeedbackAdmin onShowForm={toggleView} /> : <SubmitFeedback onViewPrevious={toggleView} />}
-              </ProtectedRoute>
-            }
+            element={token ? (showList ? <FeedbackAdmin onShowForm={toggleView} /> : <SubmitFeedback onViewPrevious={toggleView} />) : <Login />}
           />
- 
-          {/* --- Final catch-all if logged in but route doesn't exist --- */}
-           <Route path="*" element={<HomeRedirect />} />
+
+          <Route path="/profile" element={token ? <ProfilePage /> : <Login />} />
+
+          {/* fallback -> show landing for anonymous, otherwise route to dashboard by role */}
+          <Route path="*" element={token ? (isOrganiser ? <Dashboard /> : <UserDashboard />) : <LandingPage />} />
         </Routes>
       </main>
       <Footer />
