@@ -65,3 +65,17 @@
       transform: rotate(360deg);
     }
   }
+
+  /* Dark Mode */
+  html[data-theme='dark'] .category-card.active {
+    background-color: var(--simba-orange-light);
+    color: var(--simba-text-dark);
+  }
+
+  html[data-theme='dark'] .category-card.active h2 {
+    color: var(--simba-text-dark);
+  }
+
+  html[data-theme='dark'] .category-card.active .category-icon {
+    color: var(--simba-text-dark);
+  }

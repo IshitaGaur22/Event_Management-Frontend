@@ -65,6 +65,29 @@
     border-bottom: none;
 }
 
+.topEventsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.topEventCard {
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.topEventCard:hover {
+    transform: translateY(-4px);
+}
+
+.topEventImage {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
 /* --- Filter Form --- */
 .filterForm {
     display: flex;
@@ -344,4 +367,111 @@ html[data-theme='dark'] .feedbackTable td {
   .feedbackTable tbody tr + tr td {
     border-top: 1px solid rgba(0,0,0,0.06);
   }
+}
+
+/* Modal Styles */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+}
+
+.modalBox {
+    background-color: var(--simba-white);
+    border-radius: var(--radius-soft);
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: var(--shadow-medium);
+    animation: slideUp 0.3s ease;
+}
+
+.modalBox h3 {
+    color: var(--simba-orange-dark);
+    margin-bottom: 1rem;
+    font-size: 1.5em;
+}
+
+.modalBox p {
+    color: var(--simba-text-medium);
+    margin-bottom: 1rem;
+}
+
+.replyTextarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--simba-light-grey);
+    border-radius: var(--radius-soft);
+    font-family: var(--font-primary);
+    font-size: 0.95em;
+    resize: vertical;
+    margin-bottom: 1rem;
+    background-color: var(--simba-off-white);
+    color: var(--simba-text-dark);
+}
+
+.replyTextarea:focus {
+    border-color: var(--simba-orange-light);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(224, 145, 74, 0.2);
+}
+
+.modalButtons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.confirmBtn {
+    background-color: var(--simba-orange-dark);
+    color: var(--simba-white);
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--radius-round);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.confirmBtn:hover {
+    background-color: var(--simba-orange-light);
+}
+
+.cancelBtn {
+    background-color: var(--simba-light-grey);
+    color: var(--simba-text-medium);
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--radius-round);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancelBtn:hover {
+    background-color: var(--simba-white);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

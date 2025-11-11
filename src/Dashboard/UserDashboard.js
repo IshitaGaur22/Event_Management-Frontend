@@ -3,14 +3,14 @@ import axios from 'axios';
 import CategoryList from './CategoryList';
 import EventCard from './EventCard';
 import './UserDashboard.css';
-
+ 
 const UserDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [filter, setFilter] = useState('All');
   const [activeCategoryId, setActiveCategoryId] = useState(null);
-
+ 
   useEffect(() => {
     axios.get('https://localhost:7283/api/Events')
       .then(res => {
@@ -19,7 +19,7 @@ const UserDashboard = () => {
       })
       .catch(err => console.error('Events fetch error:', err));
   }, []);
-
+ 
   useEffect(() => {
     if (searchQuery.trim() === '') {
       setFilteredEvents(events);
@@ -30,7 +30,7 @@ const UserDashboard = () => {
       setFilteredEvents(result);
     }
   }, [searchQuery, events]);
-
+ 
   const handleCategoryClick = (categoryId) => {
     if (activeCategoryId === categoryId) {
       // If same category clicked, reset to show all events
@@ -43,12 +43,12 @@ const UserDashboard = () => {
       setFilteredEvents(result);
     }
   };
-
+ 
   const handleDateFilter = (filterType) => {
     setFilter(filterType);
     const today = new Date();
     let result = events;
-
+ 
     if (filterType === 'Today') {
       result = events.filter(ev => new Date(ev.eventDate).toDateString() === today.toDateString());
     } else if (filterType === 'Tomorrow') {
@@ -60,17 +60,17 @@ const UserDashboard = () => {
       weekEnd.setDate(today.getDate() + 7);
       result = events.filter(ev => new Date(ev.eventDate) <= weekEnd);
     }
-
+ 
     setFilteredEvents(result);
   };
-
+ 
   const resetFilters = () => {
     setSearchQuery('');
     setActiveCategoryId(null);
     setFilter('All');
     setFilteredEvents(events);
   };
-
+ 
   return (
     <div className="dashboard-container">
       {/* Search Bar */}
@@ -82,11 +82,11 @@ const UserDashboard = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-
+ 
       {/* Categories */}
       <h3 className="section-title">Explore Events</h3>
       <CategoryList onCategoryClick={handleCategoryClick} activeCategoryId={activeCategoryId} />
-
+ 
       {/* Date Filters */}
       <h3 className="section-title">All Events</h3>
       <div className="filter-buttons">
@@ -101,7 +101,7 @@ const UserDashboard = () => {
         ))}
         {/* <button onClick={resetFilters} style={{ marginLeft: '8px' }}>Reset</button> */}
       </div>
-
+ 
       {/* Event Grid */}
       {filteredEvents.length === 0 ? (
         <div className="empty-state" style={{ padding: '2rem', textAlign: 'center' }}>
@@ -123,5 +123,5 @@ const UserDashboard = () => {
     </div>
   );
 };
-
+ 
 export default UserDashboard;

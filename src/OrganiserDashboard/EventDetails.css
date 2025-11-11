@@ -182,3 +182,8 @@
     width: 100%;
   }
 }
+
+html[data-theme='dark'] .event-details-container {
+  color: var(--simba-white);
+  border: 1px solid var(--simba-light-grey);
+} 

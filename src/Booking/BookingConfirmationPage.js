@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import confetti from 'canvas-confetti';
 import { Download, Share } from 'lucide-react';
+import { NotificationContext } from '../BookingHistory/NotificationContext';
 
 const BookingConfirmationPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const bookingData = location.state;
-  const [isBookingDone, setIsBookingDone] = useState(null); // null = unknown, true/false = result
+  const [isBookingDone, setIsBookingDone] = useState(null);
+  const { addNotification } = useContext(NotificationContext);
+  const userId = localStorage.getItem('userId');
 
   // Run side effects (toast/confetti) depending on booking result passed from ReviewBookingPage
   useEffect(() => {
@@ -18,6 +21,14 @@ const BookingConfirmationPage = () => {
     const { success } = bookingData;
     if (success) {
       setIsBookingDone(true);
+      
+      // Add notification
+      addNotification({
+        message: `Your booking for "${bookingData.eventName}" has been confirmed!`,
+        type: 'Booking Confirmation',
+        userId: parseInt(userId)
+      });
+      
       toast.success('🎉 Your booking is confirmed!', {
         position: 'top-center',
         autoClose: 3000,
