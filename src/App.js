@@ -1,86 +1,101 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, Link } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
  
-// --- CORE & AUTH ---
+// Booking & User Components
+import BookingHistory from './BookingHistory/BookingHistory';
+import NotificationTab from './BookingHistory/NotificationTab';
+import TopEvents from './Booking/TopEvents';
+import EventDetailsPage from './Booking/EventDetailsPage';
+import ReviewBookingPage from './Booking/ReviewBookingPage';
+import BookingConfirmationPage from './Booking/BookingConfirmationPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './Login/Login';
 import Signup from './Login/Signup';
-import ProtectedRoute from './Login/ProtectedRoute';
-import { useAuth } from './AuthContext';
+import ProfilePage from './Login/ProfilePage';
  
-// --- ORGANISER PAGES ---
+// Feedback Components
+import FeedbackAdmin from './Feedback/FeedbackAdmin';
+import SubmitFeedback from './Feedback/SubmitFeedback';
+ 
+// Organiser Components
 import Dashboard from './OrganiserDashboard/Dashboard';
 import CreateEventForm from './OrganiserDashboard/CreateEventForm';
 import UpdateEventPage from './OrganiserDashboard/UpdateEventPage';
 import EventDetails from './OrganiserDashboard/EventDetails';
  
-// --- USER PAGES ---
+// Context & Services
+import { useAuth } from './AuthContext';
+import { startConnection, onNotificationReceived } from './BookingHistory/SignalService';
+import { NotificationContext } from './BookingHistory/NotificationContext';
+ 
 import UserDashboard from './Dashboard/UserDashboard';
-import GetBookings from './Booking/GetBookings';
-import BookTicketsForm from './Booking/BookTicketsForm';
-import UpdateBookingForm from './Booking/UpdateBookingForm';
-import SearchByUsername from './Booking/SearchByUsername';
-import SeatAvailability from './Booking/SeatAvailability';
-import TopEvents from './Booking/TopEvents';
-import PaymentDetails from './Booking/PaymentDetails';
-import UpdateCompleted from './Booking/UpdateCompleted';
+import { User } from 'lucide-react';
  
-// --- SHARED PAGES ---
-import FeedbackAdmin from './Feedback/FeedbackAdmin';
-import SubmitFeedback from './Feedback/SubmitFeedback';
- 
-
 function AppContent() {
   const { token, theme, role } = useAuth();
-  const isOrganiser = role === 'Organiser';
+  const { addNotification } = useContext(NotificationContext);
  
-  // --- State for Feedback Page Toggle ---
+  // State and toggles for Feedback section
   const [showList, setShowList] = useState(false);
   const toggleView = () => {
     setShowList(prevShowList => !prevShowList);
   };
  
-  // Effect to set initial Feedback view based on role
+  // Effect to set initial view for Feedback based on user role
   useEffect(() => {
-    setShowList(isOrganiser);
-  }, [isOrganiser, token]);
-
- 
-  const HomeRedirect = () => {
-    if (!token) {
-      return <Navigate to="/login" replace />;
+    if (role === 'Organiser') {
+      setShowList(true); // If Organiser, go to the previous feedbacks directly
+    } else {
+      setShowList(false); // If User, go to the submit feedback form
     }
-    return isOrganiser ?
-      <Navigate to="/organiser-dashboard" replace /> :
-      <Navigate to="/user-dashboard" replace />;
-  };
+  }, [role]);
+ 
+  // Effect for SignalR connection and notifications
+  // useEffect(() => {
+  //   startConnection();
+  //   onNotificationReceived((notification) => {
+  //     addNotification(notification);
+  //     toast.info(notification.message, {
+  //       position: "top-right",
+  //       autoClose: 5000,
+  //     });
+  //   });
+  // }, []); // Run only once on mount
+ 
+  // Determine if the user is an Organiser
+  const isOrganiser = role === 'Organiser';
  
   return (
     <div className="App" data-theme={theme}>
       <Header />
       <ToastContainer />
+      {/* <UserDashboard /> */}
  
-      {/* --- Role-Based Navigation --- */}
+      {/* Show nav only if logged in */}
       {token && (
         <nav className="main-nav">
+          {/* Organiser Navigation */}
           {isOrganiser ? (
-            /* --- ORGANISER NAV --- */
             <>
-              <NavLink to="/organiser-dashboard">Dashboard</NavLink>
-              <NavLink to="/create-event">Create Event</NavLink>
-              <NavLink to="/feedback">Feedback</NavLink>
+              <NavLink to="/dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
+              <NavLink to="/create-event" style={{ margin: '10px' }}>Create Event</NavLink>
+              {/* Note: /update-event and /event-details paths are typically navigated to from the Dashboard */}
+              <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
+             
             </>
           ) : (
-            /* --- USER NAV --- */
+            /* User/Booking Navigation */
             <>
-              <NavLink to="/user-dashboard">Home</NavLink>
-              <NavLink to="/bookings">My Bookings</NavLink>
-              <NavLink to="/top-events">Top Events</NavLink>
-              <NavLink to="/feedback">Feedback</NavLink>
+              <NavLink to="/user-dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
+              <NavLink to="/booking-history" style={{ margin: '10px' }}>Booking History</NavLink>
+              {/* <NavLink to="/Notification" style={{ margin: '10px' }}>Notification 🔔</NavLink> */}
+              <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
+              {/* <NavLink to="/check-event" style={{ margin: '10px' }}>Check Event</NavLink */}
+              <NavLink to="/top-events" style={{ margin: '10px' }}>Top Events</NavLink>
             </>
           )}
         </nav>
@@ -91,53 +106,48 @@ function AppContent() {
           {/* --- Public Route --- */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-
-          {/* --- Home/Redirector --- */}
-          <Route path="/" element={<HomeRedirect />} />
- 
           {/* --- Protected Routes --- */}
+          {/* If token exists, show the page. If not, show Login page. */}
+ 
           {isOrganiser ? (
-            /* --- ORGANISER-ONLY ROUTES --- */
+            /* Organiser Routes */
             <>
-              <Route path="/organiser-dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/create-event" element={<ProtectedRoute><CreateEventForm /></ProtectedRoute>} />
-              <Route path="/update-event" element={<ProtectedRoute><UpdateEventPage /></ProtectedRoute>} />
-              <Route path="/event-details" element={<ProtectedRoute><EventDetails /></ProtectedRoute>} />
+              <Route path="/" element={token ? <Dashboard /> : <Login />} />
+              <Route path="/dashboard" element={token ? <Dashboard /> : <Login />} />
+              <Route path="/create-event" element={token ? <CreateEventForm /> : <Login />} />
+              <Route path="/update-event" element={token ? <UpdateEventPage /> : <Login />} />
+              <Route path="/event-details" element={token ? <EventDetails /> : <Login />} />
             </>
           ) : (
-            /* --- USER-ONLY ROUTES --- */
+            /* User/Booking Routes */
             <>
-              <Route path="/user-dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
-              <Route path="/bookings" element={<ProtectedRoute><GetBookings /></ProtectedRoute>} />
-              <Route path="/add" element={<ProtectedRoute><BookTicketsForm /></ProtectedRoute>} />
-              <Route path="/edit/:id" element={<ProtectedRoute><UpdateBookingForm /></ProtectedRoute>} />
-              <Route path="/search" element={<ProtectedRoute><SearchByUsername /></ProtectedRoute>} />
-              <Route path="/availability" element={<ProtectedRoute><SeatAvailability /></ProtectedRoute>} />
-              <Route path="/top-events" element={<ProtectedRoute><TopEvents /></ProtectedRoute>} />
-              <Route path="/payment" element={<ProtectedRoute><PaymentDetails /></ProtectedRoute>} />
-              <Route path="/update-completed" element={<ProtectedRoute><UpdateCompleted /></ProtectedRoute>} />
+              <Route path="/" element={<UserDashboard />} />
+              <Route path="/user-dashboard" element={<UserDashboard />} />
+              <Route path="/profile" element={token ? <ProfilePage /> : <Login />} />
+              <Route path="/top-events" element={token ? <TopEvents /> : <Login />} />
+              <Route path="/event/:eventId" element={<EventDetailsPage />} />
+              <Route path="/review-booking" element={token ? <ReviewBookingPage /> : <Login />} />
+              <Route path="/booking-confirmation" element={token ? <BookingConfirmationPage /> : <Login />} />
+              <Route path="/booking-history" element={token ? <BookingHistory /> : <Login />} />
+              <Route path="/notification" element={token ? <NotificationTab /> : <Login />} />
             </>
           )}
          
-          {/* --- SHARED FEEDBACK ROUTE --- */}
           <Route
             path="/feedback"
-            element={
-              <ProtectedRoute>
-                {showList ? <FeedbackAdmin onShowForm={toggleView} /> : <SubmitFeedback onViewPrevious={toggleView} />}
-              </ProtectedRoute>
+            element={token ?
+              (showList ? <FeedbackAdmin onShowForm={toggleView} /> : <SubmitFeedback onViewPrevious={toggleView} />
+              ) : <Login />
             }
           />
  
-          {/* --- Final catch-all if logged in but route doesn't exist --- */}
-           <Route path="*" element={<HomeRedirect />} />
+          <Route path="*" element={isOrganiser ? (token ? <Dashboard /> : <Login />) : <UserDashboard />} />
         </Routes>
       </main>
       <Footer />
     </div>
   );
 }
- 
  
 function App() {
   return (
@@ -146,6 +156,5 @@ function App() {
     </Router>
   );
 }
- 
  
 export default App;

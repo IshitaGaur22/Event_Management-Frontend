@@ -49,3 +49,20 @@
     text-decoration: underline;
     opacity: 0.95;
   }
+
+  /* Dark Theme */
+  html[data-theme='dark'] .event-description-card h3 {
+    color: var(--simba-white);
+  }
+
+  html[data-theme='dark'] .description-text {
+    color: var(--simba-white);
+  }
+
+  html[data-theme='dark'] .event-description-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  html[data-theme='dark'] .event-card-detail {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }

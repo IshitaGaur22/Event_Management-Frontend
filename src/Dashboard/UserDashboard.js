@@ -66,9 +66,16 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="dashboard-container">
-      {/* Search Bar */}
-      <div className="search-bar">
+    <>
+      {/* Welcome Box */}
+      <div className="welcome-section">
+        <h1 className="welcome-title">Welcome to <span className="brand-highlight">SIMBA Events</span></h1>
+        <p className="welcome-subtitle">Explore, manage, and create unforgettable experiences.</p>
+      </div>
+
+      <div className="dashboard-container">
+        {/* Search Bar */}
+        <div className="search-bar">
         <input
           type="text"
           placeholder="Search for events"
@@ -101,7 +108,8 @@ const UserDashboard = () => {
           <EventCard key={event.eventID} event={event} />
         ))}
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

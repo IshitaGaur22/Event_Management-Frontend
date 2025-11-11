@@ -1,5 +1,5 @@
 .page-content {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 2rem;
     font-family: 'Poppins', sans-serif;
@@ -105,4 +105,14 @@
   
   .page-card button:hover {
     background-color: var(--simba-orange-light);
+  }
+
+  html[data-theme='dark'] .page-content {
+    background: 
+    linear-gradient(
+        to bottom right,
+            var(--simba-dark-bg) 0%,
+            #3A2A24 40%,
+            var(--simba-orange-light) 80%,
+            var(--simba-orange-dark) 100%);
   }

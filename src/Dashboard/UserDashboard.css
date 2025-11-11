@@ -1,3 +1,29 @@
+/* Welcome Section */
+.welcome-section {
+  background-color: var(--simba-orange-dark);
+  padding: 3rem 2rem;
+  text-align: center;
+  color: white;
+  margin-bottom: 0;
+}
+
+.welcome-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.brand-highlight {
+  color: var(--simba-accent-color, #ffa726);
+  font-weight: 800;
+}
+
+.welcome-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.95;
+  margin: 0;
+}
+
 .dashboard-container {
     padding: 2rem;
     font-family: 'Poppins', sans-serif;
@@ -96,4 +122,21 @@
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 1.5rem;
   }
-  
+
+  /* Dark Mode */
+  html[data-theme='dark'] .welcome-section {
+    background-color: var(--simba-accent-color);
+  }
+
+  @media (max-width: 768px) {
+    .welcome-title {
+      font-size: 1.8rem;
+    }
+    .welcome-subtitle {
+      font-size: 1rem;
+    }
+  }
+
+  html[data-theme='dark'] .search-bar input {
+    background-color: #f4f4f4c5; ;
+  }

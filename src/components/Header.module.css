@@ -92,6 +92,27 @@
   box-shadow: var(--shadow-light);
 }
 
+/* --- Login Button --- */
+.loginButton {
+  font-family: var(--font-primary);
+  font-weight: 500;
+  font-size: 0.9em;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-round);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  
+  background-color: var(--simba-orange-dark);
+  color: var(--simba-white);
+  border: 1px solid var(--simba-orange-dark);
+}
+ 
+.loginButton:hover {
+  background-color: var(--simba-orange-light);
+  border-color: var(--simba-orange-light);
+  box-shadow: var(--shadow-light);
+}
+
 .rightContainer {
   display: flex;
   align-items: center;

@@ -23,6 +23,9 @@ function FeedbackAdmin({onShowForm}) {
     const [summaryData, setSummaryData] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showTopEvents, setShowTopEvents] = useState(false);
+    const [archivingFeedback, setArchivingFeedback] = useState(null);
+    const [replyingFeedback, setReplyingFeedback] = useState(null);
+    const [replyText, setReplyText] = useState('');
 
     const getCurrentParams = () => ({
         eventName: filterEventName || null,
@@ -102,14 +105,11 @@ function FeedbackAdmin({onShowForm}) {
 
     // Archive
     const handleArchive = (id) => {
-        if (!toast.confirm('Are you sure you want to archive this feedback?')) {
-            return;
-        }
-        
         api.put(`/Feedbacks/ArchiveFeedback/${id}`)
             .then(() => {
                 toast.success('Feedback archived!');
-                loadFeedbacks(getCurrentParams()); // Refresh the list
+                setArchivingFeedback(null);
+                loadFeedbacks(getCurrentParams());
             })
             .catch(err => {
                 showErrorMessage(err);
@@ -119,15 +119,17 @@ function FeedbackAdmin({onShowForm}) {
     
     // Update-Reply
     const handleReply = (id) => {
-        const replyText = prompt('Enter your reply:');
         if (!replyText || replyText.trim() === '') {
+            toast.error('Reply cannot be empty');
             return;
         }
 
         api.post(`/Feedbacks/ReplyToFeedback/${id}`, { replyText })
             .then(() => {
                 toast.success('Reply submitted!');
-                loadFeedbacks(getCurrentParams()); // Refresh the list
+                setReplyingFeedback(null);
+                setReplyText('');
+                loadFeedbacks(getCurrentParams());
             })
             .catch(err => {
                 showErrorMessage(err);
@@ -228,11 +230,11 @@ function FeedbackAdmin({onShowForm}) {
                                 <td>{fb.reply || 'N/A'}</td>
                                 {role === 'Organiser' && (
                                     <td className={styles.actionsCell}>
-                                        <button onClick={() => handleReply(fb.feedbackId)} disabled={fb.reply}>
+                                        <button onClick={() => setReplyingFeedback(fb)} disabled={fb.reply}>
                                             Reply
                                         </button>
                                         <button 
-                                            onClick={() => handleArchive(fb.feedbackId)} 
+                                            onClick={() => setArchivingFeedback(fb)} 
                                             className={styles.archiveButton}
                                         >
                                             Archive
@@ -250,6 +252,42 @@ function FeedbackAdmin({onShowForm}) {
                     data={summaryData} 
                     onClose={() => setIsModalOpen(false)} 
                 />
+            )}
+
+            {/* Archive Confirmation Modal */}
+            {archivingFeedback && (
+                <div className={styles.modalOverlay} onClick={() => setArchivingFeedback(null)}>
+                    <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>
+                        <h3>Archive Feedback</h3>
+                        <p>Are you sure you want to archive this feedback from {archivingFeedback.userName}?</p>
+                        <div className={styles.modalButtons}>
+                            <button className={styles.confirmBtn} onClick={() => handleArchive(archivingFeedback.feedbackId)}>Archive</button>
+                            <button className={styles.cancelBtn} onClick={() => setArchivingFeedback(null)}>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Reply Modal */}
+            {replyingFeedback && (
+                <div className={styles.modalOverlay} onClick={() => { setReplyingFeedback(null); setReplyText(''); }}>
+                    <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>
+                        <h3>Reply to Feedback</h3>
+                        <p><strong>User:</strong> {replyingFeedback.userName}</p>
+                        <p><strong>Comment:</strong> {replyingFeedback.comments}</p>
+                        <textarea 
+                            className={styles.replyTextarea}
+                            placeholder="Enter your reply..."
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}
+                            rows={4}
+                        />
+                        <div className={styles.modalButtons}>
+                            <button className={styles.confirmBtn} onClick={() => handleReply(replyingFeedback.feedbackId)}>Send Reply</button>
+                            <button className={styles.cancelBtn} onClick={() => { setReplyingFeedback(null); setReplyText(''); }}>Cancel</button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );
