@@ -6,8 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import LandingPage from './components/LandingPage'; // make sure this path is correct
  
 // Booking & User Components
-// import BookingHistory from './BookingHistory/BookingHistory';
-// import NotificationTab from './BookingHistory/NotificationTab';
+import BookingHistory from './BookingHistory/BookingHistory';
+import NotificationTab from './BookingHistory/NotificationTab';
 import TopEvents from './Booking/TopEvents';
 import EventDetailsPage from './Booking/EventDetailsPage';
 import ReviewBookingPage from './Booking/ReviewBookingPage';
@@ -16,6 +16,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './Login/Login';
 import Signup from './Login/Signup';
+import ProfilePage from './Login/ProfilePage';
  
 // Feedback Components
 import FeedbackAdmin from './Feedback/FeedbackAdmin';
@@ -29,8 +30,8 @@ import EventDetails from './OrganiserDashboard/EventDetails';
  
 // Context & Services
 import { useAuth } from './AuthContext';
-// import { startConnection, onNotificationReceived } from './BookingHistory/SignalService';
-// import { NotificationContext } from './BookingHistory/NotificationContext';
+import { startConnection, onNotificationReceived } from './BookingHistory/SignalService';
+import { NotificationContext } from './BookingHistory/NotificationContext';
  
 import UserDashboard from './Dashboard/UserDashboard';
 import { User } from 'lucide-react';
@@ -38,8 +39,13 @@ import { User } from 'lucide-react';
 function AppContent() {
   const { token, theme, role } = useAuth();
   const location = useLocation();
-  const showNav = location.pathname !== '/'; // hide navbar only on LandingPage
-  // const { addNotification } = useContext(NotificationContext);
+  const showNav = location.pathname !== '/'; 
+  const { addNotification } = useContext(NotificationContext);
+
+  useEffect(() => {
+    // immediate jump to top — change to behavior: 'smooth' if you prefer animated scroll
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [location.pathname]);
  
   // State and toggles for Feedback section
   const [showList, setShowList] = useState(false);
@@ -56,18 +62,7 @@ function AppContent() {
     }
   }, [role]);
  
-  // Effect for SignalR connection and notifications
-  // useEffect(() => {
-  //   startConnection();
-  //   onNotificationReceived((notification) => {
-  //     addNotification(notification);
-  //     toast.info(notification.message, {
-  //       position: "top-right",
-  //       autoClose: 5000,
-  //     });
-  //   });
-  // }, []); // Run only once on mount
- 
+  
   // Determine if the user is an Organiser
   const isOrganiser = role === 'Organiser';
  
@@ -125,13 +120,18 @@ function AppContent() {
              /* User/Booking Routes */
              <>
                <Route path="/user-dashboard" element={token ? <UserDashboard /> : <Login />} />
-               <Route path="/top-events" element={token ? <TopEvents /> : <Login />} />
+               <Route path="/top-events" element={<TopEvents />} />
                {/* Viewing event details / booking requires login — redirect to Login if not authenticated */}
                <Route path="/event/:eventId" element={token ? <EventDetailsPage /> : <Login />} />
                <Route path="/review-booking" element={token ? <ReviewBookingPage /> : <Login />} />
                <Route path="/booking-confirmation" element={token ? <BookingConfirmationPage /> : <Login />} />
+               <Route path="/booking-history" element={token ? <BookingHistory /> : <Login />} />
+               <Route path="/notification" element={token ? <NotificationTab /> : <Login />} />
              </>
            )}
+          
+          {/* Profile Route - Available for both User and Organiser */}
+          <Route path="/profile" element={token ? <ProfilePage /> : <Login />} />
          
           {/* Feedback Route (Shared but with role logic inside) */}
           <Route

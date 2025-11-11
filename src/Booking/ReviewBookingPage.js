@@ -58,18 +58,18 @@ const TicketDetailsCard = ({ booking, selectedSeats, maxSeats, setSelectedSeats 
     const eventDateTime = `${booking.EventDate} at ${booking.Time}`;
 
     return (
-        <div className="page-card">
+        <div className="page-card" style={{ textAlign: 'center' }}>
             <h3 style={{ color: 'var(--simba-orange-dark)', fontSize: '1.2rem', marginBottom: '1rem', borderBottom: '1px solid var(--simba-light-grey)', paddingBottom: '0.5rem' }}>
                 <Ticket size={20} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Booking Details
             </h3>
 
-            <div className="detail-item">
-                <span><Calendar size={16} /> Date & Time: </span>
+            <div className="detail-item" style={{ justifyContent: 'center' }}>
+                <span><Calendar size={16} /><b> Date & Time:  </b></span>
                 <span>{eventDateTime}</span>
             </div>
             
-            <div className="detail-item">
-                <span><IndianRupee size={16} /> Price/Ticket: </span>
+            <div className="detail-item" style={{ justifyContent: 'center' }}>
+                <span><IndianRupee size={16} /><b> Price/Ticket: </b></span>
                 <span>₹{booking.PricePerTicket.toFixed(2)}</span>
             </div>
             
@@ -82,11 +82,37 @@ const TicketDetailsCard = ({ booking, selectedSeats, maxSeats, setSelectedSeats 
     );
 };
 
-const PaymentSummaryCard = ({ totalAmount, onPaymentAdd }) => (
+const PaymentSummaryCard = ({ totalAmount, onPaymentAdd, paymentMethod, setPaymentMethod }) => (
     <div className="page-card">
         <h3 style={{ color: 'var(--simba-orange-dark)', fontSize: '1.2rem', marginBottom: '1rem', borderBottom: '1px solid var(--simba-light-grey)', paddingBottom: '0.5rem' }}>
             <CreditCard size={20} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Payment Summary
         </h3>
+
+        <div style={{ marginBottom: '0.8rem', textAlign: 'center' }}>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, color: 'var(--simba-brown-dark)', fontSize: '0.9rem' }}>Payment Method:</label>
+            <div style={{ display: 'flex', gap: '0.5rem', maxWidth: '220px', margin: '0 auto' }}>
+                <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', padding: '0.4rem 0.6rem', border: `1px solid ${paymentMethod === 'UPI' ? 'var(--simba-orange-dark)' : 'var(--simba-light-grey)'}`, borderRadius: '4px', flex: 1, justifyContent: 'center', fontSize: '0.85rem' }}>
+                    <input 
+                        type="radio" 
+                        value="UPI" 
+                        checked={paymentMethod === 'UPI'} 
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        style={{ marginRight: '0.3rem', width: '12px', height: '12px', accentColor: 'var(--simba-brown-dark)' }}
+                    />
+                    UPI
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', padding: '0.4rem 0.6rem', border: `1px solid ${paymentMethod === 'Card' ? 'var(--simba-orange-dark)' : 'var(--simba-light-grey)'}`, borderRadius: '4px', flex: 1, justifyContent: 'center', fontSize: '0.85rem' }}>
+                    <input 
+                        type="radio" 
+                        value="Card" 
+                        checked={paymentMethod === 'Card'} 
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        style={{ marginRight: '0.3rem', width: '12px', height: '12px', accentColor: 'var(--simba-brown-dark)' }}
+                    />
+                    Card
+                </label>
+            </div>
+        </div>
 
         <div className="detail-item" style={{marginTop: '1rem', borderTop: '1px solid var(--simba-text-dark)', paddingTop: '1rem'}}>
             <span style={{ color: 'var(--simba-brown-dark)', fontSize: '1.2rem', fontWeight: 600 }}>Total Due:</span>
@@ -94,7 +120,7 @@ const PaymentSummaryCard = ({ totalAmount, onPaymentAdd }) => (
         </div>
 
         <button onClick={onPaymentAdd} className="book-button" style={{ marginTop: '1.5rem' }}>
-            Confirm Payment of ₹{totalAmount.toFixed(2)}
+            Pay via {paymentMethod} - ₹{totalAmount.toFixed(2)}
         </button>
     </div>
 );
@@ -110,6 +136,7 @@ const ReviewBookingPage = () => {
     const [selectedSeats, setSelectedSeats] = useState(1);
     const [totalAmount, setTotalAmount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    const [paymentMethod, setPaymentMethod] = useState('UPI');
 
     useEffect(() => {
         if (eventId) {
@@ -237,7 +264,9 @@ const ReviewBookingPage = () => {
             />
             <PaymentSummaryCard 
                 totalAmount={totalAmount} 
-                onPaymentAdd={handlePaymentAdd} 
+                onPaymentAdd={handlePaymentAdd}
+                paymentMethod={paymentMethod}
+                setPaymentMethod={setPaymentMethod}
             />
         </div>
     );
