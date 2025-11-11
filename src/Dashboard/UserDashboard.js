@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Search } from 'lucide-react';
 import axios from 'axios';
 import CategoryList from './CategoryList';
 import EventCard from './EventCard';
 import './UserDashboard.css';
-
+ 
 const UserDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [filter, setFilter] = useState('All');
   const [activeCategoryId, setActiveCategoryId] = useState(null);
-
+ 
   useEffect(() => {
     axios.get('https://localhost:7283/api/Events')
       .then(res => {
@@ -20,7 +19,7 @@ const UserDashboard = () => {
       })
       .catch(err => console.error('Events fetch error:', err));
   }, []);
-
+ 
   useEffect(() => {
     if (searchQuery.trim() === '') {
       setFilteredEvents(events);
@@ -31,7 +30,7 @@ const UserDashboard = () => {
       setFilteredEvents(result);
     }
   }, [searchQuery, events]);
-
+ 
   const handleCategoryClick = (categoryId) => {
     if (activeCategoryId === categoryId) {
       // If same category clicked, reset to show all events
@@ -44,12 +43,12 @@ const UserDashboard = () => {
       setFilteredEvents(result);
     }
   };
-
+ 
   const handleDateFilter = (filterType) => {
     setFilter(filterType);
     const today = new Date();
     let result = events;
-
+ 
     if (filterType === 'Today') {
       result = events.filter(ev => new Date(ev.eventDate).toDateString() === today.toDateString());
     } else if (filterType === 'Tomorrow') {
@@ -61,21 +60,21 @@ const UserDashboard = () => {
       weekEnd.setDate(today.getDate() + 7);
       result = events.filter(ev => new Date(ev.eventDate) <= weekEnd);
     }
-
+ 
     setFilteredEvents(result);
   };
-
+ 
+  const resetFilters = () => {
+    setSearchQuery('');
+    setActiveCategoryId(null);
+    setFilter('All');
+    setFilteredEvents(events);
+  };
+ 
   return (
-    <>
-      {/* Welcome Box */}
-      <div className="welcome-section">
-        <h1 className="welcome-title">Welcome to <span className="brand-highlight">SIMBA Events</span></h1>
-        <p className="welcome-subtitle">Explore, manage, and create unforgettable experiences.</p>
-      </div>
-
-      <div className="dashboard-container">
-        {/* Search Bar */}
-        <div className="search-bar">
+    <div className="dashboard-container">
+      {/* Search Bar */}
+      <div className="search-bar">
         <input
           type="text"
           placeholder="Search for events"
@@ -83,11 +82,11 @@ const UserDashboard = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-
+ 
       {/* Categories */}
       <h3 className="section-title">Explore Events</h3>
       <CategoryList onCategoryClick={handleCategoryClick} activeCategoryId={activeCategoryId} />
-
+ 
       {/* Date Filters */}
       <h3 className="section-title">All Events</h3>
       <div className="filter-buttons">
@@ -100,17 +99,29 @@ const UserDashboard = () => {
             {f}
           </button>
         ))}
+        {/* <button onClick={resetFilters} style={{ marginLeft: '8px' }}>Reset</button> */}
       </div>
-
+ 
       {/* Event Grid */}
-      <div className="event-grid">
-        {filteredEvents.map(event => (
-          <EventCard key={event.eventID} event={event} />
-        ))}
-      </div>
-      </div>
-    </>
+      {filteredEvents.length === 0 ? (
+        <div className="empty-state" style={{ padding: '2rem', textAlign: 'center' }}>
+          <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--simba-brown-dark)' }}>No events found!</h4>
+          <p style={{ margin: 0, color: 'var(--simba-text-medium)' }}>
+            Try adjusting your search or filters.
+          </p>
+          {/* <div style={{ marginTop: '1rem' }}>
+            <button onClick={resetFilters} className="cta">Show all events</button>
+          </div> */}
+        </div>
+      ) : (
+        <div className="event-grid">
+          {filteredEvents.map(event => (
+            <EventCard key={event.eventID || event.id || event.eventId} event={event} />
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
-
+ 
 export default UserDashboard;

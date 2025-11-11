@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import GetEventById from './GetEventById';
 import EventDetailsCard from '../components/Booking/EventDetailsCard';
@@ -16,6 +16,22 @@ const EventDetailsPage = () => {
   const { token } = useAuth();
   const [event, setEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const isExpired = useMemo(() => {
+    if (!event) return false;
+    try {
+      // if both date and time present, combine; otherwise fall back to date only
+      const datePart = event.eventDate || event.date || event.eventDateTime;
+      const timePart = event.eventTime || event.time || '';
+      const iso = timePart ? `${datePart}T${timePart}` : datePart;
+      const eventdatetime = new Date(iso);
+      if (isNaN(eventdatetime.getTime())) return false;
+      return eventdatetime < new Date();
+    } catch (e) {
+      console.warn('isExpired check failed', e);
+      return false;
+    }
+  }, [event]);
 
   useEffect(() => {
     if (eventId) {
@@ -92,7 +108,7 @@ const EventDetailsPage = () => {
           <EventDescriptionCard description={event.description} />
         </div>
         <div>
-          <BookTicketsPanel event={event} onBookClick={handleBook} />
+          <BookTicketsPanel event={event} onBookClick={handleBook} disabled={isExpired} />
         </div>
         <div style={{ marginTop: '2rem' }}>
         <FAQDropdown

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import SimbaLogo from '../images/simba-dark.png'; // Make sure this path is correct
 import styles from './Header.module.css';
 import { useAuth } from '../AuthContext';
@@ -10,7 +10,8 @@ const Header = () => {
   // 2. Get theme and toggleTheme from the context
   const { token, logout, theme, toggleTheme } = useAuth();
   const navigate = useNavigate();
- 
+  const location = useLocation();
+
   const handleLogout = () => {
     logout();
     toast.success('Logged out successfully!', {
@@ -22,7 +23,11 @@ const Header = () => {
   const handleNotifications = () => {
     navigate('/notification');
   };
-  const { unreadCount, resetUnreadCount } = React.useContext(NotificationContext);
+
+  // Only show profile/notifications/logout when NOT on Landing or Auth pages
+  const hideProfileOn = ['/', '/login', '/signup'];
+  const showProfileControls = token && !hideProfileOn.includes(location.pathname);
+
   return (
     <header className={styles.header}>
       <div className={styles.headerContent}>
@@ -37,44 +42,35 @@ const Header = () => {
             {theme === 'light' ? '🌙' : '☀️'}
           </button>
           
-          {/* Profile & Notifications */}
-        {token ? (
-          <div className={styles.profileContainer}>
-            <button
-              onClick={() => {
-                handleNotifications();
-                resetUnreadCount();
-              }}
-              className={styles.notificationBell}
-              aria-label="View notifications"
-              style={{ position: "relative" }}
-            >
-              <i className="fas fa-bell"></i>
-              {unreadCount > 0 && (
-                <span
-                  className="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle"
-                  style={{ fontSize: "0.75rem" }}
-                >
-                  {unreadCount}
-                </span>
-              )}
-            </button>
- 
-              <button onClick={() => navigate('/profile')} className={styles.profileIcon}>
+          {showProfileControls && (
+            <div className={styles.profileContainer}>
+              <button 
+                onClick={handleNotifications} 
+                className={styles.notificationBell}
+                aria-label="View notifications"
+              >
+                <i className="fas fa-bell"></i> 
+              </button>
+
+              <div
+                className={styles.profileIcon}
+                onClick={() => navigate('/profile')}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
+                aria-label="Go to profile"
+              >
                 <svg fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" fillRule="evenodd"></path>
                 </svg>
-              </button>
+              </div>
+
               <button onClick={handleLogout} className={styles.logoutButton}>
                 Logout
-</button>
-</div>
-          ): (
-            <button onClick={() => navigate('/login')} className={styles.loginButton}>
-              Login
-            </button>
+              </button>
+            </div>
           )}
-</div>
+        </div>
  
       </div>
 </header>

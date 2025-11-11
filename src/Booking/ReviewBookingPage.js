@@ -23,40 +23,35 @@ const BookingSummaryHeader = ({ booking }) => (
 );
 
 const SeatCounter = ({ count, setCount, maxSeats }) => {
-    return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem', borderTop: '1px solid var(--simba-light-grey)', paddingTop: '1rem' }}>
-            <span style={{ fontWeight: 600, color: 'var(--simba-text-dark)' }}>Selected Seats:</span>
-            
-            <button 
-                onClick={() => setCount(c => Math.max(1, c - 1))}
-                disabled={count <= 1}
-                style={{ 
-                    background: 'var(--simba-orange-light)', 
-                    border: 'none', 
-                    borderRadius: '4px', 
-                    padding: '0.5rem', 
-                    cursor: 'pointer' 
-                }}
-            >
-                <Minus size={18} />
-            </button>
-            <span style={{ fontWeight: 700 }}>{count}</span>
-            <button 
-                onClick={() => setCount(c => Math.min(maxSeats, c + 1))}
-                disabled={count >= maxSeats}
-                style={{ 
-                    background: 'var(--simba-orange-dark)', 
-                    border: 'none', 
-                    borderRadius: '4px', 
-                    padding: '0.5rem', 
-                    cursor: 'pointer' 
-                }}
-            >
-                <Plus size={18} />
-            </button>
-            <span style={{ color: 'var(--simba-text-medium)', fontSize: '0.85rem' }}> (Max: {maxSeats})</span>
-        </div>
-    );
+  return (
+    <div className="seat-counter-container">
+      <span className="seat-label">Selected Seats: </span>
+
+      <div className="seat-controls">
+        <button
+          id="decrement-btn"
+          onClick={() => setCount(c => Math.max(1, c - 1))}
+          disabled={count <= 1}
+          className="seat-btn minus-btn"
+        >
+          <Minus size={18} />
+        </button>
+
+        <span className="seat-count">{count}</span>
+
+        <button
+          id="increment-btn"
+          onClick={() => setCount(c => Math.min(maxSeats, c + 1))}
+          disabled={count >= maxSeats}
+          className="seat-btn plus-btn"
+        >
+          <Plus size={18} />
+        </button>
+      </div>
+
+      <span className="seat-max">(Max: {maxSeats})</span>
+    </div>
+  );
 };
 
 const TicketDetailsCard = ({ booking, selectedSeats, maxSeats, setSelectedSeats }) => {
@@ -69,12 +64,12 @@ const TicketDetailsCard = ({ booking, selectedSeats, maxSeats, setSelectedSeats 
             </h3>
 
             <div className="detail-item">
-                <span><Calendar size={16} /> Date & Time:</span>
+                <span><Calendar size={16} /> Date & Time: </span>
                 <span>{eventDateTime}</span>
             </div>
             
             <div className="detail-item">
-                <span><IndianRupee size={16} /> Price/Ticket:</span>
+                <span><IndianRupee size={16} /> Price/Ticket: </span>
                 <span>₹{booking.PricePerTicket.toFixed(2)}</span>
             </div>
             

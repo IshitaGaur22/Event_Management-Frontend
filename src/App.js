@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, NavLink, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, Link, useLocation } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LandingPage from './components/LandingPage'; // make sure this path is correct
  
 // Booking & User Components
-import BookingHistory from './BookingHistory/BookingHistory';
-import NotificationTab from './BookingHistory/NotificationTab';
+// import BookingHistory from './BookingHistory/BookingHistory';
+// import NotificationTab from './BookingHistory/NotificationTab';
 import TopEvents from './Booking/TopEvents';
 import EventDetailsPage from './Booking/EventDetailsPage';
 import ReviewBookingPage from './Booking/ReviewBookingPage';
@@ -15,7 +16,6 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './Login/Login';
 import Signup from './Login/Signup';
-import ProfilePage from './Login/ProfilePage';
  
 // Feedback Components
 import FeedbackAdmin from './Feedback/FeedbackAdmin';
@@ -29,15 +29,17 @@ import EventDetails from './OrganiserDashboard/EventDetails';
  
 // Context & Services
 import { useAuth } from './AuthContext';
-import { startConnection, onNotificationReceived } from './BookingHistory/SignalService';
-import { NotificationContext } from './BookingHistory/NotificationContext';
+// import { startConnection, onNotificationReceived } from './BookingHistory/SignalService';
+// import { NotificationContext } from './BookingHistory/NotificationContext';
  
 import UserDashboard from './Dashboard/UserDashboard';
 import { User } from 'lucide-react';
  
 function AppContent() {
   const { token, theme, role } = useAuth();
-  const { addNotification } = useContext(NotificationContext);
+  const location = useLocation();
+  const showNav = location.pathname !== '/'; // hide navbar only on LandingPage
+  // const { addNotification } = useContext(NotificationContext);
  
   // State and toggles for Feedback section
   const [showList, setShowList] = useState(false);
@@ -75,26 +77,27 @@ function AppContent() {
       <ToastContainer />
       {/* <UserDashboard /> */}
  
-      {/* Show nav only if logged in */}
-      {token && (
+      {/* Show nav on all routes except LandingPage ('/') */}
+      {showNav && (
         <nav className="main-nav">
-          {/* Organiser Navigation */}
-          {isOrganiser ? (
-            <>
-              <NavLink to="/dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
-              <NavLink to="/create-event" style={{ margin: '10px' }}>Create Event</NavLink>
-              {/* Note: /update-event and /event-details paths are typically navigated to from the Dashboard */}
-              <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
-             
-            </>
+          {token ? (
+            isOrganiser ? (
+              <>
+                <NavLink to="/dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
+                <NavLink to="/create-event" style={{ margin: '10px' }}>Create Event</NavLink>
+                <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink to="/user-dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
+                <NavLink to="/booking-history" style={{ margin: '10px' }}>Booking History</NavLink>
+                <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
+                <NavLink to="/top-events" style={{ margin: '10px' }}>Top Events</NavLink>
+              </>
+            )
           ) : (
-            /* User/Booking Navigation */
             <>
-              <NavLink to="/user-dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
-              <NavLink to="/booking-history" style={{ margin: '10px' }}>Booking History</NavLink>
-              {/* <NavLink to="/Notification" style={{ margin: '10px' }}>Notification 🔔</NavLink> */}
-              <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
-              {/* <NavLink to="/check-event" style={{ margin: '10px' }}>Check Event</NavLink */}
+              <NavLink to="/login" style={{ margin: '10px' }}>Login</NavLink>
               <NavLink to="/top-events" style={{ margin: '10px' }}>Top Events</NavLink>
             </>
           )}
@@ -103,36 +106,34 @@ function AppContent() {
  
       <main className="main-content">
         <Routes>
-          {/* --- Public Route --- */}
+          {/* Public routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          {/* LandingPage is the public home screen */}
+          <Route path="/" element={<LandingPage />} />
           {/* --- Protected Routes --- */}
           {/* If token exists, show the page. If not, show Login page. */}
  
           {isOrganiser ? (
-            /* Organiser Routes */
-            <>
-              <Route path="/" element={token ? <Dashboard /> : <Login />} />
-              <Route path="/dashboard" element={token ? <Dashboard /> : <Login />} />
-              <Route path="/create-event" element={token ? <CreateEventForm /> : <Login />} />
-              <Route path="/update-event" element={token ? <UpdateEventPage /> : <Login />} />
-              <Route path="/event-details" element={token ? <EventDetails /> : <Login />} />
-            </>
-          ) : (
-            /* User/Booking Routes */
-            <>
-              <Route path="/" element={<UserDashboard />} />
-              <Route path="/user-dashboard" element={<UserDashboard />} />
-              <Route path="/profile" element={token ? <ProfilePage /> : <Login />} />
-              <Route path="/top-events" element={token ? <TopEvents /> : <Login />} />
-              <Route path="/event/:eventId" element={<EventDetailsPage />} />
-              <Route path="/review-booking" element={token ? <ReviewBookingPage /> : <Login />} />
-              <Route path="/booking-confirmation" element={token ? <BookingConfirmationPage /> : <Login />} />
-              <Route path="/booking-history" element={token ? <BookingHistory /> : <Login />} />
-              <Route path="/notification" element={token ? <NotificationTab /> : <Login />} />
-            </>
-          )}
+             /* Organiser Routes */
+             <>
+               <Route path="/create-event" element={token ? <CreateEventForm /> : <Login />} />
+               <Route path="/update-event" element={token ? <UpdateEventPage /> : <Login />} />
+               <Route path="/event-details" element={token ? <EventDetails /> : <Login />} />
+             </>
+           ) : (
+             /* User/Booking Routes */
+             <>
+               <Route path="/user-dashboard" element={token ? <UserDashboard /> : <Login />} />
+               <Route path="/top-events" element={token ? <TopEvents /> : <Login />} />
+               {/* Viewing event details / booking requires login — redirect to Login if not authenticated */}
+               <Route path="/event/:eventId" element={token ? <EventDetailsPage /> : <Login />} />
+               <Route path="/review-booking" element={token ? <ReviewBookingPage /> : <Login />} />
+               <Route path="/booking-confirmation" element={token ? <BookingConfirmationPage /> : <Login />} />
+             </>
+           )}
          
+          {/* Feedback Route (Shared but with role logic inside) */}
           <Route
             path="/feedback"
             element={token ?
@@ -140,8 +141,8 @@ function AppContent() {
               ) : <Login />
             }
           />
- 
-          <Route path="*" element={isOrganiser ? (token ? <Dashboard /> : <Login />) : <UserDashboard />} />
+          {/* Fallback: anonymous -> LandingPage, authenticated -> role default */}
+          <Route path="*" element={token ? (isOrganiser ? <Dashboard /> : <UserDashboard />) : <LandingPage />} />
         </Routes>
       </main>
       <Footer />
