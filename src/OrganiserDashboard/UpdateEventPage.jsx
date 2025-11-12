@@ -112,7 +112,7 @@ const UpdateEventPage = () => {
  
       if (response.ok) {
         toast.success("✅ Event updated successfully!");
-        setTimeout(() => navigate('/'), 2000);
+        setTimeout(() => navigate('/dashboard'), 2000);
       } else {
         const errorData = await response.json();
         const message = errorData?.error;

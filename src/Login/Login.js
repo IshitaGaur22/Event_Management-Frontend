@@ -21,6 +21,7 @@ const Login = () => {
     const [resetEmail, setResetEmail] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [resetSuccess, setResetSuccess] = useState(false);
 
     const validateEmail = (email) =>
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -58,8 +59,7 @@ const Login = () => {
             login(token, role, userId);
             
             toast.success("Login successful!", {
-              position: 'top-center',
-              autoClose: 2000
+              position: 'top-center'
             });
             const from = location.state?.from || "/dashboard";
             navigate(from);
@@ -95,16 +95,15 @@ const Login = () => {
                 NewPassword: newPassword,
                 ConfirmPassword: confirmPassword
             });
-            toast.success("Password reset successfully! Please login with your new password.", {
-                position: 'top-center',
-                autoClose: 3000
-            });
-            setShowResetModal(false);
-            setResetEmail("");
-            setNewPassword("");
-            setConfirmPassword("");
+            setResetSuccess(true);
             setEmail(resetEmail);
-            setPassword("");
+            setTimeout(() => {
+                setShowResetModal(false);
+                setResetEmail("");
+                setNewPassword("");
+                setConfirmPassword("");
+                setResetSuccess(false);
+            }, 2000);
         } catch (err) {
             console.error('Reset password error:', err);
             let errorMsg = "Failed to reset password. Please try again.";
@@ -127,7 +126,8 @@ const Login = () => {
             
             toast.error(errorMsg, {
                 position: 'top-center',
-                autoClose: 4000
+                autoClose: 4000,
+                hideProgressBar: false
             });
         }
     };
@@ -182,8 +182,15 @@ const Login = () => {
         ) : (
             <div className={`${styles.container} auth-card`} style={{ maxWidth: '450px', marginTop: '50px' }}>
                 <h2>Reset Password</h2>
-                <p style={{ textAlign: 'center', color: '#666', marginBottom: '1.5rem' }}>Enter your email and new password to reset your account.</p>
-                <form onSubmit={handleResetPassword} className={styles.form}>
+                {resetSuccess ? (
+                    <div style={{ textAlign: 'center', padding: '2rem' }}>
+                        <p style={{ color: '#28a745', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '1rem' }}>✓ Password reset successfully!</p>
+                        <p style={{ color: '#666' }}>Please login with your new password.</p>
+                    </div>
+                ) : (
+                    <>
+                        <p style={{ textAlign: 'center', color: '#666', marginBottom: '1.5rem' }}>Enter your email and new password to reset your account.</p>
+                        <form onSubmit={handleResetPassword} className={styles.form}>
                     <input
                         type="email"
                         value={resetEmail}
@@ -211,11 +218,13 @@ const Login = () => {
                         autoComplete="new-password"
                         required
                     />
-                    <div className="reset-buttons" styles={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
-                        <button type="submit" className="reset-btn">Reset Password</button>
-                        <button type="button" className="reset-btn" onClick={() => { setShowResetModal(false); setResetEmail(""); setNewPassword(""); setConfirmPassword(""); }}>Back to Login</button>
-                    </div>
-                </form>
+                            <div className="reset-buttons" styles={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+                                <button type="submit" className="reset-btn">Reset Password</button>
+                                <button type="button" className="reset-btn" onClick={() => { setShowResetModal(false); setResetEmail(""); setNewPassword(""); setConfirmPassword(""); }}>Back to Login</button>
+                            </div>
+                        </form>
+                    </>
+                )}
             </div>
         )}
         

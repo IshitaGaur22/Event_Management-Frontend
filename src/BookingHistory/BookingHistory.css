@@ -292,6 +292,42 @@
   gap: 1rem;
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+.page-btn {
+  padding: 0.5rem 1.5rem;
+  background: var(--simba-orange-dark);
+  color: var(--simba-white);
+  border: none;
+  border-radius: var(--radius-soft);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: var(--simba-brown-dark);
+  transform: translateY(-2px);
+}
+
+.page-btn:disabled {
+  background: var(--simba-light-grey);
+  color: var(--simba-text-medium);
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-weight: 500;
+  color: var(--simba-text-dark);
+}
+
 @media (max-width: 768px) {
   .booking-history-container {
     padding: 1rem;

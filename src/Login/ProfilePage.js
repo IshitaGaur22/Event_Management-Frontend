@@ -22,6 +22,14 @@ const ProfilePage = () => {
             location: res.data.location || ''
           });
         })
+        .then(res => {
+          setUserDetails(res.data);
+          setForm({
+            username: res.data.username || '',
+            phoneNumber: res.data.phoneNumber || '',
+            location: res.data.location || ''
+          });
+        })
         .catch(err => console.error('Error fetching user details:', err));
     }
   }, [userId]);
@@ -61,7 +69,7 @@ const ProfilePage = () => {
   if (!userDetails) {
     return <div className="profile-container">Loading profile...</div>;
   }
-
+ 
   return (
     <div className="profile-container">
       <h1 className="profile-title">My Profile</h1>
@@ -129,5 +137,5 @@ const ProfilePage = () => {
     </div>
   );
 };
-
+ 
 export default ProfilePage;

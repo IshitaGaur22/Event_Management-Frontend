@@ -20,7 +20,10 @@ const Header = () => {
     });
     navigate('/');
   };
+  const { unreadCount, resetUnreadCount } = React.useContext(NotificationContext);
+  
   const handleNotifications = () => {
+    resetUnreadCount();
     navigate('/notification');
   };
 
@@ -48,22 +51,37 @@ const Header = () => {
                 onClick={handleNotifications} 
                 className={styles.notificationBell}
                 aria-label="View notifications"
+                style={{ position: 'relative' }}
               >
-                <i className="fas fa-bell"></i> 
+                <i className="fas fa-bell"></i>
+                {unreadCount > 0 && (
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: '-5px',
+                      right: '-5px',
+                      backgroundColor: 'red',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '20px',
+                      height: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    {unreadCount}
+                  </span>
+                )}
               </button>
 
-              <div
-                className={styles.profileIcon}
-                onClick={() => navigate('/profile')}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/profile'); }}
-                aria-label="Go to profile"
-              >
+              <button onClick={() => navigate('/profile')} className={styles.profileIcon}>
                 <svg fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" fillRule="evenodd"></path>
                 </svg>
-              </div>
+              </button>
 
               <button onClick={handleLogout} className={styles.logoutButton}>
                 Logout

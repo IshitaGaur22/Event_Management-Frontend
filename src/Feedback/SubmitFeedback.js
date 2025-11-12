@@ -43,6 +43,10 @@ function SubmitFeedback({onViewPrevious}) {
             toast.error('Please select an event.');
             return;
         }
+        if (overallExperience === 0) {
+            toast.error('Please provide an overall experience rating.');
+            return;
+        }
         const feedbackData = {
             EventId: parseInt(eventId, 10),
             UserId: parseInt(userId, 10),
@@ -55,8 +59,10 @@ function SubmitFeedback({onViewPrevious}) {
         };
 
         // API Call
+        console.log('Submitting feedback:', feedbackData);
         api.post('/Feedbacks/SubmitFeedback', feedbackData)
             .then(response => {
+                console.log('Feedback submitted successfully:', response);
                 toast.success('Thank you! Your feedback has been submitted.');
                 setEventId("");
                 setOverallExperience(0);
@@ -67,6 +73,8 @@ function SubmitFeedback({onViewPrevious}) {
                 setComments("");
             })
             .catch(err => {
+                console.error('Feedback submission error:', err);
+                console.error('Error response:', err.response);
                 let errorMessage = "An error occurred.";
                 if (err.response && typeof err.response.data === 'string') {
                     errorMessage = err.response.data;

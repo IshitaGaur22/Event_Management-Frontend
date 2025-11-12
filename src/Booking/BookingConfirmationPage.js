@@ -16,18 +16,25 @@ const BookingConfirmationPage = () => {
 
   // Run side effects (toast/confetti) depending on booking result passed from ReviewBookingPage
   useEffect(() => {
-    if (!bookingData) return;
+    if (!bookingData || !userId) return;
 
     const { success } = bookingData;
     if (success) {
       setIsBookingDone(true);
       
-      // Add notification
+      // Add notification immediately
+      console.log('Adding booking confirmation notification for userId:', userId);
       addNotification({
         message: `Your booking for "${bookingData.eventName}" has been confirmed!`,
         type: 'Booking Confirmation',
         userId: parseInt(userId)
       });
+      
+      // Verify it was saved
+      setTimeout(() => {
+        const saved = localStorage.getItem(`notifications_${userId}`);
+        console.log('Saved notifications after booking:', saved);
+      }, 500);
       
       toast.success('🎉 Your booking is confirmed!', {
         position: 'top-center',
@@ -52,7 +59,7 @@ const BookingConfirmationPage = () => {
       });
       console.error('Booking failed serverResponse:', bookingData.serverResponse);
     }
-  }, [bookingData]);
+  }, [bookingData, userId, addNotification]);
 
   if (!bookingData) {
     return (
@@ -65,8 +72,19 @@ const BookingConfirmationPage = () => {
 
   const { eventName, selectedSeats, date, time, locationName, totalAmount } = bookingData;
 
-  const handleDownload = () => alert('Downloading booking confirmation...');
-  const handleShare = () => alert('Sharing booking details...');
+  const handleDownload = () => {
+    toast.info('Downloading booking confirmation...', {
+      position: 'top-center',
+      autoClose: 2000
+    });
+  };
+  
+  const handleShare = () => {
+    toast.info('Sharing booking details...', {
+      position: 'top-center',
+      autoClose: 2000
+    });
+  };
 
   return (
     <div className="page-content" style={{

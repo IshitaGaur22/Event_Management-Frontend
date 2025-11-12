@@ -13,12 +13,13 @@ function FeedbackFilter({
 
     // tells the parent to filter
     const handleSubmit = (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         onFilterSubmit();
     };
 
     // tells the parent to clear
-    const handleClear = () => {
+    const handleClear = (e) => {
+        if (e) e.preventDefault();
         onClearFilters();
     };
 
