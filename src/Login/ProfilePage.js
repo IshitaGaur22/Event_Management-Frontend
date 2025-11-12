@@ -2,60 +2,140 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './ProfilePage.css';
 import { useAuth } from '../AuthContext';
+import { Edit2 } from 'react-feather';
+import { toast } from 'react-toastify';
 
 const ProfilePage = () => {
   const { userId } = useAuth();
   const [userDetails, setUserDetails] = useState(null);
-//   const [bookings, setBookings] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [form, setForm] = useState({ username: '', phoneNumber: '', location: '' });
 
   useEffect(() => {
     if (userId) {
-      // Fetch user details
       axios.get(`https://localhost:7283/api/Users/${userId}`)
-        .then(res => setUserDetails(res.data))
+        .then(res => {
+          setUserDetails(res.data);
+          setForm({
+            username: res.data.username || '',
+            phoneNumber: res.data.phoneNumber || '',
+            location: res.data.location || ''
+          });
+        })
+        .then(res => {
+          setUserDetails(res.data);
+          setForm({
+            username: res.data.username || '',
+            phoneNumber: res.data.phoneNumber || '',
+            location: res.data.location || ''
+          });
+        })
         .catch(err => console.error('Error fetching user details:', err));
-
-      // Fetch booking history
-    //   axios.get(`http://localhost:7283/api/Bookings/user/${userId}`)
-    //     .then(res => setBookings(res.data))
-    //     .catch(err => console.error('Error fetching bookings:', err));
     }
   }, [userId]);
+
+  const handleEdit = () => setEditMode(true);
+
+  const handleCancel = () => {
+    if (userDetails) {
+      setForm({
+        username: userDetails.username || '',
+        phoneNumber: userDetails.phoneNumber || '',
+        location: userDetails.location || ''
+      });
+    }
+    setEditMode(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm(prevForm => ({ ...prevForm, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios.put(`https://localhost:7283/api/Users/update/${userId}`, form)
+      .then(res => {
+        setUserDetails(res.data);
+        setEditMode(false);
+        toast.success('Profile updated successfully!');
+      })
+      .catch(err => {
+        console.error('Error updating profile:', err);
+        toast.error('Failed to update profile.');
+      });
+  };
 
   if (!userDetails) {
     return <div className="profile-container">Loading profile...</div>;
   }
-
+ 
   return (
     <div className="profile-container">
       <h1 className="profile-title">My Profile</h1>
 
-      {/* User Details */}
       <div className="profile-card">
-        <h2>{userDetails.username}</h2>
-        <p><strong>Location:</strong> {userDetails.location}</p>
-        <p><strong>Phone:</strong> {userDetails.phoneNumber}</p>
-        <p><strong>Role:</strong> {userDetails.role}</p>
-      </div>
+        {/* top-right icon-only edit button (styled by .edit-btn-card / .edit-btn in CSS) */}
+        <div className="edit-btn-card">
+          <button
+            className="edit-btn"
+            aria-label="Edit profile"
+            onClick={handleEdit}
+            title="Edit profile"
+          >
+            <Edit2 />
+          </button>
+        </div>
 
-      {/* Booking History */}
-      {/* <h2 className="section-title">Booking History</h2>
-      <div className="booking-list">
-        {bookings.length === 0 ? (
-          <p>No bookings found.</p>
-        ) : (
-          bookings.map(b => (
-            <div key={b.bookingId} className="booking-card">
-              <h3>{b.eventName}</h3>
-              <p>Date: {b.eventDate}</p>
-              <p>Seats: {b.selectedSeats}</p>
-              <p>Total: ₹{b.totalAmount}</p>
+        {editMode ? (
+          <form className="edit-card" onSubmit={handleSubmit}>
+            <label>
+              Name
+              <input
+                name="username"
+                type="text"
+                value={form.username}
+                onChange={handleChange}
+                required
+              />
+            </label>
+
+            <label>
+              Location
+              <input
+                name="location"
+                type="text"
+                value={form.location}
+                onChange={handleChange}
+              />
+            </label>
+
+            <label>
+              Phone
+              <input
+                name="phoneNumber"
+                type="tel"
+                value={form.phoneNumber}
+                onChange={handleChange}
+              />
+            </label>
+
+            <div className="edit-actions">
+              <button type="submit" className="btn save">Save</button>
+              <button type="button" className="btn cancel" onClick={handleCancel}>Cancel</button>
             </div>
-          ))
-        )} */}
-      {/* </div> */}
+          </form>
+        ) : (
+          <>
+            <h2>{userDetails.username}</h2>
+            <p><strong>Location:</strong> {userDetails.location || '—'}</p>
+            <p><strong>Phone:</strong> {userDetails.phoneNumber || '—'}</p>
+            <p><strong>Role:</strong> {userDetails.role || 'User'}</p>
+          </>
+        )}
+      </div>
     </div>
   );
 };
-
+ 
 export default ProfilePage;

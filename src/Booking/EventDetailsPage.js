@@ -45,7 +45,7 @@ const EventDetailsPage = () => {
     }
   }, [eventId]);
 
-  const handleBack = () => navigate('/');
+  const handleBack = () => navigate('/dashboard');
 
   const handleBook = () => {
     if (!token) {

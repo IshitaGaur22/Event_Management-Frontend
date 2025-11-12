@@ -21,6 +21,8 @@ const BookingHistory = () => {
   const [selectedBookingId, setSelectedBookingId] = useState(null);
   const [selectedEventName, setSelectedEventName] = useState("");
   const [showBanner, setShowBanner] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
  
  
  
@@ -168,6 +170,7 @@ const cancelBooking = async () => {
  const searchByEventName = async () => {
     if (!searchEventName) { fetchUpcoming(); fetchPast(); return; }
     setLoading(true);
+    setCurrentPage(1);
     try {
       const res = await api.get(`/api/BookingHistory/SearchByEventName`, {
         params: { userId, eventName: searchEventName },
@@ -185,6 +188,7 @@ const cancelBooking = async () => {
   const searchByDate = async () => {
     if (!searchDate) { fetchUpcoming(); fetchPast(); return; }
     setLoading(true);
+    setCurrentPage(1);
     try {
       const res = await api.get(`/api/BookingHistory/SearchByDate`, {
         params: { userId, date: searchDate },
@@ -202,7 +206,7 @@ const cancelBooking = async () => {
   return (
     <div className="booking-history-container">
       <div className="booking-header">
-        <h2>📅 Booking History</h2>
+        <h2>Booking History</h2>
         <p>Manage your event bookings</p>
       </div>
  
@@ -212,7 +216,7 @@ const cancelBooking = async () => {
           className={`tab-btn ${activeTab === "upcoming" ? "active" : ""}`}
           onClick={() => setActiveTab("upcoming")}
         >
-          🔮 Upcoming ({upcomingBookings.length})
+          Upcoming ({upcomingBookings.length})
         </button>
         <button
           className={`tab-btn ${activeTab === "past" ? "active" : ""}`}
@@ -227,7 +231,7 @@ const cancelBooking = async () => {
         <div className="search-group">
           <input
             type="text"
-            placeholder="🔍 Search by Event Name"
+            placeholder="Search by Event Name"
             className="search-input"
             value={searchEventName}
             onChange={(e) => setSearchEventName(e.target.value)}
@@ -244,7 +248,7 @@ const cancelBooking = async () => {
             onChange={(e) => setSearchDate(e.target.value)}
           />
           <button className="search-btn secondary" onClick={searchByDate}>
-            📅 Search by Date
+            Search by Date
           </button>
         </div>
       </div>
@@ -255,8 +259,9 @@ const cancelBooking = async () => {
  
       {/* Bookings Grid */}
       <div className="bookings-grid">
-        {(activeTab === "upcoming" ? upcomingBookings : pastBookings).map(
-          (booking) => (
+        {(activeTab === "upcoming" ? upcomingBookings : pastBookings)
+          .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+          .map((booking) => (
             <div key={booking.bookingId} className={`booking-card ${booking.status.toLowerCase()}`}>
               <div className="booking-header-card">
                 <h4>{booking.eventName}</h4>
@@ -311,6 +316,29 @@ const cancelBooking = async () => {
           <div className="empty-icon">{activeTab === "upcoming" ? "📅" : ""}</div>
           <h3>No {activeTab} bookings found</h3>
           <p>Your {activeTab} bookings will appear here</p>
+        </div>
+      )}
+
+      {/* Pagination */}
+      {(activeTab === "upcoming" ? upcomingBookings : pastBookings).length > itemsPerPage && (
+        <div className="pagination">
+          <button
+            className="page-btn"
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span className="page-info">
+            Page {currentPage} of {Math.ceil((activeTab === "upcoming" ? upcomingBookings : pastBookings).length / itemsPerPage)}
+          </span>
+          <button
+            className="page-btn"
+            onClick={() => setCurrentPage(prev => prev + 1)}
+            disabled={currentPage >= Math.ceil((activeTab === "upcoming" ? upcomingBookings : pastBookings).length / itemsPerPage)}
+          >
+            Next
+          </button>
         </div>
       )}
  

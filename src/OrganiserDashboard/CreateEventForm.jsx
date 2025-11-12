@@ -114,7 +114,7 @@ const CreateEventForm = () => {
  
       if (response.status === 200 || response.status === 201) {
         toast.success("Event created successfully!");
-        setTimeout(() => navigate('/'), 2000);
+        setTimeout(() => navigate('/dashboard'), 2000);
       } else {
         toast.error("❌ Failed to create event");
       }
