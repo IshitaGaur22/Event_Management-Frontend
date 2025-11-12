@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, NavLink, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LandingPage from './components/LandingPage'; // make sure this path is correct
@@ -16,6 +16,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './Login/Login';
 import Signup from './Login/Signup';
+import ProfilePage from './Login/ProfilePage';
  
 // Feedback Components
 import FeedbackAdmin from './Feedback/FeedbackAdmin';
@@ -33,13 +34,18 @@ import { useAuth } from './AuthContext';
 // import { NotificationContext } from './BookingHistory/NotificationContext';
  
 import UserDashboard from './Dashboard/UserDashboard';
-import { User } from 'lucide-react';
  
 function AppContent() {
   const { token, theme, role } = useAuth();
   const location = useLocation();
   const showNav = location.pathname !== '/'; // hide navbar only on LandingPage
   // const { addNotification } = useContext(NotificationContext);
+
+  // Reset scroll to top on every navigation (fixes "page loads midway" issue)
+  useEffect(() => {
+    // immediate jump to top — change to behavior: 'smooth' if you prefer animated scroll
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [location.pathname]);
  
   // State and toggles for Feedback section
   const [showList, setShowList] = useState(false);
@@ -89,7 +95,7 @@ function AppContent() {
               </>
             ) : (
               <>
-                <NavLink to="/user-dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
+                <NavLink to="/dashboard" style={{ margin: '10px' }}>Dashboard</NavLink>
                 <NavLink to="/booking-history" style={{ margin: '10px' }}>Booking History</NavLink>
                 <NavLink to="/feedback" style={{ margin: '10px' }}>Feedback</NavLink>
                 <NavLink to="/top-events" style={{ margin: '10px' }}>Top Events</NavLink>
@@ -125,13 +131,18 @@ function AppContent() {
              /* User/Booking Routes */
              <>
                <Route path="/user-dashboard" element={token ? <UserDashboard /> : <Login />} />
-               <Route path="/top-events" element={token ? <TopEvents /> : <Login />} />
+               <Route path="/top-events" element={<TopEvents />} />
                {/* Viewing event details / booking requires login — redirect to Login if not authenticated */}
                <Route path="/event/:eventId" element={token ? <EventDetailsPage /> : <Login />} />
                <Route path="/review-booking" element={token ? <ReviewBookingPage /> : <Login />} />
                <Route path="/booking-confirmation" element={token ? <BookingConfirmationPage /> : <Login />} />
+               {/* <Route path="/booking-history" element={token ? <BookingHistory /> : <Login />} />
+               <Route path="/notification" element={token ? <NotificationTab /> : <Login />} /> */}
              </>
            )}
+         
+          {/* Profile Route - Available for both User and Organiser */}
+          <Route path="/profile" element={token ? <ProfilePage /> : <Login />} />
          
           {/* Feedback Route (Shared but with role logic inside) */}
           <Route
