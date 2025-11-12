@@ -3,6 +3,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import SimbaLogo from '../images/simba-dark.png'; // Make sure this path is correct
 import styles from './Header.module.css';
 import { useAuth } from '../AuthContext';
+import { NotificationContext } from '../BookingHistory/NotificationContext';
+import { toast } from 'react-toastify';
 
 const Header = () => {
   // 2. Get theme and toggleTheme from the context
@@ -12,11 +14,14 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    toast.success('Logged out successfully!', {
+      position: 'top-center',
+      autoClose: 2000
+    });
+    navigate('/');
   };
   const handleNotifications = () => {
-    // You can replace this with your notification logic later
-    alert('Notifications clicked!');
+    navigate('/notification');
   };
 
   // Only show profile/notifications/logout when NOT on Landing or Auth pages

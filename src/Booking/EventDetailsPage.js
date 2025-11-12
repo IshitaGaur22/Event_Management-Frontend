@@ -7,11 +7,13 @@ import BookTicketsPanel from '../components/Booking/BookTicketsPanel';
 import { useNavigate, useParams } from 'react-router-dom';
 import DropdownSection from '../components/Booking/DropdownSection';
 import FAQDropdown from '../components/Booking/FAQDropdown';
+import { useAuth } from '../AuthContext';
 import './EventDetailsPage.css';
 
 const EventDetailsPage = () => {
   const navigate = useNavigate();
   const { eventId } = useParams();
+  const { token } = useAuth();
   const [event, setEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -46,6 +48,10 @@ const EventDetailsPage = () => {
   const handleBack = () => navigate('/dashboard');
 
   const handleBook = () => {
+    if (!token) {
+      navigate('/login', { state: { from: `/event/${eventId}` } });
+      return;
+    }
     if (event) {
       navigate('/review-booking', {
         state: {

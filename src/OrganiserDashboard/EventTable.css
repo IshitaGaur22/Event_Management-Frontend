@@ -148,6 +148,8 @@
   gap: 12px; 
   margin-top: 10px;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 10;
 }
 
 .event-card.inactive {
@@ -186,6 +188,8 @@
   font-size: 14px;
   font-weight: 600;
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 20;
 }
 
 .btn.update {
