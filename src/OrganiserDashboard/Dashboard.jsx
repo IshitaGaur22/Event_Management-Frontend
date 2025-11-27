@@ -7,7 +7,8 @@ import CreateCategory from './CreateCategory';
 import {
   FaCalendarAlt, FaUsers, FaMoneyBillWave, FaClipboardList,
   FaMusic, FaLaughBeam, FaTheaterMasks, FaGlassCheers,
-  FaUtensils, FaFutbol
+  FaUtensils, FaFutbol,
+  FaHandSparkles, FaLaptop
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
@@ -19,7 +20,9 @@ const iconMap = {
   Performance: <FaTheaterMasks className="category-icon" />,
   NightLife: <FaGlassCheers className="category-icon" />,
   'Food & Drinks': <FaUtensils className="category-icon" />,
-  Sports: <FaFutbol className="category-icon" />
+  Sports: <FaFutbol className="category-icon" />,
+  Art: <FaTheaterMasks className="category-icon" />,
+  Tech: <FaLaptop className="category-icon" />
 };
  
 const Dashboard = () => {
@@ -94,7 +97,7 @@ const Dashboard = () => {
                   onClick={() => setSelectedCategory(selectedCategory === cat.categoryID ? null : cat.categoryID)}
                   style={{ cursor: 'pointer', position: 'relative' }}
                 >
-                  {iconMap[cat.categoryName] || <span className="category-icon">📦</span>}
+                  <div className="category-icon">{iconMap[cat.categoryName] || <FaHandSparkles />}</div>
                   <h2>{cat.categoryName}</h2>
                   <button 
                     className="delete-category-btn"

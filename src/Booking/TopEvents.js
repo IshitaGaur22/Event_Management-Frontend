@@ -11,7 +11,7 @@ function TopEvents() {
     getTopBookedEvents(count)
       .then(response => setEvents(response.data))
       .catch(error => console.error(error));
-  }, [count]); // ✅ Fetch automatically when count changes
+  }, [count]); // Fetch automatically when count changes
 
   return (
     <div className="top-events-container">

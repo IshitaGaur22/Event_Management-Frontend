@@ -37,8 +37,9 @@ function SubmitFeedback({onViewPrevious}) {
         setter(rate);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (!eventId) {
             toast.error('Please select an event.');
             return;
@@ -47,51 +48,75 @@ function SubmitFeedback({onViewPrevious}) {
             toast.error('Please provide an overall experience rating.');
             return;
         }
-        const feedbackData = {
-            EventId: parseInt(eventId, 10),
-            UserId: parseInt(userId, 10),
-            Rating: overallExperience,
-            ContentQuality: contentQuality,
-            VenueFacilities: venueFacilities,
-            EventOrganization: eventOrganization,
-            ValueForMoney: valueForMoney,
-            Comments: comments
+
+        // ensure numeric values and a consistent payload shape (both camelCase & PascalCase)
+        const eid = parseInt(eventId, 10);
+        const uid = parseInt(userId, 10);
+        const payload = {
+            // camelCase (frontend-friendly)
+            eventId: eid,
+            userId: uid,
+            rating: Number(overallExperience || 0),
+            contentQuality: Number(contentQuality || 0),
+            venueFacilities: Number(venueFacilities || 0),
+            eventOrganization: Number(eventOrganization || 0),
+            valueForMoney: Number(valueForMoney || 0),
+            comments: comments || '',
+
+            // PascalCase (server .NET model binding tolerance)
+            EventId: eid,
+            UserId: uid,
+            Rating: Number(overallExperience || 0),
+            ContentQuality: Number(contentQuality || 0),
+            VenueFacilities: Number(venueFacilities || 0),
+            EventOrganization: Number(eventOrganization || 0),
+            ValueForMoney: Number(valueForMoney || 0),
+            Comments: comments || ''
         };
 
-        // API Call
-        console.log('Submitting feedback:', feedbackData);
-        api.post('/Feedbacks/SubmitFeedback', feedbackData)
-            .then(response => {
-                console.log('Feedback submitted successfully:', response);
-                toast.success('Thank you! Your feedback has been submitted.');
-                setEventId("");
-                setOverallExperience(0);
-                setContentQuality(0);
-                setVenueFacilities(0);
-                setEventOrganization(0);
-                setValueForMoney(0);
-                setComments("");
-            })
-            .catch(err => {
-                console.error('Feedback submission error:', err);
-                console.error('Error response:', err.response);
-                let errorMessage = "An error occurred.";
-                if (err.response && typeof err.response.data === 'string') {
-                    errorMessage = err.response.data;
-                }
-                else if (err.response && err.response.data && err.response.data.errors) {
-                    // This will find the first specific validation error
-                    const errors = err.response.data.errors;
-                    const errorKey = Object.keys(errors)[0]; // Get the first field name 
-                    errorMessage = errors[errorKey][0];     // Get the first error message for that field
-                } 
-                else if (err.response && err.response.data && err.response.data.title) {
-                    // generic message
-                    errorMessage = err.response.data.title;
-                }
-                toast.error(`Error: ${errorMessage}`);
+        try {
+            console.log('Submitting feedback payload:', payload);
+            const response = await api.post('/Feedbacks/SubmitFeedback', payload, {
+                headers: { 'Content-Type': 'application/json' }
             });
-        };
+            console.log('Feedback submitted successfully:', response);
+            toast.success('Thank you! Your feedback has been submitted.');
+            setEventId("");
+            setOverallExperience(0);
+            setContentQuality(0);
+            setVenueFacilities(0);
+            setEventOrganization(0);
+            setValueForMoney(0);
+            setComments("");
+        } catch (err) {
+            console.error('Feedback submission error:', err);
+            console.error('Error response:', err.response);
+
+            // show best possible message from server validation
+            let errorMessage = 'An error occurred.';
+            if (err.response) {
+                const data = err.response.data;
+                // If backend returns a string
+                if (typeof data === 'string') errorMessage = data;
+                // If backend returns validation errors in an errors object
+                else if (data && data.errors) {
+                    const firstKey = Object.keys(data.errors)[0];
+                    errorMessage = data.errors[firstKey][0] || JSON.stringify(data.errors);
+                }
+                // If backend returns a title/message
+                else if (data && (data.title || data.message)) {
+                    errorMessage = data.title || data.message;
+                } else {
+                    // fallback to stringify for debugging
+                    errorMessage = JSON.stringify(data);
+                }
+            } else if (err.message) {
+                errorMessage = err.message;
+            }
+
+            toast.error(`Error: ${errorMessage}`);
+        }
+    };
 
     return (
         <div className={styles.container}>

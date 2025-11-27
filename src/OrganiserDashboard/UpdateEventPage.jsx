@@ -188,7 +188,7 @@ const UpdateEventPage = () => {
  
         <div className="form-buttons">
 <button type="submit" className="btn update">Update</button>
-<button type="button" className="btn cancel" onClick={() => navigate('/')}>Cancel</button>
+<button type="button" className="btn cancel" onClick={() => navigate('/dashboard')}>Cancel</button>
 </div>
 </form>
 </div>

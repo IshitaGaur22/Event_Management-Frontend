@@ -238,7 +238,9 @@
 }
 
 .cancel-btn {
-  background: #dc3545;
+  /* background: #dc3545;
+   */
+   background: var(--simba-orange-light);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;

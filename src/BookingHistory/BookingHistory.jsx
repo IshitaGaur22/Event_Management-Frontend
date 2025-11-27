@@ -6,6 +6,7 @@ import confetti from 'canvas-confetti';
 import "./BookingHistory.css";
 import { NotificationContext } from "./NotificationContext";
 import { toast } from "react-toastify";
+import { MapPin, Calendar, Clock, Armchair,Ticket } from "lucide-react";
  
 const BookingHistory = () => {
   const userId = localStorage.getItem("userId");
@@ -130,6 +131,13 @@ const cancelBooking = async () => {
     // ✅ Show Bootstrap banner
     setShowBanner(true);
     setTimeout(() => setShowBanner(false), 4000);
+ 
+    // Add manual notification for notification tab
+    addNotification({
+      message: `Your booking for "${selectedEventName}" has been cancelled.`,
+      type: "Booking Cancellation",
+      userId: parseInt(userId)
+    });
  
     // ✅ Add notification
     addNotification({
@@ -271,23 +279,23 @@ const cancelBooking = async () => {
               </div>
               <div className="booking-details">
                 <div className="detail-item">
-                  <span className="label">📍 Location:</span>
+                  <span className="label"><MapPin /> Location:</span>
                   <span className="value">{booking.location}</span>
                 </div>
                 <div className="detail-item">
-                  <span className="label">📅 Date:</span>
+                  <span className="label"><Calendar /> Date:</span>
                   <span className="value">{booking.eventDate}</span>
                 </div>
                 <div className="detail-item">
-                  <span className="label">⏰ Time:</span>
+                  <span className="label"><Clock /> Time:</span>
                   <span className="value">{booking.eventTime}</span>
                 </div>
                 <div className="detail-item">
-                  <span className="label">🎫 Seats:</span>
+                  <span className="label"><Armchair /> Seats:</span>
                   <span className="value">{booking.selectedSeats}</span>
                 </div>
                 <div className="detail-item">
-                  <span className="label">🆔 Booking ID:</span>
+                  <span className="label"><Ticket /> Booking ID:</span>
                   <span className="value">#{booking.bookingId}</span>
                 </div>
               </div>
@@ -318,7 +326,7 @@ const cancelBooking = async () => {
           <p>Your {activeTab} bookings will appear here</p>
         </div>
       )}
-
+ 
       {/* Pagination */}
       {(activeTab === "upcoming" ? upcomingBookings : pastBookings).length > itemsPerPage && (
         <div className="pagination">

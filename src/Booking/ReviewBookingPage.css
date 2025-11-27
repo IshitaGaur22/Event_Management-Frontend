@@ -7,10 +7,17 @@
   margin-bottom: 1.5rem;
   border: 1px solid var(--simba-light-grey);
   transition: box-shadow var(--transition-fast);
+  justify-content: center;
 }
 
 .review-card:hover {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.review-card .detail-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* ------------------------------------------- */
@@ -36,7 +43,7 @@
 }
 
 .booking-summary-header p {
-  color: var(--simba-text-medium);
+  color: var(--simba-brown-dark);
   font-size: 0.95rem;
   display: flex;
   align-items: center;
@@ -70,7 +77,7 @@
 /* Payment Detail Item (.detail-item for total due) */
 .payment-summary-card .detail-item {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-top: 1rem;
   /* Use dashed line for clarity */
