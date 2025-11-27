@@ -60,6 +60,7 @@ const Login = () => {
             
             toast.success("Login successful!", {
               position: 'top-center'
+              
             });
             const from = location.state?.from || "/dashboard";
             navigate(from);

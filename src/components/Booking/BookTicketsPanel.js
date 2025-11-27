@@ -4,7 +4,7 @@ import './BookTicketsPanel.css';
 
 const BookTicketsPanel = ({ event = {}, onBookClick, disabled = false }) => {
   const seatsLeft = event?.seats ?? event?.seatCount ?? 'N/A';
-  const price = event?.price ?? event?.eventPrice ?? null;
+  // const price = event?.price ?? event?.eventPrice ?? null;
 
   return (
     <div className="page-card">

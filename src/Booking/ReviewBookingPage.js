@@ -58,17 +58,17 @@ const TicketDetailsCard = ({ booking, selectedSeats, maxSeats, setSelectedSeats 
     const eventDateTime = `${booking.EventDate} at ${booking.Time}`;
 
     return (
-        <div className="page-card" style={{ textAlign: 'center' }}>
+        <div className="review-card" style={{ textAlign: 'center' }}>
             <h3 style={{ color: 'var(--simba-orange-dark)', fontSize: '1.2rem', marginBottom: '1rem', borderBottom: '1px solid var(--simba-light-grey)', paddingBottom: '0.5rem' }}>
                 <Ticket size={20} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Booking Details
             </h3>
 
-            <div className="detail-item" style={{ justifyContent: 'center' }}>
+            <div className="detail-item" >
                 <span><Calendar size={16} /><b> Date & Time:  </b></span>
                 <span>{eventDateTime}</span>
             </div>
             
-            <div className="detail-item" style={{ justifyContent: 'center' }}>
+            <div className="detail-item">
                 <span><IndianRupee size={16} /><b> Price/Ticket: </b></span>
                 <span>₹{booking.PricePerTicket.toFixed(2)}</span>
             </div>
@@ -83,7 +83,7 @@ const TicketDetailsCard = ({ booking, selectedSeats, maxSeats, setSelectedSeats 
 };
 
 const PaymentSummaryCard = ({ totalAmount, onPaymentAdd, paymentMethod, setPaymentMethod }) => (
-    <div className="page-card">
+    <div className="review-card">
         <h3 style={{ color: 'var(--simba-orange-dark)', fontSize: '1.2rem', marginBottom: '1rem', borderBottom: '1px solid var(--simba-light-grey)', paddingBottom: '0.5rem' }}>
             <CreditCard size={20} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Payment Summary
         </h3>

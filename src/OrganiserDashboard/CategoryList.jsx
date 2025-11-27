@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './CategoryList.css';
 import axios from 'axios';
-import { FaMusic, FaLaughBeam, FaTheaterMasks, FaGlassCheers, FaUtensils, FaFutbol } from 'react-icons/fa';
+import { FaMusic, FaLaughBeam, FaTheaterMasks, FaGlassCheers, FaUtensils, FaFutbol, FaLaptop } from 'react-icons/fa';
 
 const iconMap = {
   Music: <FaMusic />,
@@ -10,6 +10,8 @@ const iconMap = {
   NightLife: <FaGlassCheers />,
   'Food & Drinks': <FaUtensils />,
   Sports: <FaFutbol />,
+  Tech: <FaLaptop />,
+  Art: <FaTheaterMasks />
 };
 
 const CategoryList = () => {
@@ -47,7 +49,7 @@ const CategoryList = () => {
         <div className="category-grid">
           {categories.map((cat) => (
             <div key={cat.categoryID} className="category-card">
-              <div className="category-icon">{iconMap[cat.categoryName] || <FaTheaterMasks />}</div>
+              <div className="category-icon">{iconMap[cat.categoryName] || <FaHandSparkles />}</div>
               <h2>{cat.categoryName}</h2>
             </div>
           ))}

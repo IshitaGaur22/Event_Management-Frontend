@@ -1,11 +1,13 @@
 .event-details-card {
-  background-color: var(--simba-off-white);
-  padding: 1.5rem;
-  border-radius: 12px; /* ✅ Rounded corners */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-  margin-bottom: 1.5rem;
-  font-family: 'Poppins', sans-serif;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 1rem;
+  background: transparent; /* keep inner area transparent too */
+  border-radius: 8px;
+  /* very light outline to keep structure on both light/dark backgrounds */
+  border: 1px solid rgba(31, 41, 55, 0.04);
+  box-shadow: none;
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
 }
 
 .event-details-card:hover {
@@ -20,21 +22,20 @@
   font-weight: 600;
 }
 
-.event-details-card .detail-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.8rem;
-  font-size: 1rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+.event-details-card .detail-icon{
+  color: var(--simba-text-dark);
 }
 
 .event-details-card .detail-label {
-  color: var(--simba-text-medium);
-  font-weight: 500;
+  color: var(--simba-text-dark);
+  /* font-weight: 500; */
+  gap: 2rem;
 }
 
 .event-details-card .detail-value {
-  color: var(--simba-orange-dark);
+    margin-left: 0.3rem;
+  color: var(--simba-brown-dark);
   font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
 }
